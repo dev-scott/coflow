@@ -12,9 +12,21 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      const allowed = [
+        process.env.FRONTEND_URL,
+        "http://localhost:5173",
+        "http://localhost:3000",
+      ].filter(Boolean);
+      if (!origin || allowed.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origine non autorisée — ${origin}`));
+      }
+    },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 app.use(morgan("dev"));
