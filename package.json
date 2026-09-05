@@ -1,0 +1,14 @@
+{
+  "name": "coflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CoFlow – Gestionnaire de projets collaboratif (Backend + Frontend)",
+  "scripts": {
+    "install:all": "npm install --prefix backend && cd frontend && yarn install",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "yarn --cwd frontend dev",
+    "dev": "start cmd /k \"npm run dev:backend\" && start cmd /k \"npm run dev:frontend\"",
+    "start:backend": "npm run start --prefix backend",
+    "start:frontend": "yarn --cwd frontend start"
+  }
+}
