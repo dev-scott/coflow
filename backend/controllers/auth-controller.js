@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import Workspace from "../models/workspace.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Verification from "../models/verification.js";
@@ -32,36 +33,31 @@ const registerUser = async (req, res) => {
       email,
       password: hashPassword,
       name,
+      isEmailVerified: true,
     });
 
-    const verificationToken = jwt.sign(
-      { userId: newUser._id, purpose: "email-verification" },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    await Verification.create({
-      userId: newUser._id,
-      token: verificationToken,
-      expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000),
+    // Create a default workspace for the user
+    await Workspace.create({
+      name: `${name}'s Workspace`,
+      description: "Mon espace de travail",
+      color: "#3b82f6",
+      owner: newUser._id,
+      members: [
+        {
+          user: newUser._id,
+          role: "owner",
+          joinedAt: new Date(),
+        },
+      ],
     });
-
-    // send email
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-    const emailBody = `<p>Click <a href="${verificationLink}">here</a> to verify your email</p>`;
-    const emailSubject = "Verify your email";
-
-    const isEmailSent = await sendEmail(email, emailSubject, emailBody);
-
-    if (!isEmailSent) {
-      return res.status(500).json({
-        message: "Failed to send verification email",
-      });
-    }
 
     res.status(201).json({
-      message:
-        "Verification email sent to your email. Please check and verify your account.",
+      message: "Account created successfully. You can now log in.",
+      user: {
+        _id: newUser._id,
+        email: newUser.email,
+        name: newUser.name,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -81,48 +77,8 @@ const loginUser = async (req, res) => {
     }
 
     if (!user.isEmailVerified) {
-      const existingVerification = await Verification.findOne({
-        userId: user._id,
-      });
-
-      if (existingVerification && existingVerification.expiresAt > new Date()) {
-        return res.status(400).json({
-          message:
-            "Email not verified. Please check your email for the verification link.",
-        });
-      } else {
-        await Verification.findByIdAndDelete(existingVerification._id);
-
-        const verificationToken = jwt.sign(
-          { userId: user._id, purpose: "email-verification" },
-          process.env.JWT_SECRET,
-          { expiresIn: "1h" }
-        );
-
-        await Verification.create({
-          userId: user._id,
-          token: verificationToken,
-          expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000),
-        });
-
-        // send email
-        const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-        const emailBody = `<p>Click <a href="${verificationLink}">here</a> to verify your email</p>`;
-        const emailSubject = "Verify your email";
-
-        const isEmailSent = await sendEmail(email, emailSubject, emailBody);
-
-        if (!isEmailSent) {
-          return res.status(500).json({
-            message: "Failed to send verification email",
-          });
-        }
-
-        res.status(201).json({
-          message:
-            "Verification email sent to your email. Please check and verify your account.",
-        });
-      }
+      user.isEmailVerified = true;
+      await user.save();
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -139,6 +95,26 @@ const loginUser = async (req, res) => {
 
     user.lastLogin = new Date();
     await user.save();
+
+    // Ensure the user has at least one workspace
+    const workspaceCount = await Workspace.countDocuments({
+      "members.user": user._id,
+    });
+    if (workspaceCount === 0) {
+      await Workspace.create({
+        name: `${user.name || "Mon"}'s Workspace`,
+        description: "Mon espace de travail",
+        color: "#3b82f6",
+        owner: user._id,
+        members: [
+          {
+            user: user._id,
+            role: "owner",
+            joinedAt: new Date(),
+          },
+        ],
+      });
+    }
 
     const userData = user.toObject();
     delete userData.password;
@@ -218,11 +194,6 @@ const resetPasswordRequest = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    if (!user.isEmailVerified) {
-      return res
-        .status(400)
-        .json({ message: "Please verify your email first" });
-    }
 
     const existingVerification = await Verification.findOne({
       userId: user._id,

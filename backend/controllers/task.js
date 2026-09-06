@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { recordActivity } from "../libs/index.js";
 import ActivityLog from "../models/activity.js";
 import Comment from "../models/comment.js";
@@ -5,11 +6,23 @@ import Project from "../models/project.js";
 import Task from "../models/task.js";
 import Workspace from "../models/workspace.js";
 
+const isValidObjectId = (id) =>
+  Boolean(id) &&
+  id !== "null" &&
+  id !== "undefined" &&
+  mongoose.Types.ObjectId.isValid(id);
+
 const createTask = async (req, res) => {
   try {
     const { projectId } = req.params;
     const { title, description, status, priority, dueDate, assignees } =
       req.body;
+
+    if (!isValidObjectId(projectId)) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
 
     const project = await Project.findById(projectId);
 
@@ -63,6 +76,12 @@ const createTask = async (req, res) => {
 const getTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;
+
+    if (!isValidObjectId(taskId)) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
 
     const task = await Task.findById(taskId)
       .populate("assignees", "name profilePicture")

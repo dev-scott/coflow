@@ -1,12 +1,25 @@
+import mongoose from "mongoose";
 import Workspace from "../models/workspace.js";
 import Project from "../models/project.js";
 import Task from "../models/task.js";
+
+const isValidObjectId = (id) =>
+  Boolean(id) &&
+  id !== "null" &&
+  id !== "undefined" &&
+  mongoose.Types.ObjectId.isValid(id);
 
 const createProject = async (req, res) => {
   try {
     const { workspaceId } = req.params;
     const { title, description, status, startDate, dueDate, tags, members } =
       req.body;
+
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
 
     const workspace = await Workspace.findById(workspaceId);
 
@@ -56,6 +69,12 @@ const getProjectDetails = async (req, res) => {
   try {
     const { projectId } = req.params;
 
+    if (!isValidObjectId(projectId)) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
     const project = await Project.findById(projectId);
 
     if (!project) {
@@ -76,6 +95,9 @@ const getProjectDetails = async (req, res) => {
 
     res.status(200).json(project);
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Project not found" });
+    }
     console.log(error);
     return res.status(500).json({
       message: "Internal server error",
@@ -86,6 +108,13 @@ const getProjectDetails = async (req, res) => {
 const getProjectTasks = async (req, res) => {
   try {
     const { projectId } = req.params;
+
+    if (!isValidObjectId(projectId)) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
     const project = await Project.findById(projectId).populate("members.user");
 
     if (!project) {
@@ -116,6 +145,9 @@ const getProjectTasks = async (req, res) => {
       tasks,
     });
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Project not found" });
+    }
     console.log(error);
     return res.status(500).json({
       message: "Internal server error",

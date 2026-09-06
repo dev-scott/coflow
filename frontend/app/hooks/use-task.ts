@@ -21,6 +21,7 @@ export const useTaskByIdQuery = (taskId: string) => {
   return useQuery({
     queryKey: ["task", taskId],
     queryFn: () => fetchData(`/tasks/${taskId}`),
+    enabled: Boolean(taskId) && taskId !== "null" && taskId !== "undefined",
   });
 };
 

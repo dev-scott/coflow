@@ -9,6 +9,7 @@
     "dev:frontend": "yarn --cwd frontend dev",
     "dev": "start cmd /k \"npm run dev:backend\" && start cmd /k \"npm run dev:frontend\"",
     "start:backend": "npm run start --prefix backend",
-    "start:frontend": "yarn --cwd frontend start"
+    "start:frontend": "yarn --cwd frontend start",
+    "seed": "npm run seed --prefix backend"
   }
 }

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Workspace from "../models/workspace.js";
 import Project from "../models/project.js";
 import User from "../models/user.js";
@@ -5,6 +6,12 @@ import WorkspaceInvite from "../models/workspace-invite.js";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../libs/send-email.js";
 import { recordActivity } from "../libs/index.js";
+
+const isValidObjectId = (id) =>
+  Boolean(id) &&
+  id !== "null" &&
+  id !== "undefined" &&
+  mongoose.Types.ObjectId.isValid(id);
 
 const createWorkspace = async (req, res) => {
   try {
@@ -52,9 +59,16 @@ const getWorkspaceDetails = async (req, res) => {
   try {
     const { workspaceId } = req.params;
 
-    const workspace = await Workspace.findById({
-      _id: workspaceId,
-    }).populate("members.user", "name email profilePicture");
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
+
+    const workspace = await Workspace.findById(workspaceId).populate(
+      "members.user",
+      "name email profilePicture"
+    );
 
     if (!workspace) {
       return res.status(404).json({
@@ -64,6 +78,9 @@ const getWorkspaceDetails = async (req, res) => {
 
     res.status(200).json(workspace);
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -72,6 +89,12 @@ const getWorkspaceDetails = async (req, res) => {
 const getWorkspaceProjects = async (req, res) => {
   try {
     const { workspaceId } = req.params;
+
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
 
     const workspace = await Workspace.findOne({
       _id: workspaceId,
@@ -94,6 +117,9 @@ const getWorkspaceProjects = async (req, res) => {
 
     res.status(200).json({ projects, workspace });
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
     console.log(error);
     res.status(500).json({
       message: "Internal server error",
@@ -104,6 +130,12 @@ const getWorkspaceProjects = async (req, res) => {
 const getWorkspaceStats = async (req, res) => {
   try {
     const { workspaceId } = req.params;
+
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
 
     const workspace = await Workspace.findById(workspaceId);
 
@@ -309,6 +341,9 @@ const getWorkspaceStats = async (req, res) => {
       recentProjects: projects.slice(0, 5),
     });
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
     console.log(error);
     res.status(500).json({
       message: "Internal server error",
@@ -320,6 +355,12 @@ const inviteUserToWorkspace = async (req, res) => {
   try {
     const { workspaceId } = req.params;
     const { email, role } = req.body;
+
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
 
     const workspace = await Workspace.findById(workspaceId);
 
@@ -417,6 +458,12 @@ const inviteUserToWorkspace = async (req, res) => {
 const acceptGenerateInvite = async (req, res) => {
   try {
     const { workspaceId } = req.params;
+
+    if (!isValidObjectId(workspaceId)) {
+      return res.status(404).json({
+        message: "Workspace not found",
+      });
+    }
 
     const workspace = await Workspace.findById(workspaceId);
 

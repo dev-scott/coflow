@@ -51,6 +51,9 @@ app.use("/api-v1", routes);
 
 // error middleware
 app.use((err, req, res, next) => {
+  if (err.name === "CastError") {
+    return res.status(404).json({ message: "Resource not found or invalid ID" });
+  }
   console.log(err.stack);
   res.status(500).json({ message: "Internal server error" });
 });

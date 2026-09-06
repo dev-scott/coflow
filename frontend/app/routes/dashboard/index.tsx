@@ -19,8 +19,8 @@ const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const workspaceId = searchParams.get("workspaceId");
 
-  const { data, isPending } = useGetWorkspaceStatsQuery(workspaceId!) as {
-    data: {
+  const { data, isPending } = useGetWorkspaceStatsQuery(workspaceId || "") as {
+    data?: {
       stats: StatsCardProps;
       taskTrendsData: TaskTrendsData[];
       projectStatusData: ProjectStatusData[];
@@ -36,6 +36,28 @@ const Dashboard = () => {
     return (
       <div>
         <Loader />
+      </div>
+    );
+  }
+
+  if (!workspaceId) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+        <h2 className="text-xl font-semibold">Aucun espace de travail sélectionné</h2>
+        <p className="text-muted-foreground max-w-md">
+          Veuillez sélectionner un espace de travail dans la barre de navigation ou en créer un nouveau pour afficher le tableau de bord.
+        </p>
+      </div>
+    );
+  }
+
+  if (!data || !data.stats) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+        <h2 className="text-xl font-semibold">Espace de travail sans données</h2>
+        <p className="text-muted-foreground max-w-md">
+          Cet espace de travail ne contient pas encore de statistiques ou de projets.
+        </p>
       </div>
     );
   }

@@ -41,6 +41,14 @@ const ProjectDetails = () => {
       </div>
     );
 
+  if (!data || !data.project) {
+    return (
+      <div className="p-8 text-center text-muted-foreground">
+        Projet non trouvé.
+      </div>
+    );
+  }
+
   const { project, tasks } = data;
   const projectProgress = getProjectProgress(tasks);
 

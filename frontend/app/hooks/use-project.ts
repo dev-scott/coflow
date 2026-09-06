@@ -26,5 +26,6 @@ export const UseProjectQuery = (projectId: string) => {
   return useQuery({
     queryKey: ["project", projectId],
     queryFn: () => fetchData(`/projects/${projectId}/tasks`),
+    enabled: Boolean(projectId) && projectId !== "null" && projectId !== "undefined",
   });
 };

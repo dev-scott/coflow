@@ -33,6 +33,14 @@ const WorkspaceDetails = () => {
     );
   }
 
+  if (!data || !data.workspace) {
+    return (
+      <div className="p-8 text-center text-muted-foreground">
+        Espace de travail non trouvé.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <WorkspaceHeader
