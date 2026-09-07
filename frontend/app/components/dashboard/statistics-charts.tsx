@@ -5,13 +5,6 @@ import type {
   TaskTrendsData,
   WorkspaceProductivityData,
 } from "@/types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { ChartBarBig, ChartLine, ChartPie } from "lucide-react";
 import {
   ChartContainer,
@@ -41,237 +34,207 @@ interface StatisticsChartsProps {
   workspaceProductivityData: WorkspaceProductivityData[];
 }
 
+const ChartCard = ({
+  title,
+  description,
+  icon: Icon,
+  children,
+  colSpan,
+}: {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+  colSpan?: string;
+}) => (
+  <div
+    className={`glass-card card-hover rounded-xl overflow-hidden animate-fade-in-up ${colSpan ?? ""}`}
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+      <div>
+        <h3 className="text-sm font-semibold">{title}</h3>
+        <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+      </div>
+      <div className="p-2 rounded-lg bg-white/[0.05] text-muted-foreground">
+        <Icon className="w-4 h-4" />
+      </div>
+    </div>
+    {/* Content */}
+    <div className="p-5 w-full overflow-x-auto">
+      <div className="min-w-[320px]">{children}</div>
+    </div>
+  </div>
+);
+
+const AXIS_STYLE = { stroke: "#475569", fontSize: 11 };
+const GRID_STYLE = { stroke: "rgba(255,255,255,0.05)" };
+
 export const StatisticsCharts = ({
-  stats,
   taskTrendsData,
   projectStatusData,
   taskPriorityData,
   workspaceProductivityData,
 }: StatisticsChartsProps) => {
   return (
-    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
-      <Card className="lg:col-span-2">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="space-y-0.5">
-            <CardTitle className="text-base font-medium">Task Trends</CardTitle>
-            <CardDescription>Daily task status changes</CardDescription>
-          </div>
-          <ChartLine className="size-5 text-muted-foreground" />
-        </CardHeader>
-        <CardContent className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="min-w-[350px]">
-            <ChartContainer
-              className="h-[300px]"
-              config={{
-                completed: { color: "#10b981" }, // green
-                inProgress: { color: "#f59e0b" }, // blue
-                todo: { color: "#3b82f6" }, // gray
+    <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
+      {/* Task Trends */}
+      <ChartCard
+        title="Task Trends"
+        description="Daily task status changes over time"
+        icon={ChartLine}
+        colSpan="lg:col-span-2"
+      >
+        <ChartContainer
+          className="h-[280px]"
+          config={{
+            completed: { color: "#10b981", label: "Completed" },
+            inProgress: { color: "#7c3aed", label: "In Progress" },
+            todo: { color: "#64748b", label: "To Do" },
+          }}
+        >
+          <LineChart data={taskTrendsData}>
+            <XAxis dataKey="name" {...AXIS_STYLE} tickLine={false} axisLine={false} />
+            <YAxis {...AXIS_STYLE} tickLine={false} axisLine={false} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+              wrapperStyle={{
+                background: "#16161f",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
               }}
+            />
+            <Line type="monotone" dataKey="completed"  stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: "#10b981", strokeWidth: 0 }} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="inProgress" stroke="#7c3aed" strokeWidth={2.5} dot={{ r: 3, fill: "#7c3aed", strokeWidth: 0 }} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="todo"       stroke="#64748b" strokeWidth={2.5} dot={{ r: 3, fill: "#64748b", strokeWidth: 0 }} activeDot={{ r: 5 }} />
+            <ChartLegend content={<ChartLegendContent />} />
+          </LineChart>
+        </ChartContainer>
+      </ChartCard>
+
+      {/* Project Status */}
+      <ChartCard
+        title="Project Status"
+        description="Status breakdown across all projects"
+        icon={ChartPie}
+      >
+        <ChartContainer
+          className="h-[280px]"
+          config={{
+            Completed:   { color: "#10b981" },
+            "In Progress": { color: "#7c3aed" },
+            Planning:    { color: "#f59e0b" },
+          }}
+        >
+          <PieChart>
+            <Pie
+              data={projectStatusData}
+              cx="50%"
+              cy="50%"
+              dataKey="value"
+              nameKey="name"
+              innerRadius={55}
+              outerRadius={80}
+              paddingAngle={3}
+              stroke="none"
             >
-              <LineChart data={taskTrendsData}>
-                <XAxis
-                  dataKey={"name"}
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
+              {projectStatusData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color}
+                  opacity={0.9}
                 />
-                <YAxis
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-
-                <CartesianGrid strokeDasharray={"3 3"} vertical={false} />
-                <ChartTooltip />
-
-                <Line
-                  type="monotone"
-                  dataKey={"completed"}
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="inProgress"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="todo"
-                  stroke="#6b7280"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-
-                <ChartLegend content={<ChartLegendContent />} />
-              </LineChart>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* project status  */}
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="space-y-0.5">
-            <CardTitle className="text-base font-medium">
-              Project Status
-            </CardTitle>
-            <CardDescription>Project status breakdown</CardDescription>
-          </div>
-
-          <ChartPie className="size-5 text-muted-foreground" />
-        </CardHeader>
-
-        <CardContent className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="min-w-[350px]">
-            <ChartContainer
-              className="h-[300px]"
-              config={{
-                Completed: { color: "#10b981" },
-                "In Progress": { color: "#3b82f6" },
-                Planning: { color: "#f59e0b" },
+              ))}
+            </Pie>
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+              wrapperStyle={{
+                background: "#16161f",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
               }}
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </PieChart>
+        </ChartContainer>
+      </ChartCard>
+
+      {/* Task Priority */}
+      <ChartCard
+        title="Task Priority"
+        description="Distribution by priority level"
+        icon={ChartPie}
+      >
+        <ChartContainer
+          className="h-[280px]"
+          config={{
+            High:   { color: "#ef4444" },
+            Medium: { color: "#f59e0b" },
+            Low:    { color: "#64748b" },
+          }}
+        >
+          <PieChart>
+            <Pie
+              data={taskPriorityData}
+              cx="50%"
+              cy="50%"
+              innerRadius={55}
+              outerRadius={80}
+              paddingAngle={3}
+              dataKey="value"
+              nameKey="name"
+              stroke="none"
             >
-              <PieChart>
-                <Pie
-                  data={projectStatusData}
-                  cx="50%"
-                  cy="50%"
-                  dataKey="value"
-                  nameKey="name"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  label={({ name, percent }) =>
-                    `${name} (${(percent * 100).toFixed(0)}%)`
-                  }
-                  labelLine={false}
-                >
-                  {projectStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <ChartTooltip />
-                <ChartLegend content={<ChartLegendContent />} />
-              </PieChart>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* task priority  */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="space-y-0.5">
-            <CardTitle className="text-base font-medium">
-              Task Priority
-            </CardTitle>
-            <CardDescription>Task priority breakdown</CardDescription>
-          </div>
-        </CardHeader>
-
-        <CardContent className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="min-w-[350px]">
-            <ChartContainer
-              className="h-[300px]"
-              config={{
-                High: { color: "#ef4444" },
-                Medium: { color: "#f59e0b" },
-                Low: { color: "#6b7280" },
+              {taskPriorityData?.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} opacity={0.9} />
+              ))}
+            </Pie>
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+              wrapperStyle={{
+                background: "#16161f",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
               }}
-            >
-              <PieChart>
-                <Pie
-                  data={taskPriorityData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="value"
-                  nameKey="name"
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  labelLine={false}
-                >
-                  {taskPriorityData?.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <ChartTooltip />
-                <ChartLegend content={<ChartLegendContent />} />
-              </PieChart>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </PieChart>
+        </ChartContainer>
+      </ChartCard>
 
-      {/* Workspace Productivity Chart */}
-      <Card className="lg:col-span-2">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <div className="space-y-0.5">
-            <CardTitle className="text-base font-medium">
-              Workspace Productivity
-            </CardTitle>
-            <CardDescription>Task completion by project</CardDescription>
-          </div>
-          <ChartBarBig className="h-5 w-5 text-muted-foreground" />
-        </CardHeader>
-        <CardContent className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="min-w-[350px]">
-            <ChartContainer
-              className="h-[300px]"
-              config={{
-                completed: { color: "#3b82f6" },
-                total: { color: "red" },
+      {/* Workspace Productivity */}
+      <ChartCard
+        title="Workspace Productivity"
+        description="Task completion rate by project"
+        icon={ChartBarBig}
+        colSpan="lg:col-span-2"
+      >
+        <ChartContainer
+          className="h-[280px]"
+          config={{
+            total:     { color: "rgba(255,255,255,0.12)", label: "Total Tasks" },
+            completed: { color: "#7c3aed",                label: "Completed" },
+          }}
+        >
+          <BarChart data={workspaceProductivityData} barGap={4} barSize={18}>
+            <XAxis dataKey="name" {...AXIS_STYLE} tickLine={false} axisLine={false} />
+            <YAxis {...AXIS_STYLE} tickLine={false} axisLine={false} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+              wrapperStyle={{
+                background: "#16161f",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
               }}
-            >
-              <BarChart
-                data={workspaceProductivityData}
-                barGap={0}
-                barSize={20}
-              >
-                <XAxis
-                  dataKey="name"
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar
-                  dataKey="total"
-                  fill="#000"
-                  radius={[4, 4, 0, 0]}
-                  name="Total Tasks"
-                />
-                <Bar
-                  dataKey="completed"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                  name="Completed Tasks"
-                />
-                <ChartLegend content={<ChartLegendContent />} />
-              </BarChart>
-            </ChartContainer>
-          </div>
-        </CardContent>
-      </Card>
+            />
+            <Bar dataKey="total"     fill="rgba(255,255,255,0.10)" radius={[4, 4, 0, 0]} name="Total Tasks" />
+            <Bar dataKey="completed" fill="#7c3aed"                radius={[4, 4, 0, 0]} name="Completed" />
+            <ChartLegend content={<ChartLegendContent />} />
+          </BarChart>
+        </ChartContainer>
+      </ChartCard>
     </div>
   );
 };
