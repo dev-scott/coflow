@@ -18,7 +18,9 @@ app.use(
         "http://localhost:5173",
         "http://localhost:3000",
         "https://coflow.dev-scott.me",
-        "https://coflow.dev-scott.me",
+        "https://www.coflow.dev-scott.me",
+        "https://geoip.maxmind.com/",
+        "https://www.geoip.maxmind.com/",
         "https://coflow.dev-scott.me/sign-up"
       ].filter(Boolean);
       if (!origin || allowed.includes(origin)) {
@@ -28,7 +30,7 @@ app.use(
       }
     },
     methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization","X-Forwarded-For"],
     credentials: true,
   })
 );
