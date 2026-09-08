@@ -18,6 +18,7 @@ app.use(
         "http://localhost:5173",
         "http://localhost:3000",
         "https://coflow.dev-scott.me",
+        "https://coflow.dev-scott.me",
         "https://coflow.dev-scott.me/sign-up"
       ].filter(Boolean);
       if (!origin || allowed.includes(origin)) {
