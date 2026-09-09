@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // output: "standalone" is only for Docker. On Vercel, it causes ENOENT on next-server.js.nft.json
+  ...(process.env.DOCKER_BUILD === "1" ? { output: "standalone" as const } : {}),
   // Proxy API calls to avoid CORS in development
   async rewrites() {
     const rawApi = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
