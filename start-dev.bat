@@ -10,7 +10,7 @@ start "CoFlow Backend TS" cmd /k "cd /d %~dp0backend && npm run dev"
 echo.
 echo [2/2] Demarrage du Frontend Next.js (port 3000)...
 timeout /t 2 /nobreak >nul
-start "CoFlow Frontend Next" cmd /k "cd /d %~dp0frontend-next && npm run dev"
+start "CoFlow Frontend Next" cmd /k "cd /d %~dp0frontend && npm run dev"
 
 echo.
 echo ========================================

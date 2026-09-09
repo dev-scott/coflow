@@ -32,14 +32,14 @@ services:
   # ─── Frontend Next.js 15+ (App Router / React 19) ─────────────────────────────
   frontend:
     build:
-      context: ./frontend-next
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: coflow-frontend-next
+    container_name: coflow-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend-next/.env.local
+      - ./frontend/.env.local
     depends_on:
       - backend
     networks:
