@@ -2,14 +2,22 @@
   "name": "coflow",
   "version": "1.0.0",
   "private": true,
-  "description": "CoFlow – Gestionnaire de projets collaboratif (Backend + Frontend)",
+  "workspaces": [
+    "packages/*",
+    "backend",
+    "frontend-next"
+  ],
+  "description": "CoFlow – Gestionnaire de projets collaboratif",
   "scripts": {
-    "install:all": "npm install --prefix backend && cd frontend && yarn install",
-    "dev:backend": "npm run dev --prefix backend",
-    "dev:frontend": "yarn --cwd frontend dev",
-    "dev": "start cmd /k \"npm run dev:backend\" && start cmd /k \"npm run dev:frontend\"",
-    "start:backend": "npm run start --prefix backend",
-    "start:frontend": "yarn --cwd frontend start",
-    "seed": "npm run seed --prefix backend"
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend-next",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend-next",
+    "typecheck:backend": "npm run typecheck --workspace=backend",
+    "typecheck:frontend": "npm run typecheck --workspace=frontend-next",
+    "seed": "npm run seed --workspace=backend",
+    "test:db": "npm run test:db --workspace=backend"
   }
 }
+

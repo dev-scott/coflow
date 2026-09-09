@@ -1,23 +1,22 @@
 @echo off
 echo ========================================
-echo    CoFlow - Lancement en LOCAL
+echo    CoFlow - Demarrage Local (Enterprise)
 echo ========================================
 
 echo.
-echo [1/2] Demarrage du Backend (port 5000)...
-start "CoFlow Backend" cmd /k "cd /d %~dp0backend && npm run dev"
+echo [1/2] Demarrage du Backend TypeScript (port 5000)...
+start "CoFlow Backend TS" cmd /k "cd /d %~dp0backend && npm run dev"
 
 echo.
-echo [2/2] Demarrage du Frontend (port 5173)...
+echo [2/2] Demarrage du Frontend Next.js (port 3000)...
 timeout /t 2 /nobreak >nul
-start "CoFlow Frontend" cmd /k "cd /d %~dp0frontend && yarn dev"
+start "CoFlow Frontend Next" cmd /k "cd /d %~dp0frontend-next && npm run dev"
 
 echo.
 echo ========================================
-echo  Backend  : http://localhost:5000
-echo  Frontend : http://localhost:5173
+echo  Backend TS : http://localhost:5000
+echo  Frontend   : http://localhost:3000
 echo ========================================
 echo.
-echo Fermez les fenetres "CoFlow Backend" et
-echo "CoFlow Frontend" pour arreter le projet.
+echo Fermez les deux fenetres pour arreter les serveurs.
 pause
