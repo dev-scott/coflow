@@ -13,6 +13,7 @@ import {
   Menu,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
+import { CoFlowLogo } from "@/components/logo";
 
 const FAQ_ITEMS = [
   {
@@ -83,22 +84,22 @@ export default function HomeClient() {
         {
           label: "Refactoriser Header",
           tag: "Frontend",
-          tagBg: "rgba(59,130,246,0.12)",
-          tagFg: "#60a5fa",
+          tagBg: "rgba(59,130,246,0.10)",
+          tagFg: "#2563EB",
           priority: "Moyenne",
           pBg: "rgba(245,158,11,0.12)",
-          pFg: "#fbbf24",
+          pFg: "#D97706",
           assignee: "AL",
-          ava: "#7c3aed",
+          ava: "#334155",
         },
         {
-          label: "Maquettes Dark Mode",
+          label: "Refonte Design System",
           tag: "Design",
-          tagBg: "rgba(236,72,153,0.12)",
-          tagFg: "#f472b6",
+          tagBg: "rgba(77,153,114,0.12)",
+          tagFg: "#3B805C",
           priority: "Haute",
           pBg: "rgba(239,68,68,0.12)",
-          pFg: "#f87171",
+          pFg: "#DC2626",
           assignee: "SC",
           ava: "#0891b2",
         },
@@ -106,29 +107,29 @@ export default function HomeClient() {
     },
     {
       title: "En cours",
-      dot: "#7c3aed",
+      dot: "#4D9972",
       pulse: true,
       cards: [
         {
           label: "Flux invitation sécurisé",
           tag: "Auth",
           tagBg: "rgba(16,185,129,0.12)",
-          tagFg: "#34d399",
+          tagFg: "#059669",
           priority: "Haute",
           pBg: "rgba(239,68,68,0.12)",
-          pFg: "#f87171",
+          pFg: "#DC2626",
           assignee: "ML",
-          ava: "#4f46e5",
+          ava: "#334155",
           progress: 70,
         },
         {
           label: "Graphiques de vélocité",
           tag: "Analytics",
-          tagBg: "rgba(139,92,246,0.12)",
-          tagFg: "#a78bfa",
+          tagBg: "rgba(77,153,114,0.10)",
+          tagFg: "#3B805C",
           priority: "Basse",
           pBg: "rgba(100,116,139,0.12)",
-          pFg: "#94a3b8",
+          pFg: "#475569",
           assignee: "ED",
           ava: "#b45309",
         },
@@ -161,21 +162,21 @@ export default function HomeClient() {
   return (
     <div
       className="min-h-screen overflow-x-hidden font-sans antialiased"
-      style={{ background: "#05050a", color: "#e8e8f0" }}
+      style={{ background: "#F7F8FA", color: "#1E293B" }}
     >
-      {/* Background Noise overlay */}
+      {/* Subtle top-right decorative circle */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 opacity-[0.018]"
         style={{
           position: "fixed",
-          inset: 0,
+          top: "-180px",
+          right: "-180px",
+          width: "560px",
+          height: "560px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(77,153,114,0.06) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
-          opacity: 0.018,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: "repeat",
-          backgroundSize: "128px 128px",
         }}
       />
 
@@ -186,34 +187,21 @@ export default function HomeClient() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          borderColor: "rgba(255,255,255,0.06)",
-          background: "rgba(5,5,10,0.92)",
+          borderColor: "rgba(15,23,42,0.07)",
+          background: "rgba(247,248,250,0.92)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
-          <Link href="/" className="flex items-center gap-2 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div
-              className="w-7 h-7 rounded-md flex items-center justify-center"
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 6,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "linear-gradient(135deg,#7c3aed,#4f46e5)",
-              }}
-            >
-              <Zap className="w-3.5 h-3.5 text-white" size={14} fill="white" color="white" />
-            </div>
-            <span className="font-bold text-sm tracking-tight" style={{ color: "#e8e8f0", fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em" }}>
-              CoFlow
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <CoFlowLogo size={32} />
+            <span className="font-bold tracking-tight" style={{ color: "#1E293B", fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em" }}>
+              Co<span style={{ color: "#4D9972" }}>Flow</span>
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#888", gap: 28, fontSize: 13 }}>
+          <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#334155", gap: 28, fontSize: 13.5, fontWeight: 500 }}>
             {[
               { label: "Pourquoi CoFlow", href: "#why" },
               { label: "Fonctionnalités", href: "#features" },
@@ -223,8 +211,9 @@ export default function HomeClient() {
               <a
                 key={item.href}
                 href={item.href}
-                className="hover:text-white transition-colors duration-150"
-                style={{ transition: "color 0.15s" }}
+                style={{ color: "#334155", transition: "color 0.15s" }}
+                onMouseOver={(e) => (e.currentTarget.style.color = "#0F172A")}
+                onMouseOut={(e) => (e.currentTarget.style.color = "#334155")}
               >
                 {item.label}
               </a>
@@ -240,10 +229,9 @@ export default function HomeClient() {
               <>
                 <Link
                   href="/sign-in"
-                  className="text-[13px] transition-colors"
-                  style={{ color: "#666", fontSize: 13, transition: "color 0.15s" }}
-                  onMouseOver={(e) => (e.currentTarget.style.color = "#e8e8f0")}
-                  onMouseOut={(e) => (e.currentTarget.style.color = "#666")}
+                  style={{ color: "#0F172A", fontSize: 13.5, fontWeight: 600, transition: "color 0.15s", textDecoration: "none" }}
+                  onMouseOver={(e) => (e.currentTarget.style.color = "#3B805C")}
+                  onMouseOut={(e) => (e.currentTarget.style.color = "#0F172A")}
                 >
                   Connexion
                 </Link>
@@ -257,7 +245,7 @@ export default function HomeClient() {
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="ml-auto md:hidden p-1.5"
-            style={{ marginLeft: "auto", color: "#888", background: "none", border: "none", cursor: "pointer", padding: 6 }}
+            style={{ marginLeft: "auto", color: "#1E293B", background: "none", border: "none", cursor: "pointer", padding: 6 }}
             aria-label="Menu"
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -268,8 +256,8 @@ export default function HomeClient() {
           <div
             className="md:hidden px-6 pt-3 pb-6 border-t space-y-1"
             style={{
-              borderColor: "rgba(255,255,255,0.06)",
-              background: "rgba(5,5,10,0.98)",
+              borderColor: "rgba(15,23,42,0.07)",
+              background: "#FFFFFF",
               padding: "12px 24px 24px",
             }}
           >
@@ -284,14 +272,14 @@ export default function HomeClient() {
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
                 className="block py-2.5 text-sm"
-                style={{ display: "block", padding: "10px 0", fontSize: 14, color: "#888" }}
+                style={{ display: "block", padding: "10px 0", fontSize: 14, color: "#1E293B", fontWeight: 500 }}
               >
                 {item.label}
               </a>
             ))}
             <div
               className="pt-4 flex flex-col gap-2 border-t"
-              style={{ borderColor: "rgba(255,255,255,0.06)", paddingTop: 16, display: "flex", flexDirection: "column", gap: 8 }}
+              style={{ borderColor: "rgba(15,23,42,0.07)", paddingTop: 16, display: "flex", flexDirection: "column", gap: 8 }}
             >
               {isAuthenticated ? (
                 <Link href="/dashboard" className="lp-btn-mobile-primary">
@@ -299,7 +287,7 @@ export default function HomeClient() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/sign-in" className="text-center py-2 text-sm" style={{ textAlign: "center", padding: "8px 0", fontSize: 14, color: "#666" }}>
+                  <Link href="/sign-in" style={{ textAlign: "center", padding: "8px 0", fontSize: 14, color: "#1E293B", fontWeight: 600, display: "block" }}>
                     Connexion
                   </Link>
                   <Link href="/sign-up" className="lp-btn-mobile-primary">
@@ -314,7 +302,7 @@ export default function HomeClient() {
 
       {/* ── HERO SECTION ── */}
       <section className="relative max-w-screen-xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-24 z-10" style={{ position: "relative", zIndex: 10 }}>
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-8" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 32, color: "#555" }}>
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-8" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 32, color: "#3B805C" }}>
           v2.0 — Gestion de projet
         </p>
 
@@ -323,10 +311,10 @@ export default function HomeClient() {
             <h1
               className="font-bold leading-[1.03] tracking-[-0.04em] text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem]"
               style={{
-                fontWeight: 700,
+                fontWeight: 800,
                 lineHeight: 1.03,
                 letterSpacing: "-0.04em",
-                color: "#e8e8f0",
+                color: "#1E293B",
               }}
             >
               Votre équipe<br />
@@ -335,18 +323,18 @@ export default function HomeClient() {
                 className="italic"
                 style={{
                   fontStyle: "italic",
-                  background: "linear-gradient(90deg, #a78bfa 0%, #60a5fa 100%)",
+                  background: "linear-gradient(90deg, #334155 0%, #4D9972 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                qu'un tableau
+                qu&apos;un tableau
               </span><br />
-              <span style={{ color: "#e8e8f0" }}>Excel.</span>
+              <span style={{ color: "#1E293B" }}>Excel.</span>
             </h1>
 
-            <p className="mt-8 text-base leading-relaxed max-w-md" style={{ marginTop: 32, fontSize: 16, lineHeight: 1.625, maxWidth: 448, color: "#888" }}>
-              CoFlow met vos projets, vos tâches et vos collaborateurs dans un seul endroit — sans vous noyer sous les fonctionnalités que personne n'utilise.
+            <p className="mt-8 text-base leading-relaxed max-w-md" style={{ marginTop: 32, fontSize: 16, lineHeight: 1.625, maxWidth: 448, color: "#334155" }}>
+              CoFlow met vos projets, vos tâches et vos collaborateurs dans un seul endroit — sans vous noyer sous les fonctionnalités que personne n&apos;utilise.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-5" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20 }}>
@@ -359,35 +347,24 @@ export default function HomeClient() {
               </a>
             </div>
 
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-[12px] font-mono" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", gap: "8px 24px", fontSize: 12, fontFamily: "monospace", color: "#444" }}>
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-[12px] font-mono" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", gap: "8px 24px", fontSize: 12, fontFamily: "monospace", color: "#475569", fontWeight: 500 }}>
               <span>→ Aucune carte bancaire</span>
               <span>→ Setup en 30 secondes</span>
               <span>→ Données hébergées en Europe</span>
             </div>
           </div>
 
+
           {/* Preview Mockup */}
           <div id="preview" className="relative mt-4 lg:mt-0" style={{ position: "relative" }}>
-            <div
-              aria-hidden="true"
-              className="absolute -inset-4 rounded-3xl blur-3xl -z-10 opacity-20"
-              style={{
-                position: "absolute",
-                inset: -16,
-                borderRadius: 24,
-                filter: "blur(64px)",
-                zIndex: -10,
-                opacity: 0.2,
-                background: "radial-gradient(circle at 50% 50%, #7c3aed, transparent 70%)",
-              }}
-            />
             <div
               className="rounded-2xl border overflow-hidden"
               style={{
                 borderRadius: 16,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "#0d0d16",
+                border: "1px solid rgba(15,23,42,0.10)",
+                background: "#FFFFFF",
                 overflow: "hidden",
+                boxShadow: "0 8px 40px rgba(15,23,42,0.10)",
               }}
             >
               <div
@@ -397,14 +374,14 @@ export default function HomeClient() {
                   alignItems: "center",
                   gap: 8,
                   padding: "12px 16px",
-                  borderBottom: "1px solid rgba(255,255,255,0.06)",
-                  background: "#0a0a12",
+                  borderBottom: "1px solid rgba(15,23,42,0.07)",
+                  background: "#F7F8FA",
                 }}
               >
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
-                <span className="ml-3 font-mono text-[11px]" style={{ marginLeft: 12, fontFamily: "monospace", fontSize: 11, color: "#444" }}>
+                <span className="ml-3 font-mono text-[11px]" style={{ marginLeft: 12, fontFamily: "monospace", fontSize: 11, color: "#94A3B8" }}>
                   coflow.app / ws / core-platform
                 </span>
               </div>
@@ -420,14 +397,14 @@ export default function HomeClient() {
                         gap: 6,
                         marginBottom: 4,
                         paddingBottom: 8,
-                        borderBottom: "1px solid rgba(255,255,255,0.05)",
+                        borderBottom: "1px solid rgba(15,23,42,0.07)",
                       }}
                     >
                       <span
                         className={`w-2 h-2 rounded-full ${col.pulse ? "animate-pulse" : ""}`}
                         style={{ width: 8, height: 8, borderRadius: "50%", background: col.dot }}
                       />
-                      <span className="text-[10px] font-medium" style={{ fontSize: 10, fontWeight: 500, color: "#aaa" }}>
+                      <span className="text-[10px] font-medium" style={{ fontSize: 10, fontWeight: 500, color: "#64748B" }}>
                         {col.title}
                       </span>
                     </div>
@@ -440,9 +417,9 @@ export default function HomeClient() {
                           padding: 10,
                           borderRadius: 8,
                           border: "1px solid",
-                          background: card.done ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.035)",
-                          borderColor: card.done ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.07)",
-                          opacity: card.done ? 0.55 : 1,
+                          background: card.done ? "#F9FAFB" : "#FFFFFF",
+                          borderColor: card.done ? "rgba(15,23,42,0.06)" : "rgba(15,23,42,0.09)",
+                          opacity: card.done ? 0.65 : 1,
                         }}
                       >
                         <div
@@ -487,7 +464,7 @@ export default function HomeClient() {
                             lineHeight: 1.375,
                             fontWeight: 500,
                             textDecoration: card.done ? "line-through" : "none",
-                            color: card.done ? "#444" : "#ccc",
+                            color: card.done ? "#94A3B8" : "#334155",
                           }}
                         >
                           {card.label}
@@ -497,7 +474,7 @@ export default function HomeClient() {
                           <div className="mt-2" style={{ marginTop: 8 }}>
                             <div
                               className="h-1 rounded-full overflow-hidden"
-                              style={{ height: 4, borderRadius: 999, overflow: "hidden", background: "rgba(255,255,255,0.06)" }}
+                              style={{ height: 4, borderRadius: 999, overflow: "hidden", background: "rgba(15,23,42,0.07)" }}
                             >
                               <div
                                 className="h-full rounded-full"
@@ -505,18 +482,18 @@ export default function HomeClient() {
                                   height: "100%",
                                   borderRadius: 999,
                                   width: `${card.progress}%`,
-                                  background: "linear-gradient(90deg,#7c3aed,#3b82f6)",
+                                  background: "linear-gradient(90deg,#334155,#4D9972)",
                                 }}
                               />
                             </div>
-                            <p className="text-[9px] mt-1" style={{ fontSize: 9, marginTop: 4, color: "#555" }}>
+                            <p className="text-[9px] mt-1" style={{ fontSize: 9, marginTop: 4, color: "#94A3B8" }}>
                               {card.progress}% complété
                             </p>
                           </div>
                         )}
 
                         {card.done && card.closedAt && (
-                          <p className="text-[9px] mt-1.5" style={{ fontSize: 9, marginTop: 6, color: "#444" }}>
+                          <p className="text-[9px] mt-1.5" style={{ fontSize: 9, marginTop: 6, color: "#94A3B8" }}>
                             {card.closedAt}
                           </p>
                         )}
@@ -526,7 +503,7 @@ export default function HomeClient() {
                             className="flex items-center justify-between mt-2"
                             style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 8 }}
                           >
-                            <span className="text-[9px] flex items-center gap-1" style={{ fontSize: 9, display: "flex", alignItems: "center", gap: 4, color: "#444" }}>
+                            <span className="text-[9px] flex items-center gap-1" style={{ fontSize: 9, display: "flex", alignItems: "center", gap: 4, color: "#94A3B8" }}>
                               <Clock size={10} /> Demain
                             </span>
                             <div
@@ -562,10 +539,11 @@ export default function HomeClient() {
       <div
         className="border-y overflow-hidden py-3.5 z-10 relative"
         style={{
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
+          borderTop: "1px solid rgba(15,23,42,0.07)",
+          borderBottom: "1px solid rgba(15,23,42,0.07)",
           overflow: "hidden",
           padding: "14px 0",
+          background: "#F0F2F5",
           zIndex: 10,
           position: "relative",
         }}
@@ -573,10 +551,10 @@ export default function HomeClient() {
         <div className="flex whitespace-nowrap animate-marquee" style={{ display: "flex", width: "max-content", whiteSpace: "nowrap" }}>
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, idx) => (
             <span key={idx} className="inline-flex items-center gap-4 px-6" style={{ display: "inline-flex", alignItems: "center", gap: 16, padding: "0 24px" }}>
-              <span className="text-[11px] font-mono uppercase tracking-[0.14em]" style={{ fontSize: 11, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: "#444" }}>
+              <span className="text-[11px] font-mono uppercase tracking-[0.14em]" style={{ fontSize: 11, fontFamily: "monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: "#64748B" }}>
                 {item}
               </span>
-              <span style={{ color: "#222" }}>◆</span>
+              <span style={{ color: "#CBD5E1" }}>◆</span>
             </span>
           ))}
         </div>
@@ -586,26 +564,26 @@ export default function HomeClient() {
       <section id="why" className="relative z-10 max-w-screen-xl mx-auto px-6 py-28" style={{ position: "relative", zIndex: 10, padding: "112px 24px" }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start" style={{ display: "grid", alignItems: "flex-start" }}>
           <div className="lg:sticky lg:top-24" style={{ position: "sticky", top: 96 }}>
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 24, color: "#555" }}>
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 24, color: "#3B805C" }}>
               00 — Pourquoi CoFlow
             </p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-tight" style={{ fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.25, color: "#e8e8f0" }}>
-              On a construit l'outil<br />
-              qu'on cherchait<br />
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-tight" style={{ fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.25, color: "#1E293B" }}>
+              On a construit l’outil<br />
+              qu’on cherchait<br />
               sans trouver.
             </h2>
-            <p className="mt-6 text-sm leading-relaxed max-w-sm" style={{ marginTop: 24, fontSize: 14, lineHeight: 1.625, maxWidth: 384, color: "#666" }}>
-              Jira est trop lourd. Trello manque de contexte. Notion, c'est un éditeur de texte déguisé. Asana coûte trop cher. On a donc construit CoFlow — focus sur l'essentiel, zéro friction.
+            <p className="mt-6 text-sm leading-relaxed max-w-sm" style={{ marginTop: 24, fontSize: 14, lineHeight: 1.625, maxWidth: 384, color: "#334155" }}>
+              Jira est trop lourd. Trello manque de contexte. Notion, c’est un éditeur de texte déguisé. Asana coûte trop cher. On a donc construit CoFlow — focus sur l’essentiel, zéro friction.
             </p>
           </div>
 
           <div className="space-y-0" style={{ display: "flex", flexDirection: "column" }}>
             {[
-              { removed: true, text: "Des dizaines de modules que personne n'active" },
+              { removed: true, text: "Des dizaines de modules que personne n’active" },
               { removed: false, text: "Un kanban fluide avec les infos qui comptent" },
               { removed: true, text: "Des rapports générés pour remplir des slides" },
               { removed: false, text: "Une progression calculée en temps réel depuis vos tâches" },
-              { removed: true, text: "Des réunions pour parler de l'avancement" },
+              { removed: true, text: "Des réunions pour parler de l’avancement" },
               { removed: false, text: "Une vision globale accessible en un clic" },
               { removed: true, text: "Six outils distincts pour un seul projet" },
               { removed: false, text: "Un seul espace, tous vos projets, toute votre équipe" },
@@ -618,7 +596,7 @@ export default function HomeClient() {
                   alignItems: "flex-start",
                   gap: 16,
                   padding: "16px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  borderBottom: "1px solid rgba(15,23,42,0.07)",
                 }}
               >
                 <span
@@ -628,7 +606,7 @@ export default function HomeClient() {
                     fontFamily: "monospace",
                     flexShrink: 0,
                     marginTop: 2,
-                    color: row.removed ? "#3a3a3a" : "#7c3aed",
+                    color: row.removed ? "#CBD5E1" : "#3B805C",
                   }}
                 >
                   {row.removed ? "✕" : "✓"}
@@ -639,7 +617,7 @@ export default function HomeClient() {
                     fontSize: 14,
                     lineHeight: 1.625,
                     textDecoration: row.removed ? "line-through" : "none",
-                    color: row.removed ? "#3a3a3a" : "#ccc",
+                    color: row.removed ? "#64748B" : "#0F172A",
                   }}
                 >
                   {row.text}
@@ -654,10 +632,10 @@ export default function HomeClient() {
       <section
         id="features"
         className="relative z-10 border-t"
-        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(15,23,42,0.07)", background: "#F0F2F5" }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-24" style={{ padding: "96px 24px" }}>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-20" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 80, color: "#555" }}>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-20" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 80, color: "#3B805C" }}>
             01 — Fonctionnalités
           </p>
 
@@ -667,25 +645,25 @@ export default function HomeClient() {
                 n: "01",
                 title: "Multi-workspaces cloisonnés",
                 desc: "Un workspace par client, par département, par projet. Les droits sont granulaires — un membre peut voir un espace sans en voir un autre. Aucune donnée ne fuite.",
-                accent: "#7c3aed",
+                accent: "#334155",
               },
               {
                 n: "02",
-                title: "Kanban sans chargement parasite",
-                desc: "Vos colonnes sont configurables. Vos cartes ont un titre, une priorité, une assignation, une échéance et une progression. Tout ce qu'il faut, rien de plus.",
-                accent: "#3b82f6",
+                title: "Kanban fluide sans distraction",
+                desc: "Glissez vos cartes entre les colonnes. Filtrez par priorité, assigné ou statut. Pas de rechargement, pas d'attente. L'interface réagit à la vitesse de votre pensée.",
+                accent: "#4D9972",
               },
               {
                 n: "03",
-                title: "Progression calculée automatiquement",
-                desc: "Chaque projet affiche son taux d'avancement en temps réel, calculé depuis le statut de ses tâches. Aucun rapport à remplir manuellement.",
-                accent: "#10b981",
+                title: "Progression automatique calculée",
+                desc: "Chaque tâche accomplie met à jour la jauge du projet. En un coup d'œil, vous savez où en est le sprint sans ouvrir un seul tableur.",
+                accent: "#D97706",
               },
               {
                 n: "04",
-                title: "Collaboration et invitations",
-                desc: "Vous invitez un membre par lien. Il rejoint votre workspace en deux clics. Vous lui attribuez un rôle et des tâches. Terminé.",
-                accent: "#f59e0b",
+                title: "Invitations instantanées & sécurisées",
+                desc: "Générez un lien d'invitation avec un rôle précis (Admin, Membre, Lecteur). Votre collaborateur rejoint le workspace en quelques clics.",
+                accent: "#334155",
               },
             ].map((feat, idx) => (
               <div
@@ -694,7 +672,7 @@ export default function HomeClient() {
                 style={{
                   display: "grid",
                   padding: "40px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  borderBottom: "1px solid rgba(15,23,42,0.07)",
                   cursor: "pointer",
                 }}
                 onMouseEnter={() => setHoveredFeature(idx)}
@@ -709,7 +687,7 @@ export default function HomeClient() {
                       fontWeight: 700,
                       lineHeight: 1,
                       transition: "all 0.3s ease",
-                      color: hoveredFeature === idx ? feat.accent : "rgba(255,255,255,0.06)",
+                      color: hoveredFeature === idx ? feat.accent : "rgba(15,23,42,0.12)",
                     }}
                   >
                     {feat.n}
@@ -723,7 +701,7 @@ export default function HomeClient() {
                       fontWeight: 600,
                       marginBottom: 12,
                       transition: "color 0.2s ease",
-                      color: hoveredFeature === idx ? "#e8e8f0" : "#999",
+                      color: hoveredFeature === idx ? "#0F172A" : "#334155",
                     }}
                   >
                     {feat.title}
@@ -735,7 +713,7 @@ export default function HomeClient() {
                       lineHeight: 1.625,
                       maxWidth: 512,
                       transition: "color 0.2s ease",
-                      color: hoveredFeature === idx ? "#777" : "#444",
+                      color: hoveredFeature === idx ? "#0F172A" : "#475569",
                     }}
                   >
                     {feat.desc}
@@ -750,7 +728,7 @@ export default function HomeClient() {
       {/* ── TESTIMONIALS ── */}
       <section
         className="relative z-10 border-t"
-        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(15,23,42,0.07)" }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-28" style={{ padding: "112px 24px" }}>
           <blockquote>
@@ -761,11 +739,11 @@ export default function HomeClient() {
                 letterSpacing: "-0.03em",
                 lineHeight: 1.25,
                 maxWidth: 896,
-                color: "#e8e8f0",
+                color: "#1E293B",
               }}
             >
               “CoFlow a remplacé trois outils chez nous.<br />
-              <span style={{ color: "#444" }}>Les réunions de cadrage ont été divisées par deux.</span>”
+              <span style={{ color: "#3B805C" }}>Les réunions de cadrage ont été divisées par deux.</span>”
             </p>
             <footer className="mt-8 flex items-center gap-4" style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 16 }}>
               <div
@@ -780,16 +758,16 @@ export default function HomeClient() {
                   fontSize: 14,
                   fontWeight: 700,
                   color: "#fff",
-                  background: "#7c3aed",
+                  background: "#334155",
                 }}
               >
                 SM
               </div>
               <div>
-                <p className="text-sm font-medium" style={{ fontSize: 14, fontWeight: 500, color: "#ccc" }}>
+                <p className="text-sm font-medium" style={{ fontSize: 14, fontWeight: 600, color: "#1E293B" }}>
                   Sarah Miller
                 </p>
-                <p className="text-xs font-mono" style={{ fontSize: 12, fontFamily: "monospace", color: "#555" }}>
+                <p className="text-xs font-mono" style={{ fontSize: 12, fontFamily: "monospace", color: "#475569" }}>
                   Head of Product, PixelNova
                 </p>
               </div>
@@ -803,22 +781,22 @@ export default function HomeClient() {
               display: "grid",
               gap: 32,
               paddingTop: 48,
-              borderTop: "1px solid rgba(255,255,255,0.05)",
+              borderTop: "1px solid rgba(15,23,42,0.07)",
             }}
           >
             <div>
-              <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#666" }}>
+              <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#334155" }}>
                 “L'interface est rapide, propre, sans distraction. C'est exactement ce qu'on cherchait pour notre équipe de développeurs.”
               </p>
-              <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#444" }}>
+              <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
                 Thomas Garnier — CTO, NexGen Studio
               </p>
             </div>
             <div>
-              <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#666" }}>
+              <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#334155" }}>
                 “La gestion multi-workspaces nous permet d'inviter nos clients directement sans compromettre la confidentialité des autres projets.”
               </p>
-              <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#444" }}>
+              <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
                 Camille Roux — Fondatrice, ScaleAgency
               </p>
             </div>
@@ -830,7 +808,7 @@ export default function HomeClient() {
       <section
         id="pricing"
         className="relative z-10 border-t"
-        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(15,23,42,0.07)" }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-24" style={{ padding: "96px 24px" }}>
           <div
@@ -838,10 +816,10 @@ export default function HomeClient() {
             style={{ display: "flex", gap: 24, marginBottom: 56 }}
           >
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 16, color: "#555" }}>
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 16, color: "#3B805C" }}>
                 02 — Tarifs
               </p>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em]" style={{ fontWeight: 700, letterSpacing: "-0.03em", color: "#e8e8f0" }}>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em]" style={{ fontWeight: 700, letterSpacing: "-0.03em", color: "#1E293B" }}>
                 Honnête et sans surprise.
               </h2>
             </div>
@@ -854,8 +832,8 @@ export default function HomeClient() {
                 gap: 4,
                 padding: 4,
                 borderRadius: 8,
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: "rgba(15,23,42,0.04)",
+                border: "1px solid rgba(15,23,42,0.10)",
                 alignSelf: "flex-start",
               }}
             >
@@ -865,13 +843,13 @@ export default function HomeClient() {
                 style={{
                   padding: "6px 14px",
                   fontSize: 12,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   borderRadius: 6,
                   border: "none",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
-                  background: isAnnual ? "transparent" : "#7c3aed",
-                  color: isAnnual ? "#555" : "#fff",
+                  background: isAnnual ? "transparent" : "#334155",
+                  color: isAnnual ? "#475569" : "#fff",
                 }}
               >
                 Mensuel
@@ -882,28 +860,25 @@ export default function HomeClient() {
                 style={{
                   padding: "6px 14px",
                   fontSize: 12,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   borderRadius: 6,
                   border: "none",
                   cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
                   transition: "all 0.15s ease",
-                  background: isAnnual ? "#7c3aed" : "transparent",
-                  color: isAnnual ? "#fff" : "#555",
+                  background: isAnnual ? "#334155" : "transparent",
+                  color: isAnnual ? "#fff" : "#475569",
                 }}
               >
-                Annuel
+                <span>Annuel</span>
                 <span
-                  className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                  className="text-[10px] px-1.5 py-0.5 rounded font-bold"
                   style={{
                     fontSize: 10,
                     padding: "2px 6px",
                     borderRadius: 999,
                     fontWeight: 700,
-                    background: "rgba(16,185,129,0.2)",
-                    color: "#34d399",
+                    background: "rgba(77,153,114,0.12)",
+                    color: "#2D6A4F",
                   }}
                 >
                   −20%
@@ -918,12 +893,13 @@ export default function HomeClient() {
               className="hidden md:grid grid-cols-[1fr_140px_140px_140px] gap-4 pb-4 border-b text-[11px] font-mono uppercase tracking-[0.12em]"
               style={{
                 paddingBottom: 16,
-                borderBottom: "1px solid rgba(255,255,255,0.07)",
+                borderBottom: "1px solid rgba(15,23,42,0.09)",
                 fontSize: 11,
                 fontFamily: "monospace",
                 textTransform: "uppercase",
                 letterSpacing: "0.12em",
-                color: "#444",
+                color: "#475569",
+                fontWeight: 600,
               }}
             >
               <span>Plan</span>
@@ -937,25 +913,25 @@ export default function HomeClient() {
               className="hidden md:grid grid-cols-[1fr_140px_140px_140px] gap-4 py-5 border-b items-center"
               style={{
                 padding: "20px 0",
-                borderBottom: "1px solid rgba(255,255,255,0.07)",
+                borderBottom: "1px solid rgba(15,23,42,0.07)",
                 alignItems: "center",
               }}
             >
-              <span className="text-[11px] font-mono" style={{ fontSize: 11, fontFamily: "monospace", color: "#555" }}>
+              <span className="text-[11px] font-mono" style={{ fontSize: 11, fontFamily: "monospace", color: "#475569", fontWeight: 600 }}>
                 Prix / utilisateur
               </span>
-              <span className="text-center text-xl font-bold" style={{ textAlign: "center", fontSize: 20, fontWeight: 700, color: "#e8e8f0" }}>
+              <span className="text-center text-xl font-bold" style={{ textAlign: "center", fontSize: 20, fontWeight: 700, color: "#1E293B" }}>
                 0€
               </span>
               <span className="text-center" style={{ textAlign: "center" }}>
-                <span className="text-xl font-bold" style={{ fontSize: 20, fontWeight: 700, color: "#a78bfa" }}>
+                <span className="text-xl font-bold" style={{ fontSize: 20, fontWeight: 700, color: "#3B805C" }}>
                   {isAnnual ? "10€" : "12€"}
                 </span>
-                <span className="text-[11px] font-mono block" style={{ fontSize: 11, fontFamily: "monospace", display: "block", color: "#555" }}>
+                <span className="text-[11px] font-mono block" style={{ fontSize: 11, fontFamily: "monospace", display: "block", color: "#475569" }}>
                   /mois
                 </span>
               </span>
-              <span className="text-center text-sm" style={{ textAlign: "center", fontSize: 14, color: "#666" }}>
+              <span className="text-center text-sm font-semibold" style={{ textAlign: "center", fontSize: 14, color: "#334155" }}>
                 Sur mesure
               </span>
             </div>
@@ -976,28 +952,28 @@ export default function HomeClient() {
                 className="grid grid-cols-2 md:grid-cols-[1fr_140px_140px_140px] gap-4 py-3.5 border-b text-sm items-center"
                 style={{
                   padding: "14px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.04)",
+                  borderBottom: "1px solid rgba(15,23,42,0.06)",
                   fontSize: 14,
                   alignItems: "center",
                 }}
               >
-                <span className="text-[13px]" style={{ fontSize: 13, color: "#666" }}>
+                <span className="text-[13px] font-medium" style={{ fontSize: 13, color: "#0F172A" }}>
                   {row.feature}
                 </span>
 
-                <div className="md:hidden flex flex-col gap-0.5 text-right text-[12px]" style={{ display: "flex", flexDirection: "column", gap: 2, textAlign: "right", fontSize: 12, color: "#aaa" }}>
+                <div className="md:hidden flex flex-col gap-0.5 text-right text-[12px]" style={{ display: "flex", flexDirection: "column", gap: 2, textAlign: "right", fontSize: 12, color: "#334155" }}>
                   <span>Starter: {row.starter}</span>
-                  <span style={{ color: "#a78bfa" }}>Pro: {row.pro}</span>
+                  <span style={{ color: "#3B805C", fontWeight: 600 }}>Pro: {row.pro}</span>
                   <span>Ent.: {row.enterprise}</span>
                 </div>
 
-                <span className="hidden md:block text-center text-[13px]" style={{ textAlign: "center", fontSize: 13, color: row.starter === "—" ? "#333" : "#888" }}>
+                <span className="hidden md:block text-center text-[13px]" style={{ textAlign: "center", fontSize: 13, color: row.starter === "—" ? "#CBD5E1" : "#334155" }}>
                   {row.starter}
                 </span>
-                <span className="hidden md:block text-center text-[13px]" style={{ textAlign: "center", fontSize: 13, color: row.pro === "—" ? "#333" : "#a78bfa" }}>
+                <span className="hidden md:block text-center text-[13px] font-semibold" style={{ textAlign: "center", fontSize: 13, color: row.pro === "—" ? "#CBD5E1" : "#3B805C" }}>
                   {row.pro}
                 </span>
-                <span className="hidden md:block text-center text-[13px]" style={{ textAlign: "center", fontSize: 13, color: row.enterprise === "—" ? "#333" : "#888" }}>
+                <span className="hidden md:block text-center text-[13px]" style={{ textAlign: "center", fontSize: 13, color: row.enterprise === "—" ? "#CBD5E1" : "#334155" }}>
                   {row.enterprise}
                 </span>
               </div>
@@ -1040,20 +1016,20 @@ export default function HomeClient() {
       <section
         id="faq"
         className="relative z-10 border-t"
-        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(15,23,42,0.07)" }}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-24" style={{ padding: "96px 24px" }}>
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16" style={{ display: "grid", gap: 64 }}>
             <div className="lg:sticky lg:top-24 self-start" style={{ position: "sticky", top: 96, alignSelf: "flex-start" }}>
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 16, color: "#555" }}>
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 16, color: "#3B805C" }}>
                 03 — FAQ
               </p>
-              <h2 className="text-2xl font-bold tracking-tight" style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.025em", color: "#e8e8f0" }}>
+              <h2 className="text-2xl font-bold tracking-tight" style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.025em", color: "#1E293B" }}>
                 Questions fréquentes.
               </h2>
-              <p className="mt-3 text-sm" style={{ marginTop: 12, fontSize: 14, color: "#555" }}>
+              <p className="mt-3 text-sm" style={{ marginTop: 12, fontSize: 14, color: "#334155" }}>
                 Autre question ?{" "}
-                <Link href="/sign-in" className="underline transition-colors" style={{ textDecoration: "underline", color: "#7c3aed" }}>
+                <Link href="/sign-in" className="underline transition-colors font-semibold" style={{ textDecoration: "underline", color: "#3B805C" }}>
                   Contactez-nous.
                 </Link>
               </p>
@@ -1061,7 +1037,7 @@ export default function HomeClient() {
 
             <div className="space-y-0" style={{ display: "flex", flexDirection: "column" }}>
               {FAQ_ITEMS.map((faq, idx) => (
-                <div key={idx} className="border-b" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                <div key={idx} className="border-b" style={{ borderBottom: "1px solid rgba(15,23,42,0.07)" }}>
                   <button
                     onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                     className="w-full flex items-center justify-between py-5 text-left gap-4 transition-colors group"
@@ -1079,17 +1055,17 @@ export default function HomeClient() {
                     }}
                   >
                     <span
-                      className="text-[14px] font-medium"
-                      style={{ fontSize: 14, fontWeight: 500, color: openFaq === idx ? "#e8e8f0" : "#aaa" }}
+                      className="text-[14px] font-semibold"
+                      style={{ fontSize: 14, fontWeight: 600, color: openFaq === idx ? "#0F172A" : "#1E293B" }}
                     >
                       {faq.q}
                     </span>
-                    <span className="shrink-0" style={{ flexShrink: 0, color: "#555" }}>
+                    <span className="shrink-0" style={{ flexShrink: 0, color: "#475569" }}>
                       {openFaq === idx ? <Minus size={16} /> : <Plus size={16} />}
                     </span>
                   </button>
                   {openFaq === idx && (
-                    <p className="pb-5 text-sm leading-relaxed" style={{ paddingBottom: 20, fontSize: 14, lineHeight: 1.625, color: "#666" }}>
+                    <p className="pb-5 text-sm leading-relaxed" style={{ paddingBottom: 20, fontSize: 14, lineHeight: 1.625, color: "#334155" }}>
                       {faq.a}
                     </p>
                   )}
@@ -1103,30 +1079,52 @@ export default function HomeClient() {
       {/* ── FINAL CTA ── */}
       <section
         className="relative z-10 border-t"
-        style={{ position: "relative", zIndex: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        style={{
+          position: "relative",
+          zIndex: 10,
+          borderTop: "1px solid #E2E8F0",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%)",
+        }}
       >
-        <div className="max-w-screen-xl mx-auto px-6 py-32 text-center" style={{ padding: "128px 24px", textAlign: "center" }}>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-8" style={{ fontFamily: "monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 32, color: "#555" }}>
-            Prêt à commencer ?
-          </p>
-          <h2
-            className="text-4xl sm:text-6xl font-bold tracking-[-0.04em] leading-[1.05] mb-10"
+        <div className="max-w-screen-xl mx-auto px-6 py-28 text-center" style={{ padding: "112px 24px", textAlign: "center" }}>
+          <div
             style={{
+              display: "inline-block",
+              padding: "4px 14px",
+              borderRadius: 999,
+              background: "rgba(77,153,114,0.12)",
+              border: "1px solid rgba(77,153,114,0.25)",
+              color: "#3B805C",
+              fontFamily: "monospace",
+              fontSize: 11,
               fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: 24,
+            }}
+          >
+            Prêt à commencer ?
+          </div>
+          <h2
+            className="text-4xl sm:text-6xl font-bold tracking-[-0.04em] leading-[1.05] mb-8"
+            style={{
+              fontWeight: 800,
               letterSpacing: "-0.04em",
               lineHeight: 1.05,
-              marginBottom: 40,
-              color: "#e8e8f0",
+              marginBottom: 32,
+              color: "#0F172A",
             }}
           >
             Moins d'outils.<br />
             Plus de livraisons.
           </h2>
-          <Link href={isAuthenticated ? "/dashboard" : "/sign-up"} className="lp-btn-final">
-            {isAuthenticated ? "Ouvrir mon workspace" : "Démarrer gratuitement"}
-            <ArrowRight size={16} className="lp-arrow" />
-          </Link>
-          <p className="mt-4 text-xs font-mono" style={{ marginTop: 16, fontSize: 12, fontFamily: "monospace", color: "#444" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+            <Link href={isAuthenticated ? "/dashboard" : "/sign-up"} className="lp-btn-final">
+              {isAuthenticated ? "Ouvrir mon workspace" : "Démarrer gratuitement"}
+              <ArrowRight size={16} className="lp-arrow" />
+            </Link>
+          </div>
+          <p className="mt-4 text-xs font-mono" style={{ marginTop: 16, fontSize: 12.5, fontFamily: "monospace", color: "#475569", fontWeight: 500 }}>
             Sans carte bancaire · Annulation libre · Données hébergées en Europe
           </p>
         </div>
@@ -1135,7 +1133,7 @@ export default function HomeClient() {
       {/* ── FOOTER ── */}
       <footer
         className="border-t relative z-10"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 10 }}
+        style={{ borderTop: "1px solid #E2E8F0", position: "relative", zIndex: 10, background: "#FFFFFF" }}
       >
         <div
           className="max-w-screen-xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-5"
@@ -1148,50 +1146,50 @@ export default function HomeClient() {
           }}
         >
           <Link href="/" className="flex items-center gap-2" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div
-              className="w-6 h-6 rounded-md flex items-center justify-center"
-              style={{
-                width: 24,
-                height: 24,
-                borderRadius: 6,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "linear-gradient(135deg,#7c3aed,#4f46e5)",
-              }}
-            >
-              <Zap size={12} className="text-white" fill="white" color="white" />
-            </div>
-            <span className="text-sm font-semibold" style={{ fontSize: 14, fontWeight: 600, color: "#666" }}>
-              CoFlow
+            <CoFlowLogo size={24} />
+            <span className="text-sm font-bold" style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>
+              Co<span style={{ color: "#3B805C" }}>Flow</span>
             </span>
           </Link>
 
           <nav
-            className="flex flex-wrap items-center justify-center gap-5 text-[12px] font-mono"
+            className="flex flex-wrap items-center justify-center gap-6 text-[13px]"
             style={{
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
               justifyContent: "center",
-              gap: 20,
-              fontSize: 12,
-              fontFamily: "monospace",
-              color: "#444",
+              gap: 24,
+              fontSize: 13,
+              color: "#475569",
+              fontWeight: 500,
             }}
           >
-            <a href="#why" className="hover:text-white transition-colors">Pourquoi CoFlow</a>
-            <a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Tarifs</a>
-            <Link href="/sign-in" className="hover:text-white transition-colors">Connexion</Link>
-            <Link href="/sign-up" className="hover:text-white transition-colors">Inscription</Link>
+            {[
+              { label: "Pourquoi CoFlow", href: "#why" },
+              { label: "Fonctionnalités", href: "#features" },
+              { label: "Tarifs", href: "#pricing" },
+              { label: "Connexion", href: "/sign-in" },
+              { label: "Inscription", href: "/sign-up" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{ color: "#475569", transition: "color 0.15s", textDecoration: "none" }}
+                onMouseOver={(e) => (e.currentTarget.style.color = "#0F172A")}
+                onMouseOut={(e) => (e.currentTarget.style.color = "#475569")}
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
-          <p className="text-[11px] font-mono" style={{ fontSize: 11, fontFamily: "monospace", color: "#333" }}>
-            © {new Date().getFullYear()} CoFlow
+          <p className="text-[11.5px] font-mono" style={{ fontSize: 11.5, fontFamily: "monospace", color: "#475569" }}>
+            © {new Date().getFullYear()} CoFlow · Tous droits réservés
           </p>
         </div>
       </footer>
     </div>
   );
 }
+

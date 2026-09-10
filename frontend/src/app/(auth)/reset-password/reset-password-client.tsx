@@ -55,13 +55,12 @@ export default function ResetPasswordClient() {
     return (
       <div
         style={{
-          background: "rgba(17, 17, 24, 0.75)",
-          backdropFilter: "blur(20px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: 16,
           padding: "40px 32px",
           textAlign: "center",
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
+          boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
         }}
       >
         <div
@@ -79,10 +78,10 @@ export default function ResetPasswordClient() {
         >
           <AlertCircle size={26} />
         </div>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#f1f5f9", margin: "0 0 8px" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1E293B", margin: "0 0 8px" }}>
           Jeton de validation manquant
         </h2>
-        <p style={{ fontSize: 13, color: "#71717a", margin: "0 auto 20px", maxWidth: 300 }}>
+        <p style={{ fontSize: 13, color: "#64748B", margin: "0 auto 20px", maxWidth: 300 }}>
           Le lien utilisé est incomplet ou a expiré. Veuillez refaire une demande de réinitialisation.
         </p>
         <Link
@@ -107,13 +106,12 @@ export default function ResetPasswordClient() {
     return (
       <div
         style={{
-          background: "rgba(17, 17, 24, 0.75)",
-          backdropFilter: "blur(20px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: 16,
           padding: "40px 32px",
           textAlign: "center",
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
+          boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
         }}
       >
         <div
@@ -121,8 +119,8 @@ export default function ResetPasswordClient() {
             width: 54,
             height: 54,
             borderRadius: "50%",
-            background: "rgba(16, 185, 129, 0.12)",
-            color: "#10b981",
+            background: "rgba(77, 153, 114, 0.12)",
+            color: "#4D9972",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -131,10 +129,10 @@ export default function ResetPasswordClient() {
         >
           <CheckCircle2 size={28} />
         </div>
-        <h2 style={{ fontSize: 20, fontWeight: 800, color: "#f1f5f9", margin: "0 0 8px" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: "#1E293B", margin: "0 0 8px" }}>
           Mot de passe modifié !
         </h2>
-        <p style={{ fontSize: 13, color: "#71717a", margin: "0 auto 20px" }}>
+        <p style={{ fontSize: 13, color: "#64748B", margin: "0 auto 20px" }}>
           Redirection automatique vers la connexion...
         </p>
         <Link
@@ -158,12 +156,11 @@ export default function ResetPasswordClient() {
   return (
     <div
       style={{
-        background: "rgba(17, 17, 24, 0.75)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
+        background: "#FFFFFF",
+        border: "1px solid #E2E8F0",
         borderRadius: 16,
         padding: "36px 32px",
-        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.03) inset",
+        boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
         position: "relative",
       }}
     >
@@ -173,27 +170,27 @@ export default function ResetPasswordClient() {
           top: -1,
           left: "20%",
           right: "20%",
-          height: 1,
-          background: "linear-gradient(90deg, transparent, #10b981, transparent)",
+          height: 2,
+          background: "linear-gradient(90deg, transparent, #4D9972, transparent)",
         }}
       />
 
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#f1f5f9", margin: "0 0 6px" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#1E293B", margin: "0 0 6px" }}>
           Nouveau mot de passe
         </h1>
-        <p style={{ fontSize: 13, color: "#71717a", margin: 0 }}>
+        <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
           Choisissez un nouveau mot de passe fort pour sécuriser votre compte.
         </p>
       </div>
 
       <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 6 }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
             Nouveau mot de passe
           </label>
           <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#52525b" }} />
+            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94A3B8" }} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="8 caractères minimum"
@@ -201,10 +198,10 @@ export default function ResetPasswordClient() {
               style={{
                 width: "100%",
                 padding: "10px 38px 10px 36px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.newPassword ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.newPassword ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
               }}
@@ -221,7 +218,7 @@ export default function ResetPasswordClient() {
                 border: "none",
                 padding: 0,
                 cursor: "pointer",
-                color: "#52525b",
+                color: "#94A3B8",
               }}
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -235,11 +232,11 @@ export default function ResetPasswordClient() {
         </div>
 
         <div>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 6 }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
             Confirmer le mot de passe
           </label>
           <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#52525b" }} />
+            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94A3B8" }} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
@@ -247,10 +244,10 @@ export default function ResetPasswordClient() {
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.confirmPassword ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.confirmPassword ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
               }}

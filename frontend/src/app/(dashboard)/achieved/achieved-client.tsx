@@ -23,22 +23,22 @@ export default function AchievedClient() {
       label: "Tâches accomplies",
       value: completedTasks.length,
       icon: CheckCircle2,
-      color: "#10b981",
-      bgColor: "rgba(16, 185, 129, 0.12)",
+      color: "#3B805C",
+      bgColor: "rgba(77, 153, 114, 0.12)",
     },
     {
       label: "Taux de complétion",
       value: `${completionRate}%`,
       icon: TrendingUp,
-      color: "#3b82f6",
-      bgColor: "rgba(59, 130, 246, 0.12)",
+      color: "#334155",
+      bgColor: "rgba(51, 65, 85, 0.1)",
     },
     {
       label: "Total assignées",
       value: allTasks.length,
       icon: Star,
-      color: "#8b5cf6",
-      bgColor: "rgba(139, 92, 246, 0.12)",
+      color: "#64748B",
+      bgColor: "rgba(100, 116, 139, 0.1)",
     },
   ];
 
@@ -49,17 +49,17 @@ export default function AchievedClient() {
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
           <div style={{
             width: 40, height: 40, borderRadius: 10,
-            background: "rgba(16, 185, 129, 0.12)",
+            background: "rgba(77, 153, 114, 0.12)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#10b981",
+            color: "#3B805C",
           }}>
             <CheckCircle2 size={22} />
           </div>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", margin: 0 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", margin: 0, color: "#1E293B" }}>
               Réalisés & Accomplissements
             </h1>
-            <p style={{ fontSize: 13.5, color: "var(--muted-foreground)", margin: "4px 0 0" }}>
+            <p style={{ fontSize: 13.5, color: "#64748B", margin: "4px 0 0" }}>
               Archive de vos tâches menées à bien et projets terminés
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function AchievedClient() {
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="glass-card" style={{ padding: "20px 24px", borderRadius: 12 }}>
+            <div key={s.label} className="glass-card" style={{ padding: "20px 24px", borderRadius: 12, background: "#FFFFFF", border: "1px solid #E2E8F0" }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 8,
                 background: s.bgColor, color: s.color,
@@ -80,10 +80,10 @@ export default function AchievedClient() {
               }}>
                 <Icon size={18} />
               </div>
-              <p style={{ fontSize: 26, fontWeight: 800, margin: 0, color: "var(--foreground)" }}>
+              <p style={{ fontSize: 26, fontWeight: 800, margin: 0, color: "#1E293B" }}>
                 {isLoading ? "—" : s.value}
               </p>
-              <p style={{ fontSize: 12.5, color: "var(--muted-foreground)", margin: "4px 0 0" }}>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: "4px 0 0" }}>
                 {s.label}
               </p>
             </div>
@@ -92,12 +92,12 @@ export default function AchievedClient() {
       </div>
 
       {/* Content */}
-      <div className="glass-card" style={{ borderRadius: 14, padding: "24px 28px" }}>
+      <div className="glass-card" style={{ borderRadius: 14, padding: "24px 28px", background: "#FFFFFF", border: "1px solid #E2E8F0" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>
+          <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0, color: "#1E293B" }}>
             Tâches terminées ({completedTasks.length})
           </h2>
-          <span style={{ fontSize: 12, color: "var(--muted-foreground)" }}>
+          <span style={{ fontSize: 12, color: "#64748B" }}>
             Classées par date d'accomplissement
           </span>
         </div>
@@ -105,26 +105,26 @@ export default function AchievedClient() {
         {isLoading ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[1, 2, 3].map((i) => (
-              <div key={i} style={{ height: 56, borderRadius: 10, background: "rgba(255,255,255,0.03)" }} />
+              <div key={i} style={{ height: 56, borderRadius: 10, background: "#F1F5F9" }} />
             ))}
           </div>
         ) : completedTasks.length === 0 ? (
           <div style={{
             textAlign: "center", padding: "64px 24px",
-            border: "1px dashed rgba(255,255,255,0.08)", borderRadius: 12,
+            border: "1px dashed #CBD5E1", borderRadius: 12,
           }}>
             <div style={{
               width: 52, height: 52, borderRadius: "50%",
-              background: "rgba(16, 185, 129, 0.08)", color: "#10b981",
+              background: "rgba(77, 153, 114, 0.12)", color: "#3B805C",
               display: "flex", alignItems: "center", justifyContent: "center",
               margin: "0 auto 16px",
             }}>
               <CheckCircle2 size={26} />
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 6px" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 6px", color: "#1E293B" }}>
               Aucune tâche terminée pour le moment
             </h3>
-            <p style={{ fontSize: 13, color: "var(--muted-foreground)", maxWidth: 360, margin: "0 auto 20px" }}>
+            <p style={{ fontSize: 13, color: "#64748B", maxWidth: 360, margin: "0 auto 20px" }}>
               Lorsque vous marquez des tâches comme "Done" dans vos projets, elles apparaîtront ici avec vos statistiques de succès.
             </p>
             <Link
@@ -132,9 +132,9 @@ export default function AchievedClient() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "8px 16px", borderRadius: 8,
-                background: "rgba(255,255,255,0.06)", color: "var(--foreground)",
-                fontSize: 13, fontWeight: 500, textDecoration: "none",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "#EEF1F6", color: "#1E293B",
+                fontSize: 13, fontWeight: 600, textDecoration: "none",
+                border: "1px solid #CBD5E1",
               }}
             >
               Voir mes tâches en cours <ArrowUpRight size={14} />
@@ -152,29 +152,29 @@ export default function AchievedClient() {
                   className="card-hover"
                   style={{
                     padding: "16px 20px", borderRadius: 10,
-                    background: "rgba(255,255,255,0.02)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "#F8FAFC",
+                    border: "1px solid #E2E8F0",
                     display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%",
-                      background: "rgba(16, 185, 129, 0.15)", color: "#10b981",
+                      background: "rgba(77, 153, 114, 0.15)", color: "#3B805C",
                       display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                     }}>
                       <CheckCircle2 size={16} />
                     </div>
                     <div style={{ minWidth: 0 }}>
                       <p style={{
-                        fontSize: 14, fontWeight: 600, color: "var(--foreground)",
+                        fontSize: 14, fontWeight: 600, color: "#1E293B",
                         margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                       }}>
                         {task.title}
                       </p>
                       {task.description && (
                         <p style={{
-                          fontSize: 12, color: "var(--muted-foreground)",
+                          fontSize: 12, color: "#64748B",
                           margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                         }}>
                           {task.description}
@@ -185,18 +185,18 @@ export default function AchievedClient() {
 
                   <div style={{ display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
                     {task.updatedAt && (
-                      <span style={{ fontSize: 11.5, color: "#64748b", display: "flex", alignItems: "center", gap: 5 }}>
+                      <span style={{ fontSize: 11.5, color: "#64748B", display: "flex", alignItems: "center", gap: 5 }}>
                         <Calendar size={13} />
                         {new Date(task.updatedAt).toLocaleDateString("fr-FR")}
                       </span>
                     )}
                     <span style={{
                       fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 999,
-                      background: "rgba(16, 185, 129, 0.15)", color: "#10b981",
+                      background: "rgba(77, 153, 114, 0.12)", color: "#3B805C",
                     }}>
                       Terminée
                     </span>
-                    <ArrowUpRight size={15} color="#555" />
+                    <ArrowUpRight size={15} color="#94A3B8" />
                   </div>
                 </div>
               </Link>
@@ -207,3 +207,4 @@ export default function AchievedClient() {
     </div>
   );
 }
+

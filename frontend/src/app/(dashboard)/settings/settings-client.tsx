@@ -81,10 +81,10 @@ export default function SettingsClient() {
     <div style={{ maxWidth: 760, margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9", margin: "0 0 4px" }}>
+        <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B", margin: "0 0 4px" }}>
           Paramètres du compte
         </h1>
-        <p style={{ fontSize: 13.5, color: "#71717a", margin: 0 }}>
+        <p style={{ fontSize: 13.5, color: "#64748B", margin: 0 }}>
           Gérez votre profil public, votre sécurité et vos préférences d'accès.
         </p>
       </div>
@@ -99,6 +99,8 @@ export default function SettingsClient() {
           alignItems: "center",
           gap: 20,
           marginBottom: 24,
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
         }}
       >
         <div
@@ -106,14 +108,14 @@ export default function SettingsClient() {
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.3))",
-            border: "2px solid rgba(124,58,237,0.4)",
+            background: "rgba(77, 153, 114, 0.12)",
+            border: "2px solid rgba(77, 153, 114, 0.25)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: 24,
             fontWeight: 800,
-            color: "#e8e8f0",
+            color: "#3B805C",
             flexShrink: 0,
             overflow: "hidden",
           }}
@@ -127,7 +129,7 @@ export default function SettingsClient() {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 800, color: "#f1f5f9", margin: 0 }}>
+            <h2 style={{ fontSize: 17, fontWeight: 800, color: "#1E293B", margin: 0 }}>
               {user?.name ?? "Chargement..."}
             </h2>
             <span
@@ -136,14 +138,14 @@ export default function SettingsClient() {
                 fontWeight: 600,
                 padding: "2px 8px",
                 borderRadius: 999,
-                background: "rgba(16, 185, 129, 0.12)",
-                color: "#34d399",
+                background: "rgba(77, 153, 114, 0.12)",
+                color: "#3B805C",
               }}
             >
               Compte vérifié
             </span>
           </div>
-          <p style={{ fontSize: 13, color: "#71717a", margin: 0 }}>
+          <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
             {user?.email ?? ""}
           </p>
         </div>
@@ -155,7 +157,7 @@ export default function SettingsClient() {
           display: "flex",
           alignItems: "center",
           gap: 8,
-          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+          borderBottom: "1px solid #E2E8F0",
           marginBottom: 24,
           paddingBottom: 4,
         }}
@@ -168,8 +170,8 @@ export default function SettingsClient() {
             gap: 8,
             padding: "8px 16px",
             borderRadius: 6,
-            background: activeTab === "profile" ? "rgba(255, 255, 255, 0.08)" : "transparent",
-            color: activeTab === "profile" ? "#f1f5f9" : "#71717a",
+            background: activeTab === "profile" ? "#EEF1F6" : "transparent",
+            color: activeTab === "profile" ? "#1E293B" : "#64748B",
             border: "none",
             fontSize: 13,
             fontWeight: 600,
@@ -189,8 +191,8 @@ export default function SettingsClient() {
             gap: 8,
             padding: "8px 16px",
             borderRadius: 6,
-            background: activeTab === "security" ? "rgba(255, 255, 255, 0.08)" : "transparent",
-            color: activeTab === "security" ? "#f1f5f9" : "#71717a",
+            background: activeTab === "security" ? "#EEF1F6" : "transparent",
+            color: activeTab === "security" ? "#1E293B" : "#64748B",
             border: "none",
             fontSize: 13,
             fontWeight: 600,
@@ -205,10 +207,10 @@ export default function SettingsClient() {
 
       {/* Tab 1: Profile */}
       {activeTab === "profile" && (
-        <div className="glass-card" style={{ padding: "28px", borderRadius: 14 }}>
+        <div className="glass-card" style={{ padding: "28px", borderRadius: 14, background: "#FFFFFF", border: "1px solid #E2E8F0" }}>
           <form onSubmit={handleProfile((d) => saveProfile(d))} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 Nom affiché
               </label>
               <input
@@ -216,12 +218,13 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: profileErrors.name ? "1px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.10)",
+                  background: "#FFFFFF",
+                  border: profileErrors.name ? "1px solid #ef4444" : "1px solid #CBD5E1",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13.5,
                   outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                 }}
               />
               {profileErrors.name && (
@@ -232,7 +235,7 @@ export default function SettingsClient() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 URL de photo de profil (facultatif)
               </label>
               <input
@@ -241,12 +244,13 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: profileErrors.profilePicture ? "1px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.10)",
+                  background: "#FFFFFF",
+                  border: profileErrors.profilePicture ? "1px solid #ef4444" : "1px solid #CBD5E1",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13.5,
                   outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                 }}
               />
               {profileErrors.profilePicture && (
@@ -257,7 +261,7 @@ export default function SettingsClient() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 Adresse email associée
               </label>
               <input
@@ -266,15 +270,15 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.01)",
-                  border: "1px solid rgba(255, 255, 255, 0.05)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#71717a",
+                  color: "#64748B",
                   fontSize: 13.5,
                   cursor: "not-allowed",
                 }}
               />
-              <span style={{ fontSize: 11, color: "#52525b", marginTop: 4, display: "block" }}>
+              <span style={{ fontSize: 11, color: "#64748B", marginTop: 4, display: "block" }}>
                 L'adresse email est le principal identifiant de connexion et ne peut pas être changée ici.
               </span>
             </div>
@@ -305,10 +309,10 @@ export default function SettingsClient() {
 
       {/* Tab 2: Security */}
       {activeTab === "security" && (
-        <div className="glass-card" style={{ padding: "28px", borderRadius: 14 }}>
+        <div className="glass-card" style={{ padding: "28px", borderRadius: 14, background: "#FFFFFF", border: "1px solid #E2E8F0" }}>
           <form onSubmit={handlePwd((d) => changePassword(d))} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 Mot de passe actuel
               </label>
               <input
@@ -318,12 +322,13 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: pwdErrors.currentPassword ? "1px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.10)",
+                  background: "#FFFFFF",
+                  border: pwdErrors.currentPassword ? "1px solid #ef4444" : "1px solid #CBD5E1",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13.5,
                   outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                 }}
               />
               {pwdErrors.currentPassword && (
@@ -334,7 +339,7 @@ export default function SettingsClient() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 Nouveau mot de passe
               </label>
               <input
@@ -344,12 +349,13 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: pwdErrors.newPassword ? "1px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.10)",
+                  background: "#FFFFFF",
+                  border: pwdErrors.newPassword ? "1px solid #ef4444" : "1px solid #CBD5E1",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13.5,
                   outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                 }}
               />
               {pwdErrors.newPassword && (
@@ -360,7 +366,7 @@ export default function SettingsClient() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 7 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#334155", marginBottom: 7 }}>
                 Confirmer le nouveau mot de passe
               </label>
               <input
@@ -370,12 +376,13 @@ export default function SettingsClient() {
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: pwdErrors.confirmPassword ? "1px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.10)",
+                  background: "#FFFFFF",
+                  border: pwdErrors.confirmPassword ? "1px solid #ef4444" : "1px solid #CBD5E1",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13.5,
                   outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
                 }}
               />
               {pwdErrors.confirmPassword && (
@@ -408,6 +415,7 @@ export default function SettingsClient() {
           </form>
         </div>
       )}
+
     </div>
   );
 }

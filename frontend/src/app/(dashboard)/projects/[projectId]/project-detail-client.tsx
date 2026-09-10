@@ -15,16 +15,16 @@ import { fetchData, postData } from "@/lib/fetch-util";
 import type { Task, Project } from "@/types";
 
 const STATUS_COLS: { status: string; label: string; color: string; bg: string }[] = [
-  { status: "To Do",       label: "À faire",      color: "#94a3b8", bg: "rgba(148, 163, 184, 0.12)" },
-  { status: "In Progress", label: "En cours",      color: "#60a5fa", bg: "rgba(59, 130, 246, 0.12)" },
-  { status: "Review",      label: "En révision",   color: "#fbbf24", bg: "rgba(245, 158, 11, 0.12)" },
-  { status: "Done",        label: "Terminé",       color: "#34d399", bg: "rgba(16, 185, 129, 0.12)" },
+  { status: "To Do",       label: "À faire",      color: "#475569", bg: "#E2E8F0" },
+  { status: "In Progress", label: "En cours",      color: "#2563EB", bg: "rgba(59, 130, 246, 0.12)" },
+  { status: "Review",      label: "En révision",   color: "#D97706", bg: "rgba(245, 158, 11, 0.12)" },
+  { status: "Done",        label: "Terminé",       color: "#059669", bg: "rgba(16, 185, 129, 0.12)" },
 ];
 
 const PRIORITY_CONFIG: Record<string, { color: string; bg: string }> = {
-  High:   { color: "#f87171", bg: "rgba(239, 68, 68, 0.15)" },
-  Medium: { color: "#fbbf24", bg: "rgba(245, 158, 11, 0.15)" },
-  Low:    { color: "#94a3b8", bg: "rgba(148, 163, 184, 0.15)" },
+  High:   { color: "#DC2626", bg: "rgba(239, 68, 68, 0.12)" },
+  Medium: { color: "#D97706", bg: "rgba(245, 158, 11, 0.12)" },
+  Low:    { color: "#475569", bg: "rgba(100, 116, 139, 0.12)" },
 };
 
 const taskSchema = z.object({
@@ -51,23 +51,23 @@ function CreateTaskModal({
   const { register, handleSubmit, formState: { errors } } = useForm<TaskForm>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      status: (initialStatus as any) || "To Do",
+      status: (initialStatus as "To Do" | "In Progress" | "Review" | "Done") || "To Do",
       priority: "Medium",
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (d: TaskForm) =>
-      postData(`/tasks/${projectId}/create-task`, {
+      postData<Task>(`/tasks/${projectId}/create-task`, {
         ...d,
         assignees: d.assignees ? [d.assignees] : [],
       }),
-    onSuccess: () => {
+    onSuccess: (t) => {
       qc.invalidateQueries({ queryKey: ["project-tasks", projectId] });
-      toast.success("Tâche ajoutée avec succès !");
+      toast.success(`Tâche "${t.title}" ajoutée !`);
       onClose();
     },
-    onError: (err: Error) => toast.error(err.message || "Erreur de création de la tâche"),
+    onError: (err: Error) => toast.error(err.message || "Erreur de création"),
   });
 
   return (
@@ -76,7 +76,7 @@ function CreateTaskModal({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0,0,0,0.75)",
+        background: "rgba(15, 23, 42, 0.45)",
         backdropFilter: "blur(8px)",
         display: "flex",
         alignItems: "center",
@@ -89,22 +89,22 @@ function CreateTaskModal({
         style={{
           width: "100%",
           maxWidth: 480,
-          background: "#111118",
-          border: "1px solid rgba(255, 255, 255, 0.10)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: 16,
           padding: 32,
-          boxShadow: "0 24px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.05) inset",
+          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.15)",
           position: "relative",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#f1f5f9", margin: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#1E293B", margin: 0 }}>
             Nouvelle tâche
           </h2>
           <button
             onClick={onClose}
-            style={{ background: "none", border: "none", padding: 6, color: "#71717a", cursor: "pointer" }}
+            style={{ background: "none", border: "none", padding: 6, color: "#94A3B8", cursor: "pointer" }}
           >
             <X size={18} />
           </button>
@@ -112,7 +112,7 @@ function CreateTaskModal({
 
         <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
               Intitulé de la tâche *
             </label>
             <input
@@ -121,10 +121,10 @@ function CreateTaskModal({
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.title ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.title ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
               }}
@@ -138,7 +138,7 @@ function CreateTaskModal({
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
                 Statut
               </label>
               <select
@@ -146,10 +146,10 @@ function CreateTaskModal({
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "#181822",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13,
                   outline: "none",
                   cursor: "pointer",
@@ -162,7 +162,7 @@ function CreateTaskModal({
             </div>
 
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
                 Priorité
               </label>
               <select
@@ -170,10 +170,10 @@ function CreateTaskModal({
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "#181822",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13,
                   outline: "none",
                   cursor: "pointer",
@@ -187,7 +187,7 @@ function CreateTaskModal({
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
               Date d'échéance *
             </label>
             <input
@@ -196,10 +196,10 @@ function CreateTaskModal({
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.dueDate ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.dueDate ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13,
                 outline: "none",
               }}
@@ -213,7 +213,7 @@ function CreateTaskModal({
 
           {members.length > 0 && (
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
                 Assigner à un membre
               </label>
               <select
@@ -221,10 +221,10 @@ function CreateTaskModal({
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "#181822",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13,
                   outline: "none",
                   cursor: "pointer",
@@ -245,10 +245,10 @@ function CreateTaskModal({
               style={{
                 flex: 1,
                 height: 40,
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "#F1F5F9",
+                border: "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#a1a1aa",
+                color: "#475569",
                 fontSize: 13,
                 fontWeight: 600,
                 cursor: "pointer",
@@ -297,15 +297,16 @@ function KanbanTaskCard({ task }: { task: Task }) {
           borderRadius: 12,
           marginBottom: 10,
           cursor: "pointer",
-          background: "#13131b",
-          border: "1px solid rgba(255, 255, 255, 0.06)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
+          boxShadow: "0 2px 6px rgba(15, 23, 42, 0.04)",
         }}
       >
         <p
           style={{
             fontSize: 13.5,
             fontWeight: 600,
-            color: "#f1f5f9",
+            color: "#1E293B",
             margin: "0 0 10px",
             lineHeight: 1.45,
           }}
@@ -332,7 +333,7 @@ function KanbanTaskCard({ task }: { task: Task }) {
               <span
                 style={{
                   fontSize: 11,
-                  color: isOverdue ? "#ef4444" : "#71717a",
+                  color: isOverdue ? "#DC2626" : "#64748B",
                   display: "flex",
                   alignItems: "center",
                   gap: 4,
@@ -353,14 +354,14 @@ function KanbanTaskCard({ task }: { task: Task }) {
                     width: 22,
                     height: 22,
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.3))",
-                    border: "1px solid rgba(124,58,237,0.5)",
+                    background: "#EEF1F6",
+                    border: "1px solid #CBD5E1",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: 10,
                     fontWeight: 700,
-                    color: "#e8e8f0",
+                    color: "#334155",
                   }}
                   title={a.name}
                 >
@@ -404,7 +405,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#71717a",
+              color: "#64748B",
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
@@ -428,7 +429,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-              <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9", margin: 0 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B", margin: 0 }}>
                 {isLoading ? "Chargement du projet..." : project?.title}
               </h1>
               {project?.status && (
@@ -439,7 +440,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
                     padding: "3px 9px",
                     borderRadius: 999,
                     background: "rgba(59, 130, 246, 0.12)",
-                    color: "#60a5fa",
+                    color: "#2563EB",
                   }}
                 >
                   {project.status}
@@ -447,7 +448,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
               )}
             </div>
             {project?.description && (
-              <p style={{ fontSize: 13.5, color: "#71717a", margin: 0, maxWidth: 650 }}>
+              <p style={{ fontSize: 13.5, color: "#64748B", margin: 0, maxWidth: 650 }}>
                 {project.description}
               </p>
             )}
@@ -479,8 +480,8 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
             <div
               key={status}
               style={{
-                background: "rgba(17, 17, 24, 0.6)",
-                border: "1px solid rgba(255, 255, 255, 0.05)",
+                background: "#F1F5F9",
+                border: "1px solid #E2E8F0",
                 borderRadius: 14,
                 padding: "16px 14px",
                 display: "flex",
@@ -492,7 +493,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, padding: "0 4px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "#e2e8f0", letterSpacing: "0.02em" }}>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B", letterSpacing: "0.02em" }}>
                     {label}
                   </span>
                 </div>
@@ -525,9 +526,9 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
                     style={{
                       padding: "36px 12px",
                       textAlign: "center",
-                      border: "1px dashed rgba(255,255,255,0.06)",
+                      border: "1px dashed #CBD5E1",
                       borderRadius: 10,
-                      color: "#52525b",
+                      color: "#64748B",
                       fontSize: 12,
                     }}
                   >
@@ -546,8 +547,8 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
                   padding: "8px 10px",
                   borderRadius: 8,
                   background: "transparent",
-                  border: "1px dashed rgba(255,255,255,0.08)",
-                  color: "#71717a",
+                  border: "1px dashed #CBD5E1",
+                  color: "#64748B",
                   fontSize: 12,
                   fontWeight: 600,
                   display: "flex",
@@ -559,12 +560,12 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
                   transition: "all 0.15s ease",
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-                  e.currentTarget.style.color = "#e2e8f0";
+                  e.currentTarget.style.background = "#FFFFFF";
+                  e.currentTarget.style.color = "#1E293B";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "#71717a";
+                  e.currentTarget.style.color = "#64748B";
                 }}
               >
                 <Plus size={13} /> Ajouter une tâche

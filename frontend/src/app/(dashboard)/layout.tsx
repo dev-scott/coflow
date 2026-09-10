@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FolderKanban, CheckSquare, Users,
-  Archive, Settings, LogOut, Zap, Plus, Search,
-  Bell, HelpCircle, ExternalLink
+  Archive, Settings, LogOut, Plus,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
+import { CoFlowLogo } from "@/components/logo";
 
 const NAV_MAIN = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -38,14 +38,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#08080d", color: "#f1f5f9" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#F4F6F9", color: "#1E293B" }}>
+
       {/* ── SIDEBAR ── */}
       <aside
         style={{
           width: 240,
           flexShrink: 0,
-          background: "rgba(11, 11, 17, 0.95)",
-          borderRight: "1px solid rgba(255, 255, 255, 0.06)",
+          background: "#FFFFFF",
+          borderRight: "1px solid rgba(15,23,42,0.07)",
           display: "flex",
           flexDirection: "column",
           position: "fixed",
@@ -53,40 +54,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           left: 0,
           bottom: 0,
           zIndex: 40,
-          backdropFilter: "blur(12px)",
         }}
       >
         {/* Logo Section */}
-        <div style={{ padding: "20px 20px 18px", borderBottom: "1px solid rgba(255, 255, 255, 0.06)" }}>
+        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(15,23,42,0.06)" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fff",
-                boxShadow: "0 0 16px rgba(124, 58, 237, 0.35)",
-              }}
-            >
-              <Zap size={16} fill="#fff" />
-            </div>
-            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
-              Co<span style={{ color: "#a78bfa" }}>Flow</span>
+            <CoFlowLogo size={32} />
+            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em", color: "#1E293B" }}>
+              Co<span style={{ color: "#4D9972" }}>Flow</span>
             </span>
           </Link>
         </div>
 
         {/* Navigation Sections */}
-        <div style={{ flex: 1, padding: "16px 12px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ flex: 1, padding: "14px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 18 }}>
+
           {/* Main Links */}
           <div>
             <p style={{
-              fontSize: 10.5, fontWeight: 700, textTransform: "uppercase",
-              letterSpacing: "0.08em", color: "#52525b", padding: "0 10px", marginBottom: 8,
+              fontSize: 10.5, fontWeight: 800, textTransform: "uppercase",
+              letterSpacing: "0.10em", color: "#475569", padding: "0 10px", marginBottom: 6,
             }}>
               Principal
             </p>
@@ -101,24 +88,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 11,
-                      padding: "9px 12px",
-                      borderRadius: 8,
+                      gap: 10,
+                      padding: "8px 12px",
+                      borderRadius: 7,
                       fontSize: 13,
-                      fontWeight: active ? 600 : 500,
-                      color: active ? "#c4b5fd" : "#888899",
+                      fontWeight: active ? 700 : 600,
+                      color: active ? "#2D6A4F" : "#334155",
                       textDecoration: "none",
-                      transition: "all 0.15s ease",
-                      background: active ? "rgba(124, 58, 237, 0.12)" : "transparent",
+                      transition: "all 0.12s ease",
+                      background: active ? "rgba(77,153,114,0.10)" : "transparent",
                     }}
                     onMouseOver={(e) => {
-                      if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                      if (!active) e.currentTarget.style.background = "rgba(15,23,42,0.04)";
                     }}
                     onMouseOut={(e) => {
                       if (!active) e.currentTarget.style.background = "transparent";
                     }}
                   >
-                    <Icon size={16} color={active ? "#a78bfa" : "#71717a"} />
+                    <Icon size={15} color={active ? "#3B805C" : "#64748B"} />
                     {label}
                   </Link>
                 );
@@ -129,8 +116,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Secondary Links */}
           <div>
             <p style={{
-              fontSize: 10.5, fontWeight: 700, textTransform: "uppercase",
-              letterSpacing: "0.08em", color: "#52525b", padding: "0 10px", marginBottom: 8,
+              fontSize: 10.5, fontWeight: 800, textTransform: "uppercase",
+              letterSpacing: "0.10em", color: "#475569", padding: "0 10px", marginBottom: 6,
             }}>
               Organisation
             </p>
@@ -145,24 +132,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: 11,
-                      padding: "9px 12px",
-                      borderRadius: 8,
+                      gap: 10,
+                      padding: "8px 12px",
+                      borderRadius: 7,
                       fontSize: 13,
-                      fontWeight: active ? 600 : 500,
-                      color: active ? "#c4b5fd" : "#888899",
+                      fontWeight: active ? 700 : 600,
+                      color: active ? "#2D6A4F" : "#334155",
                       textDecoration: "none",
-                      transition: "all 0.15s ease",
-                      background: active ? "rgba(124, 58, 237, 0.12)" : "transparent",
+                      transition: "all 0.12s ease",
+                      background: active ? "rgba(77,153,114,0.10)" : "transparent",
                     }}
                     onMouseOver={(e) => {
-                      if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                      if (!active) e.currentTarget.style.background = "rgba(15,23,42,0.04)";
                     }}
                     onMouseOut={(e) => {
                       if (!active) e.currentTarget.style.background = "transparent";
                     }}
                   >
-                    <Icon size={16} color={active ? "#a78bfa" : "#71717a"} />
+                    <Icon size={15} color={active ? "#3B805C" : "#64748B"} />
                     {label}
                   </Link>
                 );
@@ -171,62 +158,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </div>
 
-        {/* User Card in Footer */}
-        <div style={{ padding: "14px 12px", borderTop: "1px solid rgba(255, 255, 255, 0.06)" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "8px 10px",
-              borderRadius: 8,
-              background: "rgba(255, 255, 255, 0.02)",
-              border: "1px solid rgba(255, 255, 255, 0.04)",
-            }}
-          >
-            <div style={{ position: "relative", flexShrink: 0 }}>
+        {/* User Card */}
+        <div style={{ padding: "12px 14px", borderTop: "1px solid rgba(15,23,42,0.06)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ position: "relative" }}>
               <div
                 style={{
                   width: 32,
                   height: 32,
                   borderRadius: "50%",
-                  background: "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.3))",
-                  border: "1px solid rgba(124,58,237,0.4)",
+                  background: "linear-gradient(135deg, #334155, #4D9972)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: 700,
-                  color: "#e8e8f0",
+                  color: "#FFFFFF",
                 }}
               >
                 {user?.name?.charAt(0).toUpperCase() ?? "U"}
               </div>
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: -1,
-                  right: -1,
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: "#10b981",
-                  border: "2px solid #0b0b11",
-                }}
-              />
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{
-                fontSize: 12.5, fontWeight: 600, color: "#f1f5f9", margin: 0,
-                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-              }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "#0F172A", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {user?.name ?? "Utilisateur"}
               </p>
-              <p style={{
-                fontSize: 11, color: "#71717a", margin: 0,
-                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-              }}>
+              <p style={{ fontSize: 11, color: "#475569", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>
                 {user?.email ?? ""}
               </p>
             </div>
@@ -237,19 +195,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               style={{
                 background: "none",
                 border: "none",
-                padding: 6,
-                color: "#71717a",
+                padding: 5,
+                color: "#64748B",
                 cursor: "pointer",
-                borderRadius: 6,
+                borderRadius: 5,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "color 0.15s ease",
+                transition: "color 0.12s ease",
               }}
-              onMouseOver={(e) => e.currentTarget.style.color = "#ef4444"}
-              onMouseOut={(e) => e.currentTarget.style.color = "#71717a"}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#DC2626")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "#64748B")}
             >
-              <LogOut size={15} />
+              <LogOut size={14} />
             </button>
           </div>
         </div>
@@ -257,13 +215,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ── MAIN CONTENT AREA ── */}
       <div style={{ marginLeft: 240, flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
-        {/* Top bar header */}
+
+        {/* Top bar */}
         <header
           style={{
-            height: 60,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-            background: "rgba(8, 8, 13, 0.8)",
-            backdropFilter: "blur(12px)",
+            height: 56,
+            borderBottom: "1px solid rgba(15,23,42,0.07)",
+            background: "#FFFFFF",
             position: "sticky",
             top: 0,
             zIndex: 30,
@@ -271,45 +229,41 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             alignItems: "center",
             justifyContent: "space-between",
             padding: "0 32px",
+            boxShadow: "0 1px 3px rgba(15,23,42,0.06)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 13.5, fontWeight: 600, color: "#e2e8f0" }}>
-              {getPageTitle()}
-            </span>
-          </div>
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+            {getPageTitle()}
+          </span>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Link
-              href="/workspaces"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 12px",
-                borderRadius: 6,
-                background: "rgba(255, 255, 255, 0.05)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#e2e8f0",
-                textDecoration: "none",
-                transition: "all 0.15s ease",
-              }}
-            >
-              <Plus size={13} />
-              Nouveau projet
-            </Link>
-          </div>
+          <Link
+            href="/workspaces"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 14px",
+              borderRadius: 6,
+              background: "#334155",
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#FFFFFF",
+              textDecoration: "none",
+              transition: "background 0.12s ease",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.background = "#1E293B")}
+            onMouseOut={(e) => (e.currentTarget.style.background = "#334155")}
+          >
+            <Plus size={13} />
+            Nouveau projet
+          </Link>
         </header>
 
-        {/* Ambient glow under top bar */}
+        {/* Page content */}
         <div
           style={{
-            position: "relative",
             flex: 1,
             padding: "32px 36px",
-            background: "radial-gradient(circle at 10% 0%, rgba(124, 58, 237, 0.04) 0%, transparent 40%)",
           }}
         >
           {children}

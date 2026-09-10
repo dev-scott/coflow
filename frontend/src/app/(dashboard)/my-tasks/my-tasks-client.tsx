@@ -11,16 +11,16 @@ import { fetchData } from "@/lib/fetch-util";
 import type { Task } from "@/types";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  "To Do":       { label: "À faire", color: "#94a3b8", bg: "rgba(148, 163, 184, 0.12)" },
-  "In Progress": { label: "En cours", color: "#60a5fa", bg: "rgba(59, 130, 246, 0.12)" },
-  "Review":      { label: "En révision", color: "#fbbf24", bg: "rgba(245, 158, 11, 0.12)" },
-  "Done":        { label: "Terminée", color: "#34d399", bg: "rgba(16, 185, 129, 0.12)" },
+  "To Do":       { label: "À faire", color: "#475569", bg: "#EEF1F6" },
+  "In Progress": { label: "En cours", color: "#2563EB", bg: "rgba(59, 130, 246, 0.12)" },
+  "Review":      { label: "En révision", color: "#D97706", bg: "rgba(245, 158, 11, 0.12)" },
+  "Done":        { label: "Terminée", color: "#059669", bg: "rgba(16, 185, 129, 0.12)" },
 };
 
 const PRIORITY_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
-  High:   { color: "#f87171", bg: "rgba(239, 68, 68, 0.12)", label: "Haute" },
-  Medium: { color: "#fbbf24", bg: "rgba(245, 158, 11, 0.12)", label: "Moyenne" },
-  Low:    { color: "#94a3b8", bg: "rgba(148, 163, 184, 0.12)", label: "Basse" },
+  High:   { color: "#DC2626", bg: "rgba(239, 68, 68, 0.12)", label: "Haute" },
+  Medium: { color: "#D97706", bg: "rgba(245, 158, 11, 0.12)", label: "Moyenne" },
+  Low:    { color: "#475569", bg: "rgba(100, 116, 139, 0.12)", label: "Basse" },
 };
 
 function TaskCard({ task }: { task: Task }) {
@@ -41,6 +41,8 @@ function TaskCard({ task }: { task: Task }) {
           justifyContent: "space-between",
           gap: 16,
           cursor: "pointer",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
@@ -58,7 +60,7 @@ function TaskCard({ task }: { task: Task }) {
               flexShrink: 0,
             }}
           >
-            {task.status === "Done" && <Check size={13} color="#000" strokeWidth={3} />}
+            {task.status === "Done" && <Check size={13} color="#fff" strokeWidth={3} />}
           </div>
 
           <div style={{ minWidth: 0 }}>
@@ -66,7 +68,7 @@ function TaskCard({ task }: { task: Task }) {
               style={{
                 fontSize: 14,
                 fontWeight: 600,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 margin: 0,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -81,7 +83,7 @@ function TaskCard({ task }: { task: Task }) {
               <p
                 style={{
                   fontSize: 12,
-                  color: "#71717a",
+                  color: "#64748B",
                   margin: "2px 0 0",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -128,7 +130,7 @@ function TaskCard({ task }: { task: Task }) {
             <span
               style={{
                 fontSize: 11.5,
-                color: isOverdue ? "#ef4444" : "#71717a",
+                color: isOverdue ? "#DC2626" : "#64748B",
                 display: "flex",
                 alignItems: "center",
                 gap: 5,
@@ -139,7 +141,7 @@ function TaskCard({ task }: { task: Task }) {
             </span>
           )}
 
-          <ArrowUpRight size={14} color="#52525b" />
+          <ArrowUpRight size={14} color="#94A3B8" />
         </div>
       </div>
     </Link>
@@ -170,20 +172,20 @@ export default function MyTasksClient() {
   });
 
   const stats = [
-    { label: "À faire", count: todo.length, icon: Clock, color: "#94a3b8", bg: "rgba(148,163,184,0.12)", key: "To Do" },
-    { label: "En cours", count: inProgress.length, icon: CheckSquare, color: "#60a5fa", bg: "rgba(59,130,246,0.12)", key: "In Progress" },
-    { label: "En révision", count: review.length, icon: AlertTriangle, color: "#fbbf24", bg: "rgba(245,158,11,0.12)", key: "Review" },
-    { label: "Terminées", count: done.length, icon: CheckCircle2, color: "#34d399", bg: "rgba(16,185,129,0.12)", key: "Done" },
+    { label: "À faire", count: todo.length, icon: Clock, color: "#475569", bg: "#EEF1F6", key: "To Do" },
+    { label: "En cours", count: inProgress.length, icon: CheckSquare, color: "#2563EB", bg: "rgba(59,130,246,0.12)", key: "In Progress" },
+    { label: "En révision", count: review.length, icon: AlertTriangle, color: "#D97706", bg: "rgba(245,158,11,0.12)", key: "Review" },
+    { label: "Terminées", count: done.length, icon: CheckCircle2, color: "#059669", bg: "rgba(16,185,129,0.12)", key: "Done" },
   ];
 
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       {/* Header */}
       <div style={{ marginBottom: 30 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9", margin: "0 0 4px" }}>
+        <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B", margin: "0 0 4px" }}>
           Mes tâches
         </h1>
-        <p style={{ fontSize: 13.5, color: "#71717a", margin: 0 }}>
+        <p style={{ fontSize: 13.5, color: "#64748B", margin: 0 }}>
           Suivez et organisez toutes les activités qui vous sont personnellement assignées.
         </p>
       </div>
@@ -209,7 +211,8 @@ export default function MyTasksClient() {
               alignItems: "center",
               gap: 14,
               cursor: "pointer",
-              border: filterStatus === key ? `1px solid ${color}` : "1px solid rgba(255,255,255,0.06)",
+              background: "#FFFFFF",
+              border: filterStatus === key ? `2px solid #334155` : "1px solid #E2E8F0",
             }}
           >
             <div
@@ -227,10 +230,10 @@ export default function MyTasksClient() {
               <Icon size={18} color={color} />
             </div>
             <div>
-              <p style={{ fontSize: 22, fontWeight: 800, margin: 0, color: "#f1f5f9" }}>
+              <p style={{ fontSize: 22, fontWeight: 800, margin: 0, color: "#1E293B" }}>
                 {isLoading ? "—" : count}
               </p>
-              <p style={{ fontSize: 11.5, color: "#71717a", margin: 0 }}>{label}</p>
+              <p style={{ fontSize: 11.5, color: "#64748B", margin: 0 }}>{label}</p>
             </div>
           </div>
         ))}
@@ -249,7 +252,7 @@ export default function MyTasksClient() {
       >
         {/* Search */}
         <div style={{ position: "relative", flex: 1, minWidth: 260, maxWidth: 400 }}>
-          <Search size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#52525b" }} />
+          <Search size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94A3B8" }} />
           <input
             type="text"
             placeholder="Filtrer mes tâches par mot-clé..."
@@ -258,10 +261,10 @@ export default function MyTasksClient() {
             style={{
               width: "100%",
               padding: "9px 12px 9px 36px",
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "#F8FAFC",
+              border: "1px solid #E2E8F0",
               borderRadius: 8,
-              color: "#f1f5f9",
+              color: "#1E293B",
               fontSize: 13,
               outline: "none",
             }}
@@ -283,9 +286,9 @@ export default function MyTasksClient() {
                 key={pill.key}
                 onClick={() => setFilterStatus(pill.key)}
                 style={{
-                  background: active ? "rgba(124, 58, 237, 0.2)" : "rgba(255, 255, 255, 0.03)",
-                  border: active ? "1px solid rgba(124, 58, 237, 0.5)" : "1px solid rgba(255, 255, 255, 0.07)",
-                  color: active ? "#c4b5fd" : "#888899",
+                  background: active ? "#334155" : "#F1F5F9",
+                  border: active ? "1px solid #334155" : "1px solid #E2E8F0",
+                  color: active ? "#FFFFFF" : "#475569",
                   padding: "6px 12px",
                   borderRadius: 6,
                   fontSize: 12,
@@ -315,14 +318,14 @@ export default function MyTasksClient() {
             textAlign: "center",
             padding: "60px 24px",
             borderRadius: 14,
-            border: "1px dashed rgba(255,255,255,0.08)",
+            border: "1px dashed #CBD5E1",
           }}
         >
-          <CheckSquare size={36} color="#52525b" style={{ margin: "0 auto 12px" }} />
-          <p style={{ color: "#f1f5f9", fontSize: 14, fontWeight: 600, margin: "0 0 4px" }}>
+          <CheckSquare size={36} color="#94A3B8" style={{ margin: "0 auto 12px" }} />
+          <p style={{ color: "#1E293B", fontSize: 14, fontWeight: 600, margin: "0 0 4px" }}>
             Aucune tâche trouvée
           </p>
-          <p style={{ color: "#71717a", fontSize: 12.5, margin: 0 }}>
+          <p style={{ color: "#64748B", fontSize: 12.5, margin: 0 }}>
             {search || filterStatus !== "all"
               ? "Modifiez vos critères de recherche ou réinitialisez le filtre."
               : "Vous n'avez pas de tâche assignée pour le moment."}

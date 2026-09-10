@@ -15,11 +15,11 @@ import { fetchData, postData } from "@/lib/fetch-util";
 import type { Workspace, Project, WorkspaceStatsResponse } from "@/types";
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
-  Planning:      { color: "#94a3b8", bg: "rgba(148,163,184,0.15)", label: "Planification" },
-  "In Progress": { color: "#60a5fa", bg: "rgba(59,130,246,0.15)", label: "En cours" },
-  "On Hold":     { color: "#fbbf24", bg: "rgba(245,158,11,0.15)", label: "En attente" },
-  Completed:     { color: "#34d399", bg: "rgba(16,185,129,0.15)", label: "Terminé" },
-  Cancelled:     { color: "#f87171", bg: "rgba(239,68,68,0.15)", label: "Annulé" },
+  Planning:      { color: "#475569", bg: "#EEF1F6", label: "Planification" },
+  "In Progress": { color: "#2563EB", bg: "rgba(59,130,246,0.12)", label: "En cours" },
+  "On Hold":     { color: "#D97706", bg: "rgba(245,158,11,0.12)", label: "En attente" },
+  Completed:     { color: "#059669", bg: "rgba(16,185,129,0.12)", label: "Terminé" },
+  Cancelled:     { color: "#DC2626", bg: "rgba(239,68,68,0.12)", label: "Annulé" },
 };
 
 const projectSchema = z.object({
@@ -60,7 +60,7 @@ function CreateProjectModal({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0,0,0,0.75)",
+        background: "rgba(15, 23, 42, 0.45)",
         backdropFilter: "blur(8px)",
         display: "flex",
         alignItems: "center",
@@ -73,22 +73,22 @@ function CreateProjectModal({
         style={{
           width: "100%",
           maxWidth: 460,
-          background: "#111118",
-          border: "1px solid rgba(255, 255, 255, 0.10)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: 16,
           padding: 32,
-          boxShadow: "0 24px 64px rgba(0, 0, 0, 0.7)",
+          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.15)",
           position: "relative",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#f1f5f9", margin: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#1E293B", margin: 0 }}>
             Nouveau projet
           </h2>
           <button
             onClick={onClose}
-            style={{ background: "none", border: "none", padding: 6, color: "#71717a", cursor: "pointer" }}
+            style={{ background: "none", border: "none", padding: 6, color: "#94A3B8", cursor: "pointer" }}
           >
             <X size={18} />
           </button>
@@ -96,7 +96,7 @@ function CreateProjectModal({
 
         <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
               Titre du projet *
             </label>
             <input
@@ -105,10 +105,10 @@ function CreateProjectModal({
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.title ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.title ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
               }}
@@ -121,7 +121,7 @@ function CreateProjectModal({
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+            <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
               Description
             </label>
             <textarea
@@ -131,10 +131,10 @@ function CreateProjectModal({
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
                 resize: "none",
@@ -144,7 +144,7 @@ function CreateProjectModal({
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
                 Statut
               </label>
               <select
@@ -152,10 +152,10 @@ function CreateProjectModal({
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "#181822",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13,
                   outline: "none",
                   cursor: "pointer",
@@ -168,7 +168,7 @@ function CreateProjectModal({
             </div>
 
             <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: 6 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#475569", display: "block", marginBottom: 6 }}>
                 Échéance
               </label>
               <input
@@ -177,10 +177,10 @@ function CreateProjectModal({
                 style={{
                   width: "100%",
                   padding: "10px 12px",
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: 8,
-                  color: "#f1f5f9",
+                  color: "#1E293B",
                   fontSize: 13,
                   outline: "none",
                 }}
@@ -195,10 +195,10 @@ function CreateProjectModal({
               style={{
                 flex: 1,
                 height: 40,
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "#F1F5F9",
+                border: "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#a1a1aa",
+                color: "#475569",
                 fontSize: 13,
                 fontWeight: 600,
                 cursor: "pointer",
@@ -241,8 +241,8 @@ function StatCard({ label, value, icon: Icon, color, bg }: { label: string; valu
         <Icon size={18} />
       </div>
       <div>
-        <p style={{ fontSize: 22, fontWeight: 900, margin: 0, color: "#f1f5f9", letterSpacing: "-0.03em" }}>{value}</p>
-        <p style={{ fontSize: 11.5, color: "#71717a", margin: 0 }}>{label}</p>
+        <p style={{ fontSize: 22, fontWeight: 900, margin: 0, color: "#1E293B", letterSpacing: "-0.03em" }}>{value}</p>
+        <p style={{ fontSize: 11.5, color: "#64748B", margin: 0 }}>{label}</p>
       </div>
     </div>
   );
@@ -273,7 +273,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
           <Link
             href="/workspaces"
             style={{
-              color: "#71717a",
+              color: "#64748B",
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
@@ -302,7 +302,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                   width: 44,
                   height: 44,
                   borderRadius: 12,
-                  background: workspace.color || "#7c3aed",
+                  background: workspace.color || "#4D9972",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -310,18 +310,18 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                   fontWeight: 800,
                   fontSize: 18,
                   flexShrink: 0,
-                  boxShadow: `0 4px 16px ${workspace.color || "#7c3aed"}44`,
+                  boxShadow: `0 4px 14px ${(workspace.color || "#4D9972")}33`,
                 }}
               >
                 {workspace.name.charAt(0).toUpperCase()}
               </div>
             )}
             <div>
-              <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9", margin: 0 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B", margin: 0 }}>
                 {isLoading ? "Chargement…" : workspace?.name}
               </h1>
               {workspace?.description && (
-                <p style={{ fontSize: 13.5, color: "#71717a", margin: "4px 0 0" }}>
+                <p style={{ fontSize: 13.5, color: "#64748B", margin: "4px 0 0" }}>
                   {workspace.description}
                 </p>
               )}
@@ -341,25 +341,26 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
       {/* Stats row */}
       {stats && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, marginBottom: 28 }}>
-          <StatCard label="Projets" value={stats.stats.totalProjects} icon={FolderKanban} color="#a78bfa" bg="rgba(124,58,237,0.12)" />
-          <StatCard label="Tâches actives" value={stats.stats.totalTasks} icon={CheckCircle2} color="#60a5fa" bg="rgba(59,130,246,0.12)" />
-          <StatCard label="En cours" value={stats.stats.totalProjectInProgress} icon={Clock} color="#fbbf24" bg="rgba(245,158,11,0.12)" />
-          <StatCard label="Membres" value={workspace?.members?.length ?? 1} icon={Users} color="#34d399" bg="rgba(16,185,129,0.12)" />
+          <StatCard label="Projets" value={stats.stats.totalProjects} icon={FolderKanban} color="#334155" bg="rgba(51,65,85,0.10)" />
+          <StatCard label="Tâches actives" value={stats.stats.totalTasks} icon={CheckCircle2} color="#2563EB" bg="rgba(59,130,246,0.12)" />
+          <StatCard label="En cours" value={stats.stats.totalProjectInProgress} icon={Clock} color="#D97706" bg="rgba(245,158,11,0.12)" />
+          <StatCard label="Membres" value={workspace?.members?.length ?? 1} icon={Users} color="#059669" bg="rgba(16,185,129,0.12)" />
         </div>
       )}
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 24, padding: "4px", background: "rgba(255,255,255,0.03)", borderRadius: 8, width: "fit-content" }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 24, padding: "4px", background: "#EEF1F6", borderRadius: 8, width: "fit-content" }}>
         <button
           onClick={() => setActiveTab("projects")}
           style={{
             padding: "8px 16px",
             fontSize: 13,
             fontWeight: activeTab === "projects" ? 700 : 500,
-            color: activeTab === "projects" ? "#f1f5f9" : "#71717a",
-            background: activeTab === "projects" ? "rgba(255,255,255,0.08)" : "transparent",
+            color: activeTab === "projects" ? "#1E293B" : "#64748B",
+            background: activeTab === "projects" ? "#FFFFFF" : "transparent",
             border: "none",
             borderRadius: 6,
+            boxShadow: activeTab === "projects" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
@@ -375,10 +376,11 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
             padding: "8px 16px",
             fontSize: 13,
             fontWeight: activeTab === "members" ? 700 : 500,
-            color: activeTab === "members" ? "#f1f5f9" : "#71717a",
-            background: activeTab === "members" ? "rgba(255,255,255,0.08)" : "transparent",
+            color: activeTab === "members" ? "#1E293B" : "#64748B",
+            background: activeTab === "members" ? "#FFFFFF" : "transparent",
             border: "none",
             borderRadius: 6,
+            boxShadow: activeTab === "members" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
@@ -404,14 +406,14 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
               textAlign: "center",
               padding: "70px 24px",
               borderRadius: 16,
-              border: "1px dashed rgba(255,255,255,0.08)",
+              border: "1px dashed #CBD5E1",
             }}
           >
-            <FolderKanban size={40} color="#52525b" style={{ margin: "0 auto 12px" }} />
-            <p style={{ color: "#f1f5f9", fontSize: 15, fontWeight: 700, margin: "0 0 4px" }}>
+            <FolderKanban size={40} color="#94A3B8" style={{ margin: "0 auto 12px" }} />
+            <p style={{ color: "#1E293B", fontSize: 15, fontWeight: 700, margin: "0 0 4px" }}>
               Aucun projet dans cet espace
             </p>
-            <p style={{ color: "#71717a", fontSize: 13, margin: "0 0 18px" }}>
+            <p style={{ color: "#64748B", fontSize: 13, margin: "0 0 18px" }}>
               Lancez votre première initiative pour collaborer avec votre équipe.
             </p>
             <button
@@ -455,7 +457,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                         >
                           {sc.label}
                         </span>
-                        <ArrowRight size={14} color="#52525b" />
+                        <ArrowRight size={14} color="#94A3B8" />
                       </div>
 
                       <h3
@@ -463,7 +465,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                           fontSize: 16,
                           fontWeight: 800,
                           letterSpacing: "-0.02em",
-                          color: "#f1f5f9",
+                          color: "#1E293B",
                           margin: "0 0 6px",
                         }}
                       >
@@ -473,7 +475,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                         <p
                           style={{
                             fontSize: 12.5,
-                            color: "#71717a",
+                            color: "#64748B",
                             margin: 0,
                             lineHeight: 1.5,
                             display: "-webkit-box",
@@ -493,14 +495,14 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                         alignItems: "center",
                         gap: 16,
                         fontSize: 12,
-                        color: "#71717a",
+                        color: "#64748B",
                         paddingTop: 14,
                         marginTop: 14,
-                        borderTop: "1px solid rgba(255, 255, 255, 0.04)",
+                        borderTop: "1px solid #F1F5F9",
                       }}
                     >
                       <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                        <CheckCircle2 size={13} color="#60a5fa" />
+                        <CheckCircle2 size={13} color="#2563EB" />
                         {tasksArr.length} tâche{tasksArr.length !== 1 ? "s" : ""}
                       </span>
                       {p.dueDate && (
@@ -542,23 +544,23 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                       width: 38,
                       height: 38,
                       borderRadius: "50%",
-                      background: "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.3))",
+                      background: "#EEF1F6",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       fontSize: 14,
                       fontWeight: 700,
-                      color: "#a78bfa",
+                      color: "#334155",
                       flexShrink: 0,
                     }}
                   >
                     {u.name?.charAt(0).toUpperCase() ?? "U"}
                   </div>
                   <div>
-                    <p style={{ fontSize: 14, fontWeight: 700, color: "#f1f5f9", margin: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: "#1E293B", margin: 0 }}>
                       {u.name}
                     </p>
-                    <p style={{ fontSize: 12, color: "#71717a", margin: "2px 0 0" }}>
+                    <p style={{ fontSize: 12, color: "#64748B", margin: "2px 0 0" }}>
                       {u.email}
                     </p>
                   </div>
@@ -570,8 +572,8 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                     fontWeight: 600,
                     padding: "3px 10px",
                     borderRadius: 999,
-                    background: "rgba(124, 58, 237, 0.12)",
-                    color: "#a78bfa",
+                    background: "rgba(77, 153, 114, 0.12)",
+                    color: "#3B805C",
                     textTransform: "capitalize",
                   }}
                 >
@@ -592,3 +594,4 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
     </div>
   );
 }
+

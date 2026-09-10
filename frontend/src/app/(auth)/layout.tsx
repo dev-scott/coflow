@@ -1,30 +1,30 @@
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Zap } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock } from "lucide-react";
+import { CoFlowLogo } from "@/components/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#07070c",
+        background: "#F7F8FA",
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
         fontFamily: "var(--font-sans)",
         overflow: "hidden",
       }}
     >
-      {/* ── Ambient Background Glows ── */}
+      {/* ── Subtle decorative background shapes ── */}
       <div
         style={{
           position: "absolute",
-          top: "-10%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "800px",
-          height: "450px",
-          background: "radial-gradient(circle at center, rgba(124, 58, 237, 0.14) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 80%)",
+          top: "-120px",
+          right: "-120px",
+          width: "520px",
+          height: "520px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(77,153,114,0.07) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -32,11 +32,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div
         style={{
           position: "absolute",
-          bottom: "-10%",
-          right: "10%",
-          width: "600px",
-          height: "400px",
-          background: "radial-gradient(circle at center, rgba(124, 58, 237, 0.08) 0%, transparent 70%)",
+          bottom: "-80px",
+          left: "-80px",
+          width: "380px",
+          height: "380px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(51,65,85,0.05) 0%, transparent 70%)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -47,10 +48,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         style={{
           position: "relative",
           zIndex: 10,
-          padding: "24px 32px",
+          padding: "22px 32px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          borderBottom: "1px solid rgba(15,23,42,0.06)",
+          background: "rgba(247,248,250,0.90)",
+          backdropFilter: "blur(8px)",
         }}
       >
         <Link
@@ -62,23 +66,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             textDecoration: "none",
           }}
         >
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 8,
-              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              boxShadow: "0 0 16px rgba(124, 58, 237, 0.4)",
-            }}
-          >
-            <Zap size={18} fill="#fff" />
-          </div>
-          <span style={{ fontSize: 19, fontWeight: 800, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
-            Co<span style={{ color: "#a78bfa" }}>Flow</span>
+          <CoFlowLogo size={32} />
+          <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.02em", color: "#0F172A" }}>
+            Co<span style={{ color: "#3B805C" }}>Flow</span>
           </span>
         </Link>
 
@@ -88,23 +78,24 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            fontSize: 12.5,
-            fontWeight: 500,
-            color: "#888",
-            padding: "6px 14px",
-            borderRadius: 6,
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.07)",
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#334155",
+            padding: "7px 14px",
+            borderRadius: 8,
+            background: "#FFFFFF",
+            border: "1px solid #CBD5E1",
             textDecoration: "none",
             transition: "all 0.15s ease",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
           }}
         >
-          <ArrowLeft size={13} />
+          <ArrowLeft size={14} />
           Retour au site
         </Link>
       </header>
 
-      {/* ── Center Content ── */}
+      {/* ── Center Content (children = form card) ── */}
       <main
         style={{
           position: "relative",
@@ -112,13 +103,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "32px 20px",
+          padding: "40px 20px",
           flex: 1,
         }}
       >
-        <div style={{ width: "100%", maxWidth: 440 }}>
-          {children}
-        </div>
+        {children}
       </main>
 
       {/* ── Footer Trust Marks ── */}
@@ -126,21 +115,27 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         style={{
           position: "relative",
           zIndex: 10,
-          padding: "20px",
+          padding: "18px",
+          borderTop: "1px solid #E2E8F0",
           textAlign: "center",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 16,
-          fontSize: 11.5,
-          color: "#555",
+          gap: 20,
+          fontSize: 12,
+          color: "#475569",
+          fontWeight: 500,
         }}
       >
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-          <ShieldCheck size={13} color="#10b981" /> Chiffrement SSL 256-bit
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <ShieldCheck size={14} color="#3B805C" />
+          Chiffrement SSL 256-bit
         </span>
-        <span>•</span>
-        <span>Hébergement sécurisé & RGPD</span>
+        <span style={{ color: "#CBD5E1" }}>•</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <Lock size={13} color="#475569" />
+          Hébergement sécurisé & RGPD
+        </span>
       </footer>
     </div>
   );

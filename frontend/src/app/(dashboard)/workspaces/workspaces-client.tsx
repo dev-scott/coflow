@@ -12,8 +12,8 @@ import { fetchData, postData } from "@/lib/fetch-util";
 import type { Workspace } from "@/types";
 
 const COLORS = [
-  "#7c3aed", "#06b6d4", "#10b981", "#f59e0b",
-  "#ef4444", "#ec4899", "#3b82f6", "#8b5cf6"
+  "#4D9972", "#334155", "#0284c7", "#059669",
+  "#d97706", "#dc2626", "#6366f1", "#475569"
 ];
 
 const schema = z.object({
@@ -48,7 +48,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0, 0, 0, 0.75)",
+        background: "rgba(15, 23, 42, 0.45)",
         backdropFilter: "blur(8px)",
         display: "flex",
         alignItems: "center",
@@ -61,11 +61,11 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
         style={{
           width: "100%",
           maxWidth: 460,
-          background: "#111118",
-          border: "1px solid rgba(255, 255, 255, 0.10)",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: 16,
           padding: "32px",
-          boxShadow: "0 24px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.05) inset",
+          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.15)",
           position: "relative",
         }}
         onClick={(e) => e.stopPropagation()}
@@ -77,8 +77,8 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
                 width: 32,
                 height: 32,
                 borderRadius: 8,
-                background: "rgba(124, 58, 237, 0.15)",
-                color: "#a78bfa",
+                background: "rgba(77, 153, 114, 0.12)",
+                color: "#4D9972",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -86,7 +86,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
             >
               <FolderKanban size={16} />
             </div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#f1f5f9", margin: 0 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", color: "#1E293B", margin: 0 }}>
               Nouvel espace de travail
             </h2>
           </div>
@@ -96,7 +96,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
               background: "none",
               border: "none",
               padding: 6,
-              color: "#71717a",
+              color: "#94A3B8",
               cursor: "pointer",
               borderRadius: 6,
             }}
@@ -105,13 +105,13 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <p style={{ fontSize: 13, color: "#71717a", margin: "0 0 24px" }}>
+        <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 24px" }}>
           Regroupez vos projets, invitez vos collaborateurs et suivez l'avancement global.
         </p>
 
         <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 6 }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
               Nom de l'espace *
             </label>
             <input
@@ -120,10 +120,10 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: errors.name ? "1px solid #ef4444" : "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: errors.name ? "1px solid #ef4444" : "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
               }}
@@ -136,7 +136,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 6 }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
               Description de l'équipe (optionnel)
             </label>
             <textarea
@@ -146,10 +146,10 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                background: "#F8FAFC",
+                border: "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#f1f5f9",
+                color: "#1E293B",
                 fontSize: 13.5,
                 outline: "none",
                 resize: "none",
@@ -158,7 +158,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#a1a1aa", marginBottom: 10 }}>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 10 }}>
               Thème couleur
             </label>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -173,7 +173,7 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
                     borderRadius: "50%",
                     background: c,
                     border: "none",
-                    outline: selectedColor === c ? `2px solid #fff` : "2px solid transparent",
+                    outline: selectedColor === c ? `2px solid #1E293B` : "2px solid transparent",
                     outlineOffset: 3,
                     cursor: "pointer",
                     transition: "all 0.15s ease",
@@ -191,10 +191,10 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
               style={{
                 flex: 1,
                 height: 42,
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "#F1F5F9",
+                border: "1px solid #E2E8F0",
                 borderRadius: 8,
-                color: "#a1a1aa",
+                color: "#475569",
                 fontSize: 13,
                 fontWeight: 600,
                 cursor: "pointer",
@@ -253,7 +253,7 @@ export default function WorkspacesClient() {
       >
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-            <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9", margin: 0 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B", margin: 0 }}>
               Espaces de travail
             </h1>
             {workspaces && (
@@ -263,15 +263,15 @@ export default function WorkspacesClient() {
                   fontWeight: 700,
                   padding: "2px 8px",
                   borderRadius: 999,
-                  background: "rgba(124, 58, 237, 0.15)",
-                  color: "#a78bfa",
+                  background: "rgba(77, 153, 114, 0.12)",
+                  color: "#3B805C",
                 }}
               >
                 {workspaces.length}
               </span>
             )}
           </div>
-          <p style={{ fontSize: 13.5, color: "#71717a", margin: 0 }}>
+          <p style={{ fontSize: 13.5, color: "#64748B", margin: 0 }}>
             Organisez vos projets et vos équipes par département ou client.
           </p>
         </div>
@@ -300,7 +300,7 @@ export default function WorkspacesClient() {
             textAlign: "center",
             padding: "80px 24px",
             borderRadius: 16,
-            border: "1px dashed rgba(255,255,255,0.08)",
+            border: "1px dashed #CBD5E1",
           }}
         >
           <div
@@ -308,8 +308,8 @@ export default function WorkspacesClient() {
               width: 54,
               height: 54,
               borderRadius: "50%",
-              background: "rgba(124, 58, 237, 0.12)",
-              color: "#a78bfa",
+              background: "rgba(77, 153, 114, 0.12)",
+              color: "#4D9972",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -318,10 +318,10 @@ export default function WorkspacesClient() {
           >
             <FolderKanban size={26} />
           </div>
-          <h3 style={{ fontSize: 17, fontWeight: 700, color: "#f1f5f9", margin: "0 0 6px" }}>
+          <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1E293B", margin: "0 0 6px" }}>
             Aucun espace de travail créé
           </h3>
-          <p style={{ color: "#71717a", fontSize: 13.5, maxWidth: 360, margin: "0 auto 20px" }}>
+          <p style={{ color: "#64748B", fontSize: 13.5, maxWidth: 360, margin: "0 auto 20px" }}>
             Créez votre premier espace de travail pour lancer vos projets et collaborer avec votre équipe.
           </p>
           <button
@@ -336,7 +336,7 @@ export default function WorkspacesClient() {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
           {workspaces.map((ws) => {
-            const wsColor = ws.color || "#7c3aed";
+            const wsColor = ws.color || "#4D9972";
             return (
               <Link key={ws._id} href={`/workspaces/${ws._id}`} style={{ textDecoration: "none" }}>
                 <div
@@ -366,12 +366,12 @@ export default function WorkspacesClient() {
                           fontWeight: 800,
                           fontSize: 16,
                           color: "#fff",
-                          boxShadow: `0 4px 16px ${wsColor}44`,
+                          boxShadow: `0 4px 14px ${wsColor}33`,
                         }}
                       >
                         {ws.name.charAt(0).toUpperCase()}
                       </div>
-                      <ArrowRight size={16} color="#52525b" />
+                      <ArrowRight size={16} color="#94A3B8" />
                     </div>
 
                     <h3
@@ -379,7 +379,7 @@ export default function WorkspacesClient() {
                         fontSize: 17,
                         fontWeight: 800,
                         letterSpacing: "-0.02em",
-                        color: "#f1f5f9",
+                        color: "#1E293B",
                         margin: "0 0 6px",
                       }}
                     >
@@ -388,7 +388,7 @@ export default function WorkspacesClient() {
                     <p
                       style={{
                         fontSize: 13,
-                        color: "#71717a",
+                        color: "#64748B",
                         margin: 0,
                         lineHeight: 1.5,
                         display: "-webkit-box",
@@ -409,11 +409,11 @@ export default function WorkspacesClient() {
                       justifyContent: "space-between",
                       paddingTop: 16,
                       marginTop: 16,
-                      borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+                      borderTop: "1px solid #F1F5F9",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#a1a1aa" }}>
-                      <Users size={13} color="#71717a" />
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#64748B" }}>
+                      <Users size={13} color="#94A3B8" />
                       <span>
                         {ws.members?.length || 1} membre{(ws.members?.length || 1) > 1 ? "s" : ""}
                       </span>
@@ -423,8 +423,8 @@ export default function WorkspacesClient() {
                       style={{
                         fontSize: 11.5,
                         fontWeight: 600,
-                        color: "#a78bfa",
-                        background: "rgba(124, 58, 237, 0.10)",
+                        color: "#3B805C",
+                        background: "rgba(77, 153, 114, 0.10)",
                         padding: "2px 8px",
                         borderRadius: 6,
                       }}
@@ -443,3 +443,4 @@ export default function WorkspacesClient() {
     </div>
   );
 }
+

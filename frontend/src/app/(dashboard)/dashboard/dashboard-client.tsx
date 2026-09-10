@@ -60,11 +60,11 @@ export default function DashboardClient() {
       >
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-            <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.04em", color: "#f1f5f9", margin: 0 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.04em", color: "#1E293B", margin: 0 }}>
               Bonjour, {user?.name?.split(" ")[0] ?? "Collaborateur"} 👋
             </h1>
           </div>
-          <p style={{ fontSize: 14, color: "#71717a", margin: 0 }}>
+          <p style={{ fontSize: 14, color: "#64748B", margin: 0 }}>
             Voici le résumé en direct de vos livrables et de vos espaces collaboratifs.
           </p>
         </div>
@@ -74,10 +74,11 @@ export default function DashboardClient() {
             style={{
               padding: "7px 14px",
               borderRadius: 8,
-              background: "rgba(255, 255, 255, 0.03)",
-              border: "1px solid rgba(255, 255, 255, 0.07)",
+              background: "#EEF1F6",
+              border: "1px solid #E2E8F0",
               fontSize: 12.5,
-              color: "#a1a1aa",
+              fontWeight: 500,
+              color: "#475569",
               textTransform: "capitalize",
             }}
           >
@@ -109,14 +110,14 @@ export default function DashboardClient() {
           style={{ padding: "20px 22px", borderRadius: 14, position: "relative", overflow: "hidden" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#a1a1aa" }}>Tâches actives</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#64748B" }}>Tâches actives</span>
             <div
               style={{
                 width: 34,
                 height: 34,
                 borderRadius: 8,
                 background: "rgba(59, 130, 246, 0.12)",
-                color: "#60a5fa",
+                color: "#2563EB",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -126,10 +127,10 @@ export default function DashboardClient() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
+            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B" }}>
               {tasksLoading ? "—" : activeTasks.length}
             </span>
-            <span style={{ fontSize: 12, color: "#3b82f6", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "#2563EB", fontWeight: 600 }}>
               {inProgressTasks.length} en cours
             </span>
           </div>
@@ -141,14 +142,14 @@ export default function DashboardClient() {
           style={{ padding: "20px 22px", borderRadius: 14, position: "relative", overflow: "hidden" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#a1a1aa" }}>Taux de complétion</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#64748B" }}>Taux de complétion</span>
             <div
               style={{
                 width: 34,
                 height: 34,
                 borderRadius: 8,
-                background: "rgba(16, 185, 129, 0.12)",
-                color: "#34d399",
+                background: "rgba(77, 153, 114, 0.15)",
+                color: "#3B805C",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -158,21 +159,21 @@ export default function DashboardClient() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
+            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B" }}>
               {tasksLoading ? "—" : `${completionRate}%`}
             </span>
-            <span style={{ fontSize: 12, color: "#10b981", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "#3B805C", fontWeight: 600 }}>
               {completedTasks.length} terminées
             </span>
           </div>
           {/* Progress bar */}
-          <div style={{ width: "100%", height: 4, borderRadius: 2, background: "rgba(255,255,255,0.06)" }}>
+          <div style={{ width: "100%", height: 5, borderRadius: 3, background: "#EEF1F6" }}>
             <div
               style={{
                 width: `${completionRate}%`,
                 height: "100%",
-                borderRadius: 2,
-                background: "linear-gradient(90deg, #10b981, #06b6d4)",
+                borderRadius: 3,
+                background: "linear-gradient(90deg, #3B805C, #4D9972)",
                 transition: "width 0.6s ease",
               }}
             />
@@ -185,14 +186,14 @@ export default function DashboardClient() {
           style={{ padding: "20px 22px", borderRadius: 14, position: "relative", overflow: "hidden" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#a1a1aa" }}>Espaces gérés</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#64748B" }}>Espaces gérés</span>
             <div
               style={{
                 width: 34,
                 height: 34,
                 borderRadius: 8,
-                background: "rgba(124, 58, 237, 0.12)",
-                color: "#a78bfa",
+                background: "rgba(51, 65, 85, 0.10)",
+                color: "#334155",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -202,10 +203,10 @@ export default function DashboardClient() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
+            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B" }}>
               {wsLoading ? "—" : workspaces?.length ?? 0}
             </span>
-            <span style={{ fontSize: 12, color: "#8b5cf6", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "#475569", fontWeight: 600 }}>
               Workspaces actifs
             </span>
           </div>
@@ -217,14 +218,14 @@ export default function DashboardClient() {
           style={{ padding: "20px 22px", borderRadius: 14, position: "relative", overflow: "hidden" }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#a1a1aa" }}>Collaborateurs</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#64748B" }}>Collaborateurs</span>
             <div
               style={{
                 width: 34,
                 height: 34,
                 borderRadius: 8,
                 background: "rgba(245, 158, 11, 0.12)",
-                color: "#fbbf24",
+                color: "#D97706",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -234,10 +235,10 @@ export default function DashboardClient() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#f1f5f9" }}>
+            <span style={{ fontSize: 32, fontWeight: 900, letterSpacing: "-0.03em", color: "#1E293B" }}>
               {wsLoading ? "—" : totalMembers}
             </span>
-            <span style={{ fontSize: 12, color: "#f59e0b", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "#D97706", fontWeight: 600 }}>
               Membres d'équipe
             </span>
           </div>
@@ -250,10 +251,10 @@ export default function DashboardClient() {
         <div className="glass-card" style={{ borderRadius: 16, padding: "24px 28px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 4px" }}>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#1E293B", margin: "0 0 4px" }}>
                 Mes tâches prioritaires
               </h2>
-              <p style={{ fontSize: 12.5, color: "#71717a", margin: 0 }}>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>
                 Livrables assignés nécessitant votre attention
               </p>
             </div>
@@ -262,7 +263,7 @@ export default function DashboardClient() {
               style={{
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: "#a78bfa",
+                color: "#3B805C",
                 textDecoration: "none",
                 display: "inline-flex",
                 alignItems: "center",
@@ -276,16 +277,16 @@ export default function DashboardClient() {
           {tasksLoading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[1, 2, 3].map((i) => (
-                <div key={i} style={{ height: 50, borderRadius: 8, background: "rgba(255,255,255,0.03)" }} />
+                <div key={i} style={{ height: 50, borderRadius: 8, background: "#F1F5F9" }} />
               ))}
             </div>
           ) : activeTasks.length === 0 ? (
             <div style={{ padding: "40px 16px", textAlign: "center" }}>
-              <CheckCircle2 size={36} color="#10b981" style={{ margin: "0 auto 12px", opacity: 0.8 }} />
-              <p style={{ fontSize: 14, fontWeight: 600, color: "#e2e8f0", margin: "0 0 4px" }}>
+              <CheckCircle2 size={36} color="#4D9972" style={{ margin: "0 auto 12px" }} />
+              <p style={{ fontSize: 14, fontWeight: 600, color: "#1E293B", margin: "0 0 4px" }}>
                 Vous êtes à jour !
               </p>
-              <p style={{ fontSize: 12.5, color: "#71717a", margin: 0 }}>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>
                 Aucune tâche en attente dans vos projets actuels.
               </p>
             </div>
@@ -302,8 +303,8 @@ export default function DashboardClient() {
                     style={{
                       padding: "12px 16px",
                       borderRadius: 10,
-                      background: "rgba(255, 255, 255, 0.02)",
-                      border: "1px solid rgba(255, 255, 255, 0.05)",
+                      background: "#F8FAFC",
+                      border: "1px solid #E2E8F0",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
@@ -316,15 +317,15 @@ export default function DashboardClient() {
                           width: 8,
                           height: 8,
                           borderRadius: "50%",
-                          background: t.status === "In Progress" ? "#3b82f6" : "#64748b",
+                          background: t.status === "In Progress" ? "#3b82f6" : "#94A3B8",
                           flexShrink: 0,
                         }}
                       />
                       <span
                         style={{
                           fontSize: 13,
-                          fontWeight: 500,
-                          color: "#e2e8f0",
+                          fontWeight: 600,
+                          color: "#1E293B",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -343,16 +344,16 @@ export default function DashboardClient() {
                           borderRadius: 999,
                           background:
                             t.priority === "High"
-                              ? "rgba(239, 68, 68, 0.15)"
+                              ? "rgba(239, 68, 68, 0.12)"
                               : t.priority === "Medium"
-                              ? "rgba(245, 158, 11, 0.15)"
-                              : "rgba(100, 116, 139, 0.15)",
+                              ? "rgba(245, 158, 11, 0.12)"
+                              : "rgba(100, 116, 139, 0.12)",
                           color:
                             t.priority === "High"
-                              ? "#fca5a5"
+                              ? "#DC2626"
                               : t.priority === "Medium"
-                              ? "#fcd34d"
-                              : "#94a3b8",
+                              ? "#D97706"
+                              : "#475569",
                         }}
                       >
                         {t.priority}
@@ -369,10 +370,10 @@ export default function DashboardClient() {
         <div className="glass-card" style={{ borderRadius: 16, padding: "24px 28px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", margin: "0 0 4px" }}>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#1E293B", margin: "0 0 4px" }}>
                 Mes Espaces
               </h2>
-              <p style={{ fontSize: 12.5, color: "#71717a", margin: 0 }}>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>
                 Environnements actifs
               </p>
             </div>
@@ -381,7 +382,7 @@ export default function DashboardClient() {
               style={{
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: "#a78bfa",
+                color: "#3B805C",
                 textDecoration: "none",
                 display: "inline-flex",
                 alignItems: "center",
@@ -395,13 +396,13 @@ export default function DashboardClient() {
           {wsLoading ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[1, 2].map((i) => (
-                <div key={i} style={{ height: 60, borderRadius: 10, background: "rgba(255,255,255,0.03)" }} />
+                <div key={i} style={{ height: 60, borderRadius: 10, background: "#F1F5F9" }} />
               ))}
             </div>
           ) : !workspaces?.length ? (
             <div style={{ padding: "30px 16px", textAlign: "center" }}>
-              <FolderKanban size={32} color="#52525b" style={{ margin: "0 auto 10px" }} />
-              <p style={{ fontSize: 13, color: "#71717a", margin: "0 0 12px" }}>
+              <FolderKanban size={32} color="#94A3B8" style={{ margin: "0 auto 10px" }} />
+              <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 12px" }}>
                 Aucun espace pour le moment.
               </p>
               <Link href="/workspaces" className="lp-btn-nav">
@@ -421,8 +422,8 @@ export default function DashboardClient() {
                     style={{
                       padding: "14px 16px",
                       borderRadius: 10,
-                      background: "rgba(255, 255, 255, 0.02)",
-                      border: "1px solid rgba(255, 255, 255, 0.05)",
+                      background: "#F8FAFC",
+                      border: "1px solid #E2E8F0",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
@@ -436,7 +437,7 @@ export default function DashboardClient() {
                           height: 32,
                           borderRadius: 8,
                           background: ws.color || "#3b82f6",
-                          opacity: 0.85,
+                          opacity: 0.9,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -448,16 +449,16 @@ export default function DashboardClient() {
                         {ws.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p style={{ fontSize: 13.5, fontWeight: 600, color: "#f1f5f9", margin: 0 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 600, color: "#1E293B", margin: 0 }}>
                           {ws.name}
                         </p>
-                        <p style={{ fontSize: 11.5, color: "#71717a", margin: "2px 0 0" }}>
+                        <p style={{ fontSize: 11.5, color: "#64748B", margin: "2px 0 0" }}>
                           {ws.members?.length || 1} membre(s)
                         </p>
                       </div>
                     </div>
 
-                    <ArrowUpRight size={15} color="#52525b" />
+                    <ArrowUpRight size={15} color="#94A3B8" />
                   </div>
                 </Link>
               ))}
