@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>(
     password: { type: String, required: true, select: false },
     name: { type: String, required: true, trim: true },
     profilePicture: { type: String },
-    isEmailVerified: { type: Boolean, default: true },
+    isEmailVerified: { type: Boolean, default: false },
     lastLogin: { type: Date },
     is2FAEnabled: { type: Boolean, default: false },
     twoFAOtp: { type: String, select: false },

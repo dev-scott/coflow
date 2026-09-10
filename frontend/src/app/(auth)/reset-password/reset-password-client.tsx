@@ -8,8 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Lock, Eye, EyeOff, CheckCircle2, ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { Lock, Eye, EyeOff, CheckCircle2, ArrowRight, Loader2, AlertCircle, ShieldCheck } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
+import { CoFlowLogo } from "@/components/logo";
 
 const schema = z
   .object({
@@ -29,6 +30,7 @@ export default function ResetPasswordClient() {
   const router = useRouter();
   const [done, setDone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -55,12 +57,17 @@ export default function ResetPasswordClient() {
     return (
       <div
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
-          borderRadius: 16,
-          padding: "40px 32px",
+          width: "100%",
+          maxWidth: 440,
+          margin: "0 auto",
+          background: "var(--card)",
+          border: "1px solid var(--border)",
+          borderRadius: 20,
+          padding: "36px 32px",
           textAlign: "center",
-          boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
+          boxShadow: "var(--shadow-card)",
+          position: "relative",
+          transition: "background 0.2s ease, border-color 0.2s ease",
         }}
       >
         <div
@@ -68,8 +75,8 @@ export default function ResetPasswordClient() {
             width: 50,
             height: 50,
             borderRadius: "50%",
-            background: "rgba(239, 68, 68, 0.12)",
-            color: "#ef4444",
+            background: "rgba(220, 38, 38, 0.12)",
+            color: "#DC2626",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -78,10 +85,10 @@ export default function ResetPasswordClient() {
         >
           <AlertCircle size={26} />
         </div>
-        <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1E293B", margin: "0 0 8px" }}>
-          Jeton de validation manquant
+        <h2 style={{ fontSize: 19, fontWeight: 800, color: "var(--foreground)", margin: "0 0 8px" }}>
+          Lien de validation manquant
         </h2>
-        <p style={{ fontSize: 13, color: "#64748B", margin: "0 auto 20px", maxWidth: 300 }}>
+        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: "0 auto 20px", maxWidth: 300, lineHeight: 1.5 }}>
           Le lien utilisé est incomplet ou a expiré. Veuillez refaire une demande de réinitialisation.
         </p>
         <Link
@@ -91,7 +98,7 @@ export default function ResetPasswordClient() {
             width: "100%",
             justifyContent: "center",
             height: 42,
-            borderRadius: 8,
+            borderRadius: 10,
             fontSize: 13.5,
             textDecoration: "none",
           }}
@@ -106,12 +113,17 @@ export default function ResetPasswordClient() {
     return (
       <div
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
-          borderRadius: 16,
-          padding: "40px 32px",
+          width: "100%",
+          maxWidth: 440,
+          margin: "0 auto",
+          background: "var(--card)",
+          border: "1px solid var(--border)",
+          borderRadius: 20,
+          padding: "36px 32px",
           textAlign: "center",
-          boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
+          boxShadow: "var(--shadow-card)",
+          position: "relative",
+          transition: "background 0.2s ease, border-color 0.2s ease",
         }}
       >
         <div
@@ -120,7 +132,7 @@ export default function ResetPasswordClient() {
             height: 54,
             borderRadius: "50%",
             background: "rgba(77, 153, 114, 0.12)",
-            color: "#4D9972",
+            color: "#3B805C",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -129,10 +141,10 @@ export default function ResetPasswordClient() {
         >
           <CheckCircle2 size={28} />
         </div>
-        <h2 style={{ fontSize: 20, fontWeight: 800, color: "#1E293B", margin: "0 0 8px" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--foreground)", margin: "0 0 8px" }}>
           Mot de passe modifié !
         </h2>
-        <p style={{ fontSize: 13, color: "#64748B", margin: "0 auto 20px" }}>
+        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: "0 auto 22px" }}>
           Redirection automatique vers la connexion...
         </p>
         <Link
@@ -142,12 +154,12 @@ export default function ResetPasswordClient() {
             width: "100%",
             justifyContent: "center",
             height: 42,
-            borderRadius: 8,
+            borderRadius: 10,
             fontSize: 13.5,
             textDecoration: "none",
           }}
         >
-          Se connecter maintenant
+          Se connecter
         </Link>
       </div>
     );
@@ -156,54 +168,63 @@ export default function ResetPasswordClient() {
   return (
     <div
       style={{
-        background: "#FFFFFF",
-        border: "1px solid #E2E8F0",
-        borderRadius: 16,
+        width: "100%",
+        maxWidth: 440,
+        margin: "0 auto",
+        background: "var(--card)",
+        border: "1px solid var(--border)",
+        borderRadius: 20,
         padding: "36px 32px",
-        boxShadow: "0 16px 40px rgba(15, 23, 42, 0.07)",
+        boxShadow: "var(--shadow-card)",
         position: "relative",
+        transition: "background 0.2s ease, border-color 0.2s ease",
       }}
     >
+      {/* Top green accent line */}
       <div
         style={{
           position: "absolute",
           top: -1,
-          left: "20%",
-          right: "20%",
+          left: "25%",
+          right: "25%",
           height: 2,
-          background: "linear-gradient(90deg, transparent, #4D9972, transparent)",
+          background: "linear-gradient(90deg, transparent, #3B805C, transparent)",
         }}
       />
 
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#1E293B", margin: "0 0 6px" }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+          <CoFlowLogo size={40} />
+        </div>
+        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)", margin: "0 0 6px" }}>
           Nouveau mot de passe
         </h1>
-        <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
-          Choisissez un nouveau mot de passe fort pour sécuriser votre compte.
+        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
+          Définissez un mot de passe sécurisé pour votre compte.
         </p>
       </div>
 
       <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
+          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
             Nouveau mot de passe
           </label>
           <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94A3B8" }} />
+            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="8 caractères minimum"
               {...register("newPassword")}
               style={{
                 width: "100%",
-                padding: "10px 38px 10px 36px",
-                background: "#F8FAFC",
-                border: errors.newPassword ? "1px solid #ef4444" : "1px solid #E2E8F0",
-                borderRadius: 8,
-                color: "#1E293B",
+                padding: "11px 40px 11px 40px",
+                background: "var(--input-bg)",
+                border: errors.newPassword ? "1px solid #DC2626" : "1px solid var(--border)",
+                borderRadius: 10,
+                color: "var(--foreground)",
                 fontSize: 13.5,
                 outline: "none",
+                transition: "border-color 0.15s ease",
               }}
             />
             <button
@@ -216,45 +237,69 @@ export default function ResetPasswordClient() {
                 transform: "translateY(-50%)",
                 background: "none",
                 border: "none",
-                padding: 0,
+                padding: 4,
                 cursor: "pointer",
-                color: "#94A3B8",
+                color: "var(--muted-foreground)",
+                display: "flex",
+                alignItems: "center",
               }}
+              aria-label="Afficher ou masquer le mot de passe"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
           {errors.newPassword && (
-            <p style={{ fontSize: 11.5, color: "#ef4444", marginTop: 4, margin: "4px 0 0" }}>
+            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
               {errors.newPassword.message}
             </p>
           )}
         </div>
 
         <div>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#475569", marginBottom: 6 }}>
+          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
             Confirmer le mot de passe
           </label>
           <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#94A3B8" }} />
+            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
             <input
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Répétez le mot de passe"
               {...register("confirmPassword")}
               style={{
                 width: "100%",
-                padding: "10px 12px 10px 36px",
-                background: "#F8FAFC",
-                border: errors.confirmPassword ? "1px solid #ef4444" : "1px solid #E2E8F0",
-                borderRadius: 8,
-                color: "#1E293B",
+                padding: "11px 40px 11px 40px",
+                background: "var(--input-bg)",
+                border: errors.confirmPassword ? "1px solid #DC2626" : "1px solid var(--border)",
+                borderRadius: 10,
+                color: "var(--foreground)",
                 fontSize: 13.5,
                 outline: "none",
+                transition: "border-color 0.15s ease",
               }}
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                padding: 4,
+                cursor: "pointer",
+                color: "var(--muted-foreground)",
+                display: "flex",
+                alignItems: "center",
+              }}
+              aria-label="Afficher ou masquer la confirmation du mot de passe"
+            >
+              {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
           </div>
           {errors.confirmPassword && (
-            <p style={{ fontSize: 11.5, color: "#ef4444", marginTop: 4, margin: "4px 0 0" }}>
+            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
               {errors.confirmPassword.message}
             </p>
           )}
@@ -267,25 +312,43 @@ export default function ResetPasswordClient() {
           style={{
             width: "100%",
             justifyContent: "center",
-            height: 42,
-            marginTop: 6,
-            borderRadius: 8,
-            fontSize: 13.5,
+            height: 44,
+            borderRadius: 10,
+            fontSize: 14,
+            fontWeight: 700,
+            marginTop: 4,
           }}
         >
           {isPending ? (
             <>
-              <Loader2 size={15} className="animate-spin-slow" />
+              <Loader2 size={16} className="animate-spin-slow" />
               Mise à jour...
             </>
           ) : (
             <>
-              Réinitialiser le mot de passe
-              <ArrowRight size={15} className="lp-arrow" />
+              Enregistrer le nouveau mot de passe
+              <ArrowRight size={16} className="lp-arrow" />
             </>
           )}
         </button>
       </form>
+
+      <div
+        style={{
+          marginTop: 22,
+          paddingTop: 16,
+          borderTop: "1px solid var(--border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 6,
+          fontSize: 11.5,
+          color: "var(--muted-foreground)",
+        }}
+      >
+        <ShieldCheck size={13} color="#3B805C" />
+        <span>Chiffrement SSL 256-bit</span>
+      </div>
     </div>
   );
 }

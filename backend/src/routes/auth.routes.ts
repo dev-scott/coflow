@@ -3,6 +3,7 @@ import {
   registerUser,
   loginUser,
   verifyEmail,
+  resendVerificationEmail,
   resetPasswordRequest,
   verifyResetPasswordTokenAndResetPassword,
 } from "../controllers/auth.controller.js";
@@ -14,6 +15,7 @@ const router = Router();
 router.post("/register", validateBody(registerSchema), registerUser);
 router.post("/login", validateBody(loginSchema), loginUser);
 router.post("/verify-email", validateBody(verifyEmailSchema), verifyEmail);
+router.post("/resend-verification", validateBody(emailSchema), resendVerificationEmail);
 router.post("/reset-password-request", validateBody(emailSchema), resetPasswordRequest);
 router.post("/reset-password", validateBody(resetPasswordSchema), verifyResetPasswordTokenAndResetPassword);
 

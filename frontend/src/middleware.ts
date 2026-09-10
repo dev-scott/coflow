@@ -12,7 +12,7 @@ const PUBLIC_ROUTES = [
 ];
 
 // Routes that authenticated users should NOT access (redirect to dashboard)
-const AUTH_ONLY_ROUTES = ["/sign-in", "/sign-up", "/forgot-password", "/reset-password", "/verify-email"];
+const AUTH_ONLY_ROUTES = ["/sign-in", "/sign-up", "/forgot-password", "/reset-password"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

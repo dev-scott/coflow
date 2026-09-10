@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 export interface IVerification extends Document {
   userId: Types.ObjectId;
   token: string;
+  type?: "email-verification" | "reset-password";
   expiresAt: Date;
   createdAt: Date;
 }
@@ -11,6 +12,11 @@ const verificationSchema = new Schema<IVerification>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     token: { type: String, required: true },
+    type: {
+      type: String,
+      enum: ["email-verification", "reset-password"],
+      default: "email-verification",
+    },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true }

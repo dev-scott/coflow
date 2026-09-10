@@ -10,10 +10,11 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Mail, Lock, Eye, EyeOff, ArrowRight, Loader2,
-  FolderKanban, Sparkles, ShieldCheck
+  ShieldCheck, AlertCircle, Send
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
 import type { AuthResponse } from "@/types";
+import { CoFlowLogo } from "@/components/logo";
 
 const schema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -29,12 +30,13 @@ export default function SignInClient() {
     ? rawFrom
     : "/dashboard";
   const [showPassword, setShowPassword] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: loginMutate, isPending } = useMutation({
     mutationFn: (data: FormData) => postData<AuthResponse>("/auth/login", data),
     onSuccess: async (data) => {
       if (typeof window !== "undefined") {
@@ -53,387 +55,293 @@ export default function SignInClient() {
       toast.success(`Bienvenue, ${data.user.name} !`);
       window.location.href = from;
     },
-    onError: (err: Error) => {
-      toast.error(err.message || "Identifiants invalides");
+    onError: (err: any) => {
+      const msg = err.message || "Identifiants invalides";
+      if (msg.includes("vérifier votre adresse email") || err.emailNotVerified) {
+        setUnverifiedEmail(err.email || null);
+        toast.warning(msg);
+      } else {
+        toast.error(msg);
+      }
     },
   });
 
-  const handleQuickDemo = () => {
-    setValue("email", "demo@example.com");
-    setValue("password", "Password123!");
-    mutate({ email: "demo@example.com", password: "Password123!" });
-  };
+  const { mutate: resendMutate, isPending: isResending } = useMutation({
+    mutationFn: (email: string) => postData<{ message: string }>("/auth/resend-verification", { email }),
+    onSuccess: (data) => {
+      toast.success(data.message || "Email de confirmation renvoyé !");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Impossible de renvoyer l'email");
+    },
+  });
 
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
         width: "100%",
-        maxWidth: 960,
-        borderRadius: 24,
-        overflow: "hidden",
-        background: "#FFFFFF",
-        border: "1px solid #E2E8F0",
-        boxShadow: "0 20px 48px -12px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04)",
+        maxWidth: 440,
+        margin: "0 auto",
+        background: "var(--card)",
+        border: "1px solid var(--border)",
+        borderRadius: 20,
+        padding: "36px 32px",
+        boxShadow: "var(--shadow-card)",
+        position: "relative",
+        transition: "background 0.2s ease, border-color 0.2s ease",
       }}
     >
-      {/* ── Left Column: Clean & Intuitive Form ── */}
+      {/* Top green accent line */}
       <div
         style={{
-          padding: "48px 40px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          background: "#FFFFFF",
+          position: "absolute",
+          top: -1,
+          left: "25%",
+          right: "25%",
+          height: 2,
+          background: "linear-gradient(90deg, transparent, #3B805C, transparent)",
         }}
-      >
-        <div style={{ marginBottom: 28 }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "4px 12px",
-              borderRadius: 999,
-              background: "rgba(77, 153, 114, 0.10)",
-              border: "1px solid rgba(77, 153, 114, 0.22)",
-              color: "#3B805C",
-              fontSize: 11.5,
-              fontWeight: 700,
-              marginBottom: 16,
-            }}
-          >
-            <ShieldCheck size={13} />
-            Espace Sécurisé
-          </div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: "#0F172A", margin: "0 0 8px" }}>
-            Bon retour parmi nous
-          </h1>
-          <p style={{ fontSize: 13.5, color: "#475569", margin: 0, lineHeight: 1.5 }}>
-            Accédez à vos flux de travail et synchronisez vos livrables.
-          </p>
+      />
+
+      {/* Header: Logo & Segmented Tab */}
+      <div style={{ textAlign: "center", marginBottom: 26 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+          <CoFlowLogo size={40} />
         </div>
 
-        {/* ⚡ Prominent 1-Click Demo Button */}
-        <button
-          type="button"
-          onClick={handleQuickDemo}
-          disabled={isPending}
-          style={{
-            width: "100%",
-            padding: "12px 16px",
-            marginBottom: 22,
-            background: "#F8FAFC",
-            border: "1.5px dashed #CBD5E1",
-            borderRadius: 12,
-            color: "#1E293B",
-            fontSize: 13,
-            fontWeight: 700,
-            cursor: isPending ? "not-allowed" : "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            transition: "all 0.15s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.borderColor = "#3B805C";
-            e.currentTarget.style.background = "rgba(77, 153, 114, 0.04)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.borderColor = "#CBD5E1";
-            e.currentTarget.style.background = "#F8FAFC";
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{
-              width: 24, height: 24, borderRadius: 6,
-              background: "rgba(77, 153, 114, 0.15)", color: "#3B805C",
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12
-            }}>
-              ⚡
-            </span>
-            <span>Tester immédiatement (Compte Démo)</span>
-          </div>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              padding: "2px 8px",
-              borderRadius: 6,
-              background: "#334155",
-              color: "#FFFFFF",
-            }}
-          >
-            1-clic
-          </span>
-        </button>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
-          <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
-          <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748B", fontWeight: 600 }}>
-            ou avec vos identifiants
-          </span>
-          <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
-        </div>
-
-        <form onSubmit={handleSubmit((d) => mutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* Email */}
-          <div>
-            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#1E293B", marginBottom: 6 }}>
-              Adresse email
-            </label>
-            <div style={{ position: "relative" }}>
-              <Mail size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#64748B" }} />
-              <input
-                type="email"
-                placeholder="nom@entreprise.com"
-                {...register("email")}
-                style={{
-                  width: "100%",
-                  padding: "11px 12px 11px 38px",
-                  background: "#FFFFFF",
-                  border: errors.email ? "1px solid #DC2626" : "1px solid #CBD5E1",
-                  borderRadius: 10,
-                  color: "#0F172A",
-                  fontSize: 13.5,
-                  outline: "none",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
-                  transition: "border-color 0.15s ease",
-                }}
-              />
-            </div>
-            {errors.email && (
-              <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-              <label style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B" }}>
-                Mot de passe
-              </label>
-              <Link href="/forgot-password" style={{ fontSize: 12, color: "#3B805C", textDecoration: "none", fontWeight: 600 }}>
-                Mot de passe oublié ?
-              </Link>
-            </div>
-            <div style={{ position: "relative" }}>
-              <Lock size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: "#64748B" }} />
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                {...register("password")}
-                style={{
-                  width: "100%",
-                  padding: "11px 40px 11px 38px",
-                  background: "#FFFFFF",
-                  border: errors.password ? "1px solid #DC2626" : "1px solid #CBD5E1",
-                  borderRadius: 10,
-                  color: "#0F172A",
-                  fontSize: 13.5,
-                  outline: "none",
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.02)",
-                  transition: "border-color 0.15s ease",
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  padding: 4,
-                  cursor: "pointer",
-                  color: "#64748B",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                aria-label="Afficher ou masquer le mot de passe"
-              >
-                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-              </button>
-            </div>
-            {errors.password && (
-              <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={isPending}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              height: 44,
-              marginTop: 6,
-              background: isPending ? "#475569" : "#1E293B",
-              color: "#FFFFFF",
-              border: "none",
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 700,
-              cursor: isPending ? "not-allowed" : "pointer",
-              transition: "background 0.15s ease, transform 0.12s ease",
-              boxShadow: "0 2px 6px rgba(30, 41, 59, 0.15)",
-            }}
-          >
-            {isPending ? (
-              <>
-                <Loader2 size={16} className="animate-spin-slow" />
-                Connexion en cours...
-              </>
-            ) : (
-              <>
-                Se connecter
-                <ArrowRight size={16} />
-              </>
-            )}
-          </button>
-        </form>
-
-        <div style={{ marginTop: 24, textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#475569", margin: 0 }}>
-            Pas encore de compte ?{" "}
-            <Link href="/sign-up" style={{ color: "#3B805C", fontWeight: 700, textDecoration: "none" }}>
-              Créer un compte gratuitement
-            </Link>
-          </p>
-        </div>
-      </div>
-
-      {/* ── Right Column: Interactive Workspace Showcase ── */}
-      <div
-        style={{
-          background: "#F8FAFC",
-          padding: "48px 36px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          borderLeft: "1px solid #E2E8F0",
-        }}
-      >
-        <div>
-          {/* Header of Preview */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: 8,
-                background: "rgba(77, 153, 114, 0.12)", color: "#3B805C",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <FolderKanban size={18} />
-              </div>
-              <div>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", margin: 0 }}>
-                  Workspace CoFlow
-                </p>
-                <p style={{ fontSize: 11, color: "#64748B", margin: 0 }}>
-                  Sprint actif · Équipe Produit
-                </p>
-              </div>
-            </div>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 5,
-              fontSize: 11, fontWeight: 600, color: "#3B805C",
-              background: "rgba(77, 153, 114, 0.10)", padding: "3px 8px", borderRadius: 999,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#3B805C" }} />
-              En temps réel
-            </span>
-          </div>
-
-          {/* Interactive Mock Cards */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {/* Card 1 */}
-            <div
-              style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
-                borderRadius: 12,
-                padding: "16px 18px",
-                boxShadow: "0 2px 8px rgba(15, 23, 42, 0.04)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
-                  background: "rgba(77, 153, 114, 0.12)", color: "#3B805C",
-                }}>
-                  En cours
-                </span>
-                <span style={{ fontSize: 11, color: "#64748B", fontWeight: 600 }}>85% terminé</span>
-              </div>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", margin: "0 0 10px" }}>
-                Refonte Design System & Interface
-              </p>
-              <div style={{ height: 6, background: "#EEF1F6", borderRadius: 999, overflow: "hidden" }}>
-                <div style={{ width: "85%", height: "100%", background: "#3B805C", borderRadius: 999 }} />
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div
-              style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
-                borderRadius: 12,
-                padding: "16px 18px",
-                boxShadow: "0 2px 8px rgba(15, 23, 42, 0.04)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
-                  background: "rgba(217, 119, 6, 0.12)", color: "#D97706",
-                }}>
-                  Priorité Haute
-                </span>
-                <span style={{ fontSize: 11, color: "#64748B" }}>Échéance demain</span>
-              </div>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", margin: 0 }}>
-                Synchronisation des livrables clients
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Social Proof / Trust */}
+        {/* Dual Tab: Connexion / Inscription */}
         <div
           style={{
-            marginTop: 28,
-            padding: "14px 16px",
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
-            borderRadius: 12,
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 4,
+            padding: 4,
+            background: "var(--secondary)",
+            borderRadius: 10,
+            border: "1px solid var(--border)",
+            marginBottom: 20,
           }}
         >
-          <div style={{
-            width: 32, height: 32, borderRadius: "50%",
-            background: "rgba(77, 153, 114, 0.12)", color: "#3B805C",
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-          }}>
-            <Sparkles size={16} />
+          <div
+            style={{
+              padding: "8px 0",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: 700,
+              background: "var(--card)",
+              color: "var(--foreground)",
+              borderRadius: 7,
+              boxShadow: "var(--shadow-xs)",
+              cursor: "default",
+            }}
+          >
+            Connexion
           </div>
-          <p style={{ fontSize: 12, color: "#334155", margin: 0, lineHeight: 1.45, fontWeight: 500 }}>
-            <strong style={{ color: "#0F172A" }}>+40% de vélocité</strong> constatée dès les premières semaines d'utilisation en équipe.
-          </p>
+          <Link
+            href="/sign-up"
+            style={{
+              padding: "8px 0",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "var(--muted-foreground)",
+              borderRadius: 7,
+              textDecoration: "none",
+              transition: "all 0.15s ease",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.color = "var(--foreground)")}
+            onMouseOut={(e) => (e.currentTarget.style.color = "var(--muted-foreground)")}
+          >
+            Inscription
+          </Link>
         </div>
+
+        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)", margin: "0 0 6px" }}>
+          Connexion à CoFlow
+        </h1>
+        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
+          Accédez à vos projets et synchronisez votre équipe.
+        </p>
+      </div>
+
+      {/* Alerte Email non vérifié */}
+      {unverifiedEmail && (
+        <div
+          style={{
+            marginBottom: 20,
+            padding: "12px 14px",
+            borderRadius: 10,
+            background: "rgba(217, 119, 6, 0.10)",
+            border: "1px solid rgba(217, 119, 6, 0.25)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <AlertCircle size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />
+            <p style={{ fontSize: 12.5, color: "var(--foreground)", margin: 0, lineHeight: 1.45 }}>
+              Votre compte n&apos;est pas encore activé. Veuillez cliquer sur le lien envoyé à <strong>{unverifiedEmail}</strong>.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => resendMutate(unverifiedEmail)}
+            disabled={isResending}
+            style={{
+              alignSelf: "flex-start",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#D97706",
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: isResending ? "not-allowed" : "pointer",
+            }}
+          >
+            <Send size={12} />
+            {isResending ? "Envoi en cours..." : "Renvoyer l'email d'activation"}
+          </button>
+        </div>
+      )}
+
+      {/* Formulaire de connexion direct */}
+      <form onSubmit={handleSubmit((d) => loginMutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Email */}
+        <div>
+          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
+            Adresse email
+          </label>
+          <div style={{ position: "relative" }}>
+            <Mail size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+            <input
+              type="email"
+              placeholder="nom@entreprise.com"
+              {...register("email")}
+              style={{
+                width: "100%",
+                padding: "11px 14px 11px 40px",
+                background: "var(--input-bg)",
+                border: errors.email ? "1px solid #DC2626" : "1px solid var(--border)",
+                borderRadius: 10,
+                color: "var(--foreground)",
+                fontSize: 13.5,
+                outline: "none",
+                transition: "border-color 0.15s ease",
+              }}
+            />
+          </div>
+          {errors.email && (
+            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Mot de passe */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+            <label style={{ fontSize: 12.5, fontWeight: 700, color: "var(--foreground)" }}>
+              Mot de passe
+            </label>
+            <Link href="/forgot-password" style={{ fontSize: 12, color: "#3B805C", textDecoration: "none", fontWeight: 600 }}>
+              Mot de passe oublié ?
+            </Link>
+          </div>
+          <div style={{ position: "relative" }}>
+            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              {...register("password")}
+              style={{
+                width: "100%",
+                padding: "11px 40px 11px 40px",
+                background: "var(--input-bg)",
+                border: errors.password ? "1px solid #DC2626" : "1px solid var(--border)",
+                borderRadius: 10,
+                color: "var(--foreground)",
+                fontSize: 13.5,
+                outline: "none",
+                transition: "border-color 0.15s ease",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "none",
+                border: "none",
+                padding: 4,
+                cursor: "pointer",
+                color: "var(--muted-foreground)",
+                display: "flex",
+                alignItems: "center",
+              }}
+              aria-label="Afficher ou masquer le mot de passe"
+            >
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+          {errors.password && (
+            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Bouton de connexion */}
+        <button
+          type="submit"
+          disabled={isPending}
+          className="lp-btn-primary"
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            height: 44,
+            borderRadius: 10,
+            fontSize: 14,
+            fontWeight: 700,
+            marginTop: 6,
+          }}
+        >
+          {isPending ? (
+            <>
+              <Loader2 size={16} className="animate-spin-slow" />
+              Connexion en cours...
+            </>
+          ) : (
+            <>
+              Se connecter
+              <ArrowRight size={16} className="lp-arrow" />
+            </>
+          )}
+        </button>
+      </form>
+
+      {/* Trust mark footer */}
+      <div
+        style={{
+          marginTop: 22,
+          paddingTop: 16,
+          borderTop: "1px solid var(--border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+          fontSize: 11.5,
+          color: "var(--muted-foreground)",
+        }}
+      >
+        <ShieldCheck size={13} color="#3B805C" />
+        <span>Connexion sécurisée & chiffrée SSL</span>
       </div>
     </div>
   );
