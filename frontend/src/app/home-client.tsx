@@ -165,7 +165,7 @@ export default function HomeClient() {
       style={{ background: "#F7F8FA", color: "#1E293B" }}
     >
       {/* Subtle top-right decorative circle */}
-      <div
+      {/* <div
         aria-hidden="true"
         style={{
           position: "fixed",
@@ -178,7 +178,7 @@ export default function HomeClient() {
           pointerEvents: "none",
           zIndex: 0,
         }}
-      />
+      /> */}
 
       {/* ── HEADER ── */}
       <header
