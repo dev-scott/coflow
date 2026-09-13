@@ -406,7 +406,7 @@ export default function DashboardClient() {
                 Aucun espace pour le moment.
               </p>
               <Link href="/workspaces" className="lp-btn-nav">
-                + Nouveau workspace
+                + Nouvel espace
               </Link>
             </div>
           ) : (

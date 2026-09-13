@@ -184,12 +184,12 @@ export function UpgradeModal({ isOpen, open, onClose, userPlanStatus }: UpgradeM
           }}
         >
           {[
-            "Workspaces d'équipe illimités",
-            "Membres & invités illimités",
-            "Kanban fluide sans aucune limite",
-            "Analytics & suivi de vélocité",
-            "Historique complet sans expiration",
-            "Support prioritaire dédié",
+            "Espaces de travail d'équipe illimités",
+            "Collaborateurs & invités illimités",
+            "Tableaux Kanban & Projets sans limite",
+            "Suivi de progression en temps réel",
+            "Archivage & historique complet",
+            "Support prioritaire & assistance WhatsApp",
           ].map((perk, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--foreground)", fontWeight: 500 }}>
               <div

@@ -282,7 +282,7 @@ export default function WorkspacesClient() {
           style={{ height: 40, borderRadius: 8, fontSize: 13 }}
         >
           <Plus size={15} />
-          Nouveau workspace
+          Nouvel espace
         </button>
       </div>
 
@@ -330,7 +330,7 @@ export default function WorkspacesClient() {
             style={{ borderRadius: 8, height: 40, margin: "0 auto" }}
           >
             <Plus size={15} />
-            Créer un workspace
+            Créer un espace
           </button>
         </div>
       ) : (

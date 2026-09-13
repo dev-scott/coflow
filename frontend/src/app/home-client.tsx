@@ -20,33 +20,33 @@ import { UpgradeModal } from "@/components/upgrade-modal";
 const FAQ_ITEMS = [
   {
     q: "C'est gratuit pour commencer ?",
-    a: "Oui. Le plan Starter est gratuit sans limite dans le temps — 3 workspaces, 5 membres, kanban illimité. Aucune carte bancaire.",
+    a: "Oui. Le plan Starter est gratuit sans limite dans le temps — 3 espaces de travail, 5 membres, kanban illimité. Aucune carte bancaire requise.",
   },
   {
     q: "Comment inviter mon équipe ?",
-    a: "Chaque workspace génère un lien d'invitation unique. Vos collègues rejoignent en deux clics après connexion ou inscription.",
+    a: "Chaque espace de travail génère un lien d'invitation sécurisé. Vos collaborateurs rejoignent votre projet en deux clics.",
   },
   {
-    q: "On peut personnaliser les statuts des tâches ?",
-    a: "Vous avez quatre statuts (À faire, En cours, En revue, Terminé) et quatre niveaux de priorité. Vous organisez votre flux comme vous le voulez.",
+    q: "Peut-on personnaliser les statuts des tâches ?",
+    a: "Vous disposez de quatre statuts clairs (À faire, En cours, En révision, Terminé) et de priorités configurables. Vous organisez votre flux selon vos besoins réels.",
   },
   {
-    q: "Et si j'ai besoin de plus de workspaces ?",
-    a: "Le plan Pro déverrouille les workspaces illimités, les membres illimités et les analytics avancées pour 10€/utilisateur/mois (facturation annuelle).",
+    q: "Et si j'ai besoin de plus d'espaces de travail ?",
+    a: "Le plan Pro déverrouille les espaces de travail illimités, les collaborateurs illimités et la gestion multi-projets complète à 6 500 FCFA/mois (ou 10€/mois avec -20% en annuel). Vous disposez de 14 jours d'essai gratuit sans carte bancaire.",
   },
 ];
 
 const MARQUEE_ITEMS = [
-  "Multi-workspaces",
+  "Multi-espaces de travail",
   "Kanban sans friction",
   "Suivi en temps réel",
   "Assignation nominative",
   "Priorités personnalisées",
   "Progression automatique",
   "Invitations sécurisées",
-  "Interface rapide",
+  "Interface ultra-rapide",
   "Zéro abonnement inutile",
-  "Données hébergées en Europe",
+  "Données sécurisées & synchronisées",
 ];
 
 interface PreviewCard {
@@ -85,8 +85,8 @@ export default function HomeClient() {
       dot: "#64748b",
       cards: [
         {
-          label: "Refactoriser Header",
-          tag: "Frontend",
+          label: "Lancement campagne d'acquisition",
+          tag: "Marketing",
           tagBg: "rgba(59,130,246,0.10)",
           tagFg: "#2563EB",
           priority: "Moyenne",
@@ -96,7 +96,7 @@ export default function HomeClient() {
           ava: "#334155",
         },
         {
-          label: "Refonte Design System",
+          label: "Validation maquettes interface",
           tag: "Design",
           tagBg: "rgba(77,153,114,0.12)",
           tagFg: "#3B805C",
@@ -114,20 +114,20 @@ export default function HomeClient() {
       pulse: true,
       cards: [
         {
-          label: "Flux invitation sécurisé",
-          tag: "Auth",
-          tagBg: "rgba(16,185,129,0.12)",
-          tagFg: "#059669",
+          label: "Préparation du pitch partenaire",
+          tag: "Stratégie",
+          tagBg: "rgba(245,158,11,0.12)",
+          tagFg: "#D97706",
           priority: "Haute",
           pBg: "rgba(239,68,68,0.12)",
           pFg: "#DC2626",
           assignee: "ML",
           ava: "#334155",
-          progress: 70,
+          progress: 75,
         },
         {
-          label: "Graphiques de vélocité",
-          tag: "Analytics",
+          label: "Tableau de suivi des objectifs Q4",
+          tag: "Gestion",
           tagBg: "rgba(77,153,114,0.10)",
           tagFg: "#3B805C",
           priority: "Basse",
@@ -143,16 +143,16 @@ export default function HomeClient() {
       dot: "#10b981",
       cards: [
         {
-          label: "Migration React 19",
-          tag: "Infra",
+          label: "Signature accord de distribution",
+          tag: "Direction",
           tagBg: "rgba(100,116,139,0.1)",
           tagFg: "#64748b",
           done: true,
           closedAt: "Il y a 2h",
         },
         {
-          label: "Auth JWT & sessions",
-          tag: "Auth",
+          label: "Onboarding nouveaux collaborateurs",
+          tag: "RH",
           tagBg: "rgba(100,116,139,0.1)",
           tagFg: "#64748b",
           done: true,
@@ -351,9 +351,9 @@ export default function HomeClient() {
             </div>
 
             <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-[12px] font-mono" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", gap: "8px 24px", fontSize: 12, fontFamily: "monospace", color: "#475569", fontWeight: 500 }}>
-              <span>→ Aucune carte bancaire</span>
-              <span>→ Setup en 30 secondes</span>
-              <span>→ Données hébergées en Europe</span>
+              <span>→ Aucune carte bancaire requise</span>
+              <span>→ Démarrage en 30 secondes</span>
+              <span>→ Données sécurisées & synchronisées</span>
             </div>
           </div>
 
@@ -385,7 +385,7 @@ export default function HomeClient() {
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
                 <span className="ml-3 font-mono text-[11px]" style={{ marginLeft: 12, fontFamily: "monospace", fontSize: 11, color: "#94A3B8" }}>
-                  coflow.app / ws / core-platform
+                  coflow.app / workspace / agence-croissance
                 </span>
               </div>
 
@@ -789,15 +789,15 @@ export default function HomeClient() {
           >
             <div>
               <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#334155" }}>
-                “L'interface est rapide, propre, sans distraction. C'est exactement ce qu'on cherchait pour notre équipe de développeurs.”
+                “L'interface est rapide, propre, sans distraction. C'est exactement ce qu'on cherchait pour coordonner nos collaborateurs sans lourdeur inutile.”
               </p>
               <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
-                Thomas Garnier — CTO, NexGen Studio
+                Thomas Garnier — Directeur Technique, NexGen Studio
               </p>
             </div>
             <div>
               <p className="text-sm leading-relaxed" style={{ fontSize: 14, lineHeight: 1.625, color: "#334155" }}>
-                “La gestion multi-workspaces nous permet d'inviter nos clients directement sans compromettre la confidentialité des autres projets.”
+                “La gestion multi-espaces nous permet de collaborer avec nos clients et prestataires en toute sérénité sans mélanger nos dossiers.”
               </p>
               <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
                 Camille Roux — Fondatrice, ScaleAgency
@@ -921,17 +921,22 @@ export default function HomeClient() {
               }}
             >
               <span className="text-[11px] font-mono" style={{ fontSize: 11, fontFamily: "monospace", color: "#475569", fontWeight: 600 }}>
-                Prix / utilisateur
+                Tarif mensuel
               </span>
-              <span className="text-center text-xl font-bold" style={{ textAlign: "center", fontSize: 20, fontWeight: 700, color: "#1E293B" }}>
-                0€
+              <span className="text-center" style={{ textAlign: "center" }}>
+                <span className="text-xl font-bold" style={{ fontSize: 20, fontWeight: 700, color: "#1E293B" }}>
+                  0 FCFA
+                </span>
+                <span className="text-[11px] font-mono block" style={{ fontSize: 11, fontFamily: "monospace", display: "block", color: "#475569" }}>
+                  0 € / gratuit
+                </span>
               </span>
               <span className="text-center" style={{ textAlign: "center" }}>
                 <span className="text-xl font-bold" style={{ fontSize: 20, fontWeight: 700, color: "#3B805C" }}>
-                  {isAnnual ? "10€" : "12€"}
+                  {isAnnual ? "5 200 FCFA" : "6 500 FCFA"}
                 </span>
                 <span className="text-[11px] font-mono block" style={{ fontSize: 11, fontFamily: "monospace", display: "block", color: "#475569" }}>
-                  /mois
+                  {isAnnual ? "ou 8€ / mois" : "ou 10€ / mois"}
                 </span>
               </span>
               <span className="text-center text-sm font-semibold" style={{ textAlign: "center", fontSize: 14, color: "#334155" }}>
@@ -941,14 +946,14 @@ export default function HomeClient() {
 
             {/* Feature comparison rows */}
             {[
-              { feature: "Workspaces", starter: "3", pro: "Illimité", enterprise: "Illimité" },
-              { feature: "Membres / workspace", starter: "5", pro: "Illimité", enterprise: "Illimité" },
-              { feature: "Tableaux Kanban", starter: "Illimité", pro: "Illimité", enterprise: "Illimité" },
-              { feature: "Historique des tâches", starter: "30 jours", pro: "Illimité", enterprise: "Illimité" },
-              { feature: "Analytics avancées", starter: "—", pro: "✓", enterprise: "✓" },
-              { feature: "SSO / SAML", starter: "—", pro: "—", enterprise: "✓" },
-              { feature: "SLA garanti", starter: "—", pro: "—", enterprise: "99.9%" },
-              { feature: "Support", starter: "Email", pro: "Prioritaire", enterprise: "Dédié" },
+              { feature: "Espaces de travail (Workspaces)", starter: "3", pro: "Illimité", enterprise: "Illimité" },
+              { feature: "Collaborateurs & invités", starter: "5", pro: "Illimité", enterprise: "Illimité" },
+              { feature: "Tableaux Kanban & Projets", starter: "Illimité", pro: "Illimité", enterprise: "Illimité" },
+              { feature: "Suivi des priorités & échéances", starter: "✓", pro: "✓", enterprise: "✓" },
+              { feature: "Archivage des accomplissements", starter: "30 jours", pro: "Illimité", enterprise: "Illimité" },
+              { feature: "Paiement Mobile Money (MoMo/OM)", starter: "Gratuit", pro: "✓", enterprise: "✓" },
+              { feature: "Essai gratuit sans carte", starter: "✓", pro: "14 jours", enterprise: "Sur devis" },
+              { feature: "Support & Assistance", starter: "Email", pro: "Prioritaire", enterprise: "WhatsApp direct" },
             ].map((row, idx) => (
               <div
                 key={idx}
@@ -1070,10 +1075,16 @@ export default function HomeClient() {
                 Questions fréquentes.
               </h2>
               <p className="mt-3 text-sm" style={{ marginTop: 12, fontSize: 14, color: "#334155" }}>
-                Autre question ?{" "}
-                <Link href="/sign-in" className="underline transition-colors font-semibold" style={{ textDecoration: "underline", color: "#3B805C" }}>
-                  Contactez-nous.
-                </Link>
+                Une question spécifique ?{" "}
+                <a
+                  href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20j%27ai%20une%20question%20sur%20la%20plateforme."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline transition-colors font-semibold"
+                  style={{ textDecoration: "underline", color: "#3B805C" }}
+                >
+                  Discutez avec nous sur WhatsApp.
+                </a>
               </p>
             </div>
 
@@ -1167,7 +1178,7 @@ export default function HomeClient() {
             </Link>
           </div>
           <p className="mt-4 text-xs font-mono" style={{ marginTop: 16, fontSize: 12.5, fontFamily: "monospace", color: "#475569", fontWeight: 500 }}>
-            Sans carte bancaire · Annulation libre · Données hébergées en Europe
+            Sans carte bancaire · Essai 14 jours · Données sécurisées & synchronisées
           </p>
         </div>
       </section>

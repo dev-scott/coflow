@@ -381,7 +381,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               onMouseOut={(e) => (e.currentTarget.style.background = "#334155")}
             >
               <Plus size={13} />
-              Nouveau projet
+              Nouvel espace
             </Link>
           </div>
         </header>
