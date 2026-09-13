@@ -11,9 +11,11 @@ import {
   Plus,
   Minus,
   Menu,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { CoFlowLogo } from "@/components/logo";
+import { UpgradeModal } from "@/components/upgrade-modal";
 
 const FAQ_ITEMS = [
   {
@@ -75,6 +77,7 @@ export default function HomeClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isAnnual, setIsAnnual] = useState(true);
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const previewColumns: PreviewColumn[] = [
     {
@@ -988,25 +991,64 @@ export default function HomeClient() {
                 </Link>
               </div>
               <div className="flex justify-center" style={{ display: "flex", justifyContent: "center" }}>
-                <Link href="/sign-up" className="lp-btn-pro">
-                  Essayer Pro
-                </Link>
+                {isAuthenticated ? (
+                  <button
+                    type="button"
+                    onClick={() => setUpgradeOpen(true)}
+                    className="lp-btn-pro"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Essayer Pro
+                  </button>
+                ) : (
+                  <Link href="/sign-up?plan=pro" className="lp-btn-pro">
+                    Essayer Pro
+                  </Link>
+                )}
               </div>
               <div className="flex justify-center" style={{ display: "flex", justifyContent: "center" }}>
-                <Link href="/sign-up" className="lp-btn-ghost">
+                <a
+                  href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="lp-btn-ghost"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                >
+                  <MessageSquare size={13} color="#25D366" />
                   Nous contacter
-                </Link>
+                </a>
               </div>
             </div>
 
             {/* Mobile Action Row */}
-            <div className="md:hidden flex flex-col gap-2 pt-6" style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 24 }}>
+            <div className="md:hidden flex flex-col gap-2.5 pt-6" style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 24 }}>
               <Link href="/sign-up" className="lp-btn-mobile-primary">
                 Commencer gratuitement
               </Link>
-              <Link href="/sign-up" className="lp-btn-ghost" style={{ justifyContent: "center", width: "100%" }}>
-                Voir le plan Pro
-              </Link>
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => setUpgradeOpen(true)}
+                  className="lp-btn-pro"
+                  style={{ justifyContent: "center", width: "100%", cursor: "pointer" }}
+                >
+                  Essayer Pro
+                </button>
+              ) : (
+                <Link href="/sign-up?plan=pro" className="lp-btn-pro" style={{ justifyContent: "center", width: "100%" }}>
+                  Essayer Pro
+                </Link>
+              )}
+              <a
+                href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lp-btn-ghost"
+                style={{ justifyContent: "center", width: "100%", display: "inline-flex", alignItems: "center", gap: 6 }}
+              >
+                <MessageSquare size={14} color="#25D366" />
+                Offre Entreprise — WhatsApp
+              </a>
             </div>
           </div>
         </div>
@@ -1189,6 +1231,8 @@ export default function HomeClient() {
           </p>
         </div>
       </footer>
+
+      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
     </div>
   );
 }

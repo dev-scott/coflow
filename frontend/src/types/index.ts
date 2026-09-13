@@ -8,6 +8,10 @@ export interface User {
   name: string;
   profilePicture?: string;
   isEmailVerified: boolean;
+  plan?: "starter" | "pro" | "enterprise";
+  planStatus?: "active" | "trialing" | "past_due" | "canceled";
+  trialEndsAt?: string | Date;
+  subscriptionEndsAt?: string | Date;
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;

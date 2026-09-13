@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   User, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2,
-  CheckCircle2, ShieldCheck, MailCheck, Send, ArrowLeft
+  CheckCircle2, ShieldCheck, MailCheck, Send, ArrowLeft, Zap
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
 import { CoFlowLogo } from "@/components/logo";
@@ -73,6 +74,9 @@ function StrengthBar({ password }: { password: string }) {
 }
 
 export default function SignUpClient() {
+  const searchParams = useSearchParams();
+  const isPro = searchParams.get("plan") === "pro";
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
@@ -89,6 +93,7 @@ export default function SignUpClient() {
         name: data.name,
         email: data.email,
         password: data.password,
+        plan: isPro ? "pro" : "starter",
       }),
     onSuccess: (_, variables) => {
       setRegisteredEmail(variables.email);
@@ -292,6 +297,28 @@ export default function SignUpClient() {
         <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
           Créez votre premier espace de travail d&apos;équipe.
         </p>
+
+        {isPro && (
+          <div
+            style={{
+              marginTop: 12,
+              padding: "9px 14px",
+              borderRadius: 10,
+              background: "rgba(59,128,92,0.10)",
+              border: "1px solid rgba(59,128,92,0.25)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#2D6A4F",
+              textAlign: "left",
+            }}
+          >
+            <Zap size={14} fill="#3B805C" color="#3B805C" style={{ flexShrink: 0 }} />
+            <span>Essai Pro 14 jours inclus (0 FCFA · Zéro carte bancaire requise)</span>
+          </div>
+        )}
       </div>
 
       {/* Formulaire épuré */}

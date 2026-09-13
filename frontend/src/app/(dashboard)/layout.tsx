@@ -1,13 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FolderKanban, CheckSquare, Users,
-  Archive, Settings, LogOut, Plus,
+  Archive, Settings, LogOut, Plus, Zap, Crown,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { CoFlowLogo } from "@/components/logo";
+import { UpgradeModal } from "@/components/upgrade-modal";
 
 const NAV_MAIN = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -24,6 +26,17 @@ const NAV_SECONDARY = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing";
+  const isProActive = user?.plan === "pro" && user?.planStatus === "active";
+  const isEnterprise = user?.plan === "enterprise";
+
+  const getTrialDaysLeft = () => {
+    if (!user?.trialEndsAt) return 14;
+    const diff = new Date(user.trialEndsAt).getTime() - Date.now();
+    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  };
 
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Tableau de bord";
@@ -158,6 +171,47 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </div>
 
+        {/* Plan status card in sidebar */}
+        <div style={{ margin: "0 10px 10px", padding: "10px 12px", borderRadius: 8, background: "rgba(15,23,42,0.03)", border: "1px solid rgba(15,23,42,0.06)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isProActive || isEnterprise ? 0 : 4 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: isTrial || isProActive ? "#2D6A4F" : "#64748B" }}>
+              {isEnterprise ? "Entreprise" : isProActive ? "Plan Pro" : isTrial ? "Essai Pro" : "Starter"}
+            </span>
+            {isTrial && (
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#3B805C", background: "rgba(59,128,92,0.12)", padding: "1px 6px", borderRadius: 10 }}>
+                {getTrialDaysLeft()}j
+              </span>
+            )}
+          </div>
+          {!isProActive && !isEnterprise && (
+            <button
+              type="button"
+              onClick={() => setUpgradeOpen(true)}
+              style={{
+                width: "100%",
+                padding: "5px 8px",
+                marginTop: 4,
+                fontSize: 11,
+                fontWeight: 600,
+                color: "#2D6A4F",
+                background: "transparent",
+                border: "1px dashed rgba(59,128,92,0.35)",
+                borderRadius: 5,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+                transition: "background 0.12s ease",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.background = "rgba(59,128,92,0.06)")}
+              onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              <Zap size={11} color="#3B805C" /> {isTrial ? "Activer l'abonnement" : "Essayer Pro (14j)"}
+            </button>
+          )}
+        </div>
+
         {/* User Card */}
         <div style={{ padding: "12px 14px", borderTop: "1px solid rgba(15,23,42,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -236,27 +290,100 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {getPageTitle()}
           </span>
 
-          <Link
-            href="/workspaces"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 14px",
-              borderRadius: 6,
-              background: "#334155",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "#FFFFFF",
-              textDecoration: "none",
-              transition: "background 0.12s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#1E293B")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "#334155")}
-          >
-            <Plus size={13} />
-            Nouveau projet
-          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {isTrial && (
+              <button
+                type="button"
+                onClick={() => setUpgradeOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "5px 12px",
+                  borderRadius: 20,
+                  background: "rgba(59,128,92,0.10)",
+                  border: "1px solid rgba(59,128,92,0.25)",
+                  color: "#2D6A4F",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                title="Cliquez pour gérer votre abonnement Pro"
+              >
+                <Zap size={13} fill="#3B805C" color="#3B805C" />
+                <span>Essai Pro · {getTrialDaysLeft()}j restant{getTrialDaysLeft() > 1 ? "s" : ""}</span>
+              </button>
+            )}
+
+            {isProActive && (
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "5px 12px",
+                  borderRadius: 20,
+                  background: "rgba(59,128,92,0.12)",
+                  border: "1px solid rgba(59,128,92,0.3)",
+                  color: "#2D6A4F",
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                <Crown size={13} color="#2D6A4F" />
+                <span>Plan Pro</span>
+              </div>
+            )}
+
+            {!isTrial && !isProActive && !isEnterprise && (
+              <button
+                type="button"
+                onClick={() => setUpgradeOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "5px 12px",
+                  borderRadius: 20,
+                  background: "linear-gradient(135deg, rgba(59,128,92,0.12) 0%, rgba(37,99,235,0.08) 100%)",
+                  border: "1px solid rgba(59,128,92,0.3)",
+                  color: "#2D6A4F",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.background = "linear-gradient(135deg, rgba(59,128,92,0.2) 0%, rgba(37,99,235,0.15) 100%)")}
+                onMouseOut={(e) => (e.currentTarget.style.background = "linear-gradient(135deg, rgba(59,128,92,0.12) 0%, rgba(37,99,235,0.08) 100%)")}
+              >
+                <Zap size={13} color="#3B805C" />
+                <span>Essayer Pro (14j)</span>
+              </button>
+            )}
+
+            <Link
+              href="/workspaces"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 14px",
+                borderRadius: 6,
+                background: "#334155",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#FFFFFF",
+                textDecoration: "none",
+                transition: "background 0.12s ease",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.background = "#1E293B")}
+              onMouseOut={(e) => (e.currentTarget.style.background = "#334155")}
+            >
+              <Plus size={13} />
+              Nouveau projet
+            </Link>
+          </div>
         </header>
 
         {/* Page content */}
@@ -269,6 +396,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </div>
       </div>
+
+      <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
     </div>
   );
 }

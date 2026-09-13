@@ -10,10 +10,11 @@ import aj from "../lib/arcjet.js";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
-  const { email, name, password } = req.body as {
+  const { email, name, password, plan } = req.body as {
     email: string;
     name: string;
     password: string;
+    plan?: string;
   };
 
   const decision = await aj.protect(req, { email, requested: 1 });
@@ -29,12 +30,16 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const isProTrial = plan === "pro";
 
   const newUser = await User.create({
     email,
     password: hashPassword,
     name,
     isEmailVerified: false,
+    plan: isProTrial ? "pro" : "starter",
+    planStatus: isProTrial ? "trialing" : "active",
+    trialEndsAt: isProTrial ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) : undefined,
   });
 
   await Workspace.create({

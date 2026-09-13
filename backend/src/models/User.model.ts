@@ -6,6 +6,11 @@ export interface IUser extends Document {
   name: string;
   profilePicture?: string;
   isEmailVerified: boolean;
+  plan: "starter" | "pro" | "enterprise";
+  planStatus: "active" | "trialing" | "past_due" | "canceled";
+  trialEndsAt?: Date;
+  subscriptionEndsAt?: Date;
+  paymentReference?: string;
   lastLogin?: Date;
   is2FAEnabled: boolean;
   twoFAOtp?: string;
@@ -27,6 +32,19 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true, trim: true },
     profilePicture: { type: String },
     isEmailVerified: { type: Boolean, default: false },
+    plan: {
+      type: String,
+      enum: ["starter", "pro", "enterprise"],
+      default: "starter",
+    },
+    planStatus: {
+      type: String,
+      enum: ["active", "trialing", "past_due", "canceled"],
+      default: "active",
+    },
+    trialEndsAt: { type: Date },
+    subscriptionEndsAt: { type: Date },
+    paymentReference: { type: String },
     lastLogin: { type: Date },
     is2FAEnabled: { type: Boolean, default: false },
     twoFAOtp: { type: String, select: false },
