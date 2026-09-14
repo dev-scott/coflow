@@ -1,28 +1,19 @@
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Lock } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock, Sparkles } from "lucide-react";
 import { CoFlowLogo } from "@/components/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#F7F8FA",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        fontFamily: "var(--font-sans)",
-        overflow: "hidden",
-      }}
-    >
-      {/* ── Subtle decorative background shapes ── */}
+    <div className="auth-page-wrapper">
+      {/* ── Signature Atmospheric Glows (Matches Home & Dashboard) ── */}
       <div
+        aria-hidden="true"
         style={{
-          position: "absolute",
-          top: "-120px",
-          right: "-120px",
-          width: "520px",
-          height: "520px",
+          position: "fixed",
+          top: "-160px",
+          right: "-160px",
+          width: "560px",
+          height: "560px",
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(77,153,114,0.07) 0%, transparent 70%)",
           pointerEvents: "none",
@@ -30,12 +21,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         }}
       />
       <div
+        aria-hidden="true"
         style={{
-          position: "absolute",
-          bottom: "-80px",
-          left: "-80px",
-          width: "380px",
-          height: "380px",
+          position: "fixed",
+          bottom: "-120px",
+          left: "-120px",
+          width: "480px",
+          height: "480px",
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(51,65,85,0.05) 0%, transparent 70%)",
           pointerEvents: "none",
@@ -43,18 +35,19 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         }}
       />
 
-      {/* ── Top Header ── */}
+      {/* ── Sleek Header Navigation ── */}
       <header
         style={{
           position: "relative",
-          zIndex: 10,
-          padding: "22px 32px",
+          zIndex: 20,
+          padding: "16px 32px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "1px solid rgba(15,23,42,0.06)",
-          background: "rgba(247,248,250,0.90)",
-          backdropFilter: "blur(8px)",
+          borderBottom: "1px solid rgba(15, 23, 42, 0.06)",
+          background: "rgba(255, 255, 255, 0.75)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         }}
       >
         <Link
@@ -66,36 +59,47 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             textDecoration: "none",
           }}
         >
-          <CoFlowLogo size={32} />
-          <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.02em", color: "#0F172A" }}>
-            Co<span style={{ color: "#3B805C" }}>Flow</span>
-          </span>
+          <CoFlowLogo size={28} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.02em", color: "#1E293B" }}>
+              Co<span style={{ color: "#4D9972" }}>Flow</span>
+            </span>
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 10,
+                fontWeight: 700,
+                color: "#3B805C",
+                background: "rgba(77, 153, 114, 0.12)",
+                padding: "1px 6px",
+                borderRadius: 4,
+              }}
+            >
+              v2.0
+            </span>
+          </div>
         </Link>
 
         <Link
           href="/"
+          className="lp-btn-ghost"
           style={{
+            height: 34,
+            padding: "0 14px",
+            fontSize: 12.5,
+            fontWeight: 600,
+            borderRadius: 8,
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            fontSize: 13,
-            fontWeight: 600,
-            color: "#334155",
-            padding: "7px 14px",
-            borderRadius: 8,
-            background: "#FFFFFF",
-            border: "1px solid #CBD5E1",
-            textDecoration: "none",
-            transition: "all 0.15s ease",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
           }}
         >
-          <ArrowLeft size={14} />
-          Retour au site
+          <ArrowLeft size={13} />
+          Retour à l&apos;accueil
         </Link>
       </header>
 
-      {/* ── Center Content (children = form card) ── */}
+      {/* ── Main Form Area ── */}
       <main
         style={{
           position: "relative",
@@ -103,7 +107,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "40px 20px",
+          padding: "48px 20px 64px",
           flex: 1,
         }}
       >
@@ -115,15 +119,18 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         style={{
           position: "relative",
           zIndex: 10,
-          padding: "18px",
-          borderTop: "1px solid #E2E8F0",
+          padding: "18px 24px",
+          borderTop: "1px solid rgba(15, 23, 42, 0.06)",
+          background: "rgba(255, 255, 255, 0.60)",
+          backdropFilter: "blur(8px)",
           textAlign: "center",
           display: "flex",
+          flexWrap: "wrap",
           alignItems: "center",
           justifyContent: "center",
-          gap: 20,
+          gap: 16,
           fontSize: 12,
-          color: "#475569",
+          color: "#64748B",
           fontWeight: 500,
         }}
       >
@@ -133,9 +140,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </span>
         <span style={{ color: "#CBD5E1" }}>•</span>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-          <Lock size={13} color="#475569" />
-          Hébergement sécurisé & RGPD
+          <Lock size={13} color="#64748B" />
+          Espaces de travail cloisonnés & sécurisés
         </span>
+        <span style={{ color: "#CBD5E1" }}>•</span>
+        <span>© {new Date().getFullYear()} CoFlow</span>
       </footer>
     </div>
   );

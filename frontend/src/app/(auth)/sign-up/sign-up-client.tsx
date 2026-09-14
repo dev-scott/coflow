@@ -10,10 +10,9 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   User, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2,
-  CheckCircle2, ShieldCheck, MailCheck, Send, ArrowLeft, Zap
+  ShieldCheck, MailCheck, Send, ArrowLeft, Zap, AlertCircle
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
-import { CoFlowLogo } from "@/components/logo";
 
 const schema = z
   .object({
@@ -55,7 +54,7 @@ function StrengthBar({ password }: { password: string }) {
             style={{
               flex: 1,
               borderRadius: 2,
-              background: i <= filledBars ? level.color : "var(--border)",
+              background: i <= filledBars ? level.color : "rgba(15, 23, 42, 0.08)",
               transition: "background 0.25s ease",
             }}
           />
@@ -65,7 +64,7 @@ function StrengthBar({ password }: { password: string }) {
         <span style={{ fontSize: 11, color: level.color, fontWeight: 700 }}>
           Force : {level.label}
         </span>
-        <span style={{ fontSize: 10.5, color: "var(--muted-foreground)" }}>
+        <span style={{ fontSize: 10.5, color: "#64748B" }}>
           8+ car., chiffres & majuscules
         </span>
       </div>
@@ -117,49 +116,37 @@ export default function SignUpClient() {
   // ── Écran de confirmation d'envoi d'email ──
   if (registeredEmail) {
     return (
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 460,
-          margin: "0 auto",
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          padding: "40px 32px",
-          boxShadow: "var(--shadow-card)",
-          textAlign: "center",
-          position: "relative",
-          transition: "background 0.2s ease, border-color 0.2s ease",
-        }}
-      >
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            background: "rgba(77, 153, 114, 0.12)",
-            color: "#3B805C",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 20px",
-          }}
-        >
+      <div className="auth-card" style={{ textAlign: "center" }}>
+        <div className="auth-card-accent-line" />
+
+        <div className="auth-icon-circle success">
           <MailCheck size={28} />
         </div>
 
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)", margin: "0 0 10px" }}>
+        <h1 style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.025em", color: "#0F172A", margin: "0 0 10px" }}>
           Vérifiez votre boîte mail
         </h1>
 
-        <p style={{ fontSize: 13.5, color: "var(--muted-foreground)", margin: "0 0 20px", lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13.5, color: "#64748B", margin: "0 0 18px", lineHeight: 1.6 }}>
           Un lien d&apos;activation vient d&apos;être envoyé à :<br />
-          <strong style={{ color: "var(--foreground)" }}>{registeredEmail}</strong>
+          <strong style={{ color: "#0F172A", fontWeight: 700 }}>{registeredEmail}</strong>
         </p>
 
-        <p style={{ fontSize: 12, color: "var(--muted-foreground)", margin: "0 0 24px", lineHeight: 1.5 }}>
-          Cliquez sur le lien reçu pour activer votre compte. Pensez également à vérifier vos courriers indésirables (spams).
-        </p>
+        <div
+          style={{
+            padding: "12px 14px",
+            background: "#F8FAFC",
+            border: "1px solid #E2E8F0",
+            borderRadius: 10,
+            marginBottom: 24,
+            fontSize: 12,
+            color: "#64748B",
+            lineHeight: 1.5,
+            textAlign: "left",
+          }}
+        >
+          💡 Cliquez sur le lien reçu pour activer votre compte. Pensez également à vérifier vos courriers indésirables (spams).
+        </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <button
@@ -169,10 +156,10 @@ export default function SignUpClient() {
             style={{
               width: "100%",
               height: 42,
-              borderRadius: 10,
-              background: "var(--secondary)",
-              border: "1px solid var(--border)",
-              color: "var(--foreground)",
+              borderRadius: 9,
+              background: "#F1F5F9",
+              border: "1px solid #E2E8F0",
+              color: "#1E293B",
               fontSize: 13,
               fontWeight: 700,
               display: "flex",
@@ -180,10 +167,11 @@ export default function SignUpClient() {
               justifyContent: "center",
               gap: 7,
               cursor: isResending ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
             }}
           >
             {isResending ? (
-              <Loader2 size={14} className="animate-spin-slow" />
+              <Loader2 size={14} className="animate-spin" />
             ) : (
               <Send size={14} color="#3B805C" />
             )}
@@ -192,17 +180,10 @@ export default function SignUpClient() {
 
           <Link
             href="/sign-in"
-            className="lp-btn-primary"
-            style={{
-              width: "100%",
-              justifyContent: "center",
-              height: 42,
-              borderRadius: 10,
-              fontSize: 13.5,
-              textDecoration: "none",
-            }}
+            className="auth-back-link"
+            style={{ justifyContent: "center", marginTop: 4 }}
           >
-            <ArrowLeft size={15} />
+            <ArrowLeft size={14} />
             Retour à la page de connexion
           </Link>
         </div>
@@ -210,220 +191,100 @@ export default function SignUpClient() {
     );
   }
 
-  // ── Formulaire d'inscription épuré ──
+  // ── Formulaire d'inscription harmonieux ──
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: 460,
-        margin: "0 auto",
-        background: "var(--card)",
-        border: "1px solid var(--border)",
-        borderRadius: 20,
-        padding: "36px 32px",
-        boxShadow: "var(--shadow-card)",
-        position: "relative",
-        transition: "background 0.2s ease, border-color 0.2s ease",
-      }}
-    >
-      {/* Top green accent line */}
-      <div
-        style={{
-          position: "absolute",
-          top: -1,
-          left: "25%",
-          right: "25%",
-          height: 2,
-          background: "linear-gradient(90deg, transparent, #3B805C, transparent)",
-        }}
-      />
+    <div className="auth-card auth-card-wide">
+      <div className="auth-card-accent-line" />
 
-      {/* Header: Logo & Segmented Tab */}
-      <div style={{ textAlign: "center", marginBottom: 26 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-          <CoFlowLogo size={40} />
+      {/* Dual Tab: Connexion / Inscription */}
+      <div className="auth-segmented-nav">
+        <Link href="/sign-in" className="auth-segmented-item inactive">
+          Connexion
+        </Link>
+        <div className="auth-segmented-item active">
+          Inscription
         </div>
+      </div>
 
-        {/* Dual Tab: Connexion / Inscription */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 4,
-            padding: 4,
-            background: "var(--secondary)",
-            borderRadius: 10,
-            border: "1px solid var(--border)",
-            marginBottom: 20,
-          }}
-        >
-          <Link
-            href="/sign-in"
-            style={{
-              padding: "8px 0",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--muted-foreground)",
-              borderRadius: 7,
-              textDecoration: "none",
-              transition: "all 0.15s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "var(--foreground)")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "var(--muted-foreground)")}
-          >
-            Connexion
-          </Link>
-          <div
-            style={{
-              padding: "8px 0",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: 700,
-              background: "var(--card)",
-              color: "var(--foreground)",
-              borderRadius: 7,
-              boxShadow: "var(--shadow-xs)",
-              cursor: "default",
-            }}
-          >
-            Inscription
-          </div>
-        </div>
-
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)", margin: "0 0 6px" }}>
-          Rejoindre CoFlow
-        </h1>
-        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
-          Créez votre premier espace de travail d&apos;équipe.
-        </p>
-
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: 22 }}>
         {isPro && (
-          <div
-            style={{
-              marginTop: 12,
-              padding: "9px 14px",
-              borderRadius: 10,
-              background: "rgba(59,128,92,0.10)",
-              border: "1px solid rgba(59,128,92,0.25)",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 12,
-              fontWeight: 600,
-              color: "#2D6A4F",
-              textAlign: "left",
-            }}
-          >
-            <Zap size={14} fill="#3B805C" color="#3B805C" style={{ flexShrink: 0 }} />
-            <span>Essai Pro 14 jours inclus (0 FCFA · Zéro carte bancaire requise)</span>
+          <div className="auth-pill-badge">
+            <Zap size={13} fill="#3B805C" color="#3B805C" />
+            <span>Essai Pro 14 jours inclus (0 FCFA · Zéro carte requise)</span>
           </div>
         )}
+        <h1 style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.025em", color: "#0F172A", margin: "0 0 6px" }}>
+          Rejoindre CoFlow
+        </h1>
+        <p style={{ fontSize: 13, color: "#64748B", margin: 0, lineHeight: 1.5 }}>
+          Créez votre premier espace de travail et synchronisez votre équipe en temps réel.
+        </p>
       </div>
 
       {/* Formulaire épuré */}
       <form onSubmit={handleSubmit((d) => registerMutate(d))} style={{ display: "flex", flexDirection: "column", gap: 15 }}>
         {/* Nom complet */}
-        <div>
-          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
-            Nom complet
+        <div className="auth-input-group">
+          <label className="auth-input-label">
+            <span>Nom complet</span>
           </label>
-          <div style={{ position: "relative" }}>
-            <User size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <User className="auth-input-icon" size={16} />
             <input
               type="text"
               placeholder="Alexandre Martin"
               {...register("name")}
-              style={{
-                width: "100%",
-                padding: "11px 14px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.name ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.name ? "error" : ""}`}
             />
           </div>
           {errors.name && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.name.message}
             </p>
           )}
         </div>
 
         {/* Email */}
-        <div>
-          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
-            Adresse email professionnelle
+        <div className="auth-input-group">
+          <label className="auth-input-label">
+            <span>Adresse email professionnelle</span>
           </label>
-          <div style={{ position: "relative" }}>
-            <Mail size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <Mail className="auth-input-icon" size={16} />
             <input
               type="email"
               placeholder="alexandre@entreprise.com"
               {...register("email")}
-              style={{
-                width: "100%",
-                padding: "11px 14px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.email ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.email ? "error" : ""}`}
             />
           </div>
           {errors.email && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.email.message}
             </p>
           )}
         </div>
 
         {/* Mot de passe */}
-        <div>
-          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
-            Mot de passe
+        <div className="auth-input-group">
+          <label className="auth-input-label">
+            <span>Mot de passe</span>
           </label>
-          <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <Lock className="auth-input-icon" size={16} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="8 caractères minimum"
               {...register("password")}
-              style={{
-                width: "100%",
-                padding: "11px 40px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.password ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.password ? "error" : ""}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                padding: 4,
-                cursor: "pointer",
-                color: "var(--muted-foreground)",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="auth-eye-btn"
               aria-label="Afficher ou masquer le mot de passe"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -431,58 +292,38 @@ export default function SignUpClient() {
           </div>
           <StrengthBar password={passwordVal} />
           {errors.password && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.password.message}
             </p>
           )}
         </div>
 
         {/* Confirmer le mot de passe */}
-        <div>
-          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
-            Confirmer le mot de passe
+        <div className="auth-input-group">
+          <label className="auth-input-label">
+            <span>Confirmer le mot de passe</span>
           </label>
-          <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <Lock className="auth-input-icon" size={16} />
             <input
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Répétez votre mot de passe"
               {...register("confirmPassword")}
-              style={{
-                width: "100%",
-                padding: "11px 40px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.confirmPassword ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.confirmPassword ? "error" : ""}`}
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                padding: 4,
-                cursor: "pointer",
-                color: "var(--muted-foreground)",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="auth-eye-btn"
               aria-label="Afficher ou masquer la confirmation du mot de passe"
             >
               {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
           {errors.confirmPassword && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.confirmPassword.message}
             </p>
           )}
@@ -492,26 +333,18 @@ export default function SignUpClient() {
         <button
           type="submit"
           disabled={isPending}
-          className="lp-btn-primary"
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            height: 44,
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 700,
-            marginTop: 6,
-          }}
+          className="auth-submit-btn"
+          style={{ marginTop: 4 }}
         >
           {isPending ? (
             <>
-              <Loader2 size={16} className="animate-spin-slow" />
-              Création en cours...
+              <Loader2 size={16} className="animate-spin" />
+              Création du compte...
             </>
           ) : (
             <>
               Créer mon compte
-              <ArrowRight size={16} className="lp-arrow" />
+              <ArrowRight size={16} className="arrow-icon" />
             </>
           )}
         </button>
@@ -520,20 +353,21 @@ export default function SignUpClient() {
       {/* Trust footer */}
       <div
         style={{
-          marginTop: 22,
+          marginTop: 24,
           paddingTop: 16,
-          borderTop: "1px solid var(--border)",
+          borderTop: "1px solid rgba(15, 23, 42, 0.07)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           gap: 6,
           fontSize: 11.5,
-          color: "var(--muted-foreground)",
+          color: "#64748B",
         }}
       >
-        <ShieldCheck size={13} color="#3B805C" />
-        <span>Données protégées & conformes RGPD</span>
+        <ShieldCheck size={14} color="#3B805C" />
+        <span>Données hébergées en sécurité & conformes RGPD</span>
       </div>
     </div>
   );
 }
+

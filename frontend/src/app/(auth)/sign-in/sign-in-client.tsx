@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
 import type { AuthResponse } from "@/types";
-import { CoFlowLogo } from "@/components/logo";
 
 const schema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -77,110 +76,35 @@ export default function SignInClient() {
   });
 
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: 440,
-        margin: "0 auto",
-        background: "var(--card)",
-        border: "1px solid var(--border)",
-        borderRadius: 20,
-        padding: "36px 32px",
-        boxShadow: "var(--shadow-card)",
-        position: "relative",
-        transition: "background 0.2s ease, border-color 0.2s ease",
-      }}
-    >
-      {/* Top green accent line */}
-      <div
-        style={{
-          position: "absolute",
-          top: -1,
-          left: "25%",
-          right: "25%",
-          height: 2,
-          background: "linear-gradient(90deg, transparent, #3B805C, transparent)",
-        }}
-      />
+    <div className="auth-card">
+      <div className="auth-card-accent-line" />
 
-      {/* Header: Logo & Segmented Tab */}
-      <div style={{ textAlign: "center", marginBottom: 26 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-          <CoFlowLogo size={40} />
+      {/* Dual Segmented Tab: Connexion / Inscription */}
+      <div className="auth-segmented-nav">
+        <div className="auth-segmented-item active">
+          Connexion
         </div>
+        <Link href="/sign-up" className="auth-segmented-item inactive">
+          Inscription
+        </Link>
+      </div>
 
-        {/* Dual Tab: Connexion / Inscription */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 4,
-            padding: 4,
-            background: "var(--secondary)",
-            borderRadius: 10,
-            border: "1px solid var(--border)",
-            marginBottom: 20,
-          }}
-        >
-          <div
-            style={{
-              padding: "8px 0",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: 700,
-              background: "var(--card)",
-              color: "var(--foreground)",
-              borderRadius: 7,
-              boxShadow: "var(--shadow-xs)",
-              cursor: "default",
-            }}
-          >
-            Connexion
-          </div>
-          <Link
-            href="/sign-up"
-            style={{
-              padding: "8px 0",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "var(--muted-foreground)",
-              borderRadius: 7,
-              textDecoration: "none",
-              transition: "all 0.15s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "var(--foreground)")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "var(--muted-foreground)")}
-          >
-            Inscription
-          </Link>
-        </div>
-
-        <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)", margin: "0 0 6px" }}>
-          Connexion à CoFlow
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <h1 style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.025em", color: "#0F172A", margin: "0 0 6px" }}>
+          Connexion à votre espace
         </h1>
-        <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
-          Accédez à vos projets et synchronisez votre équipe.
+        <p style={{ fontSize: 13, color: "#64748B", margin: 0, lineHeight: 1.5 }}>
+          Retrouvez vos projets, vos tâches et synchronisez votre équipe en temps réel.
         </p>
       </div>
 
       {/* Alerte Email non vérifié */}
       {unverifiedEmail && (
-        <div
-          style={{
-            marginBottom: 20,
-            padding: "12px 14px",
-            borderRadius: 10,
-            background: "rgba(217, 119, 6, 0.10)",
-            border: "1px solid rgba(217, 119, 6, 0.25)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
+        <div className="auth-alert-warning">
           <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
             <AlertCircle size={16} color="#D97706" style={{ flexShrink: 0, marginTop: 2 }} />
-            <p style={{ fontSize: 12.5, color: "var(--foreground)", margin: 0, lineHeight: 1.45 }}>
+            <p style={{ fontSize: 12.5, color: "#0F172A", margin: 0, lineHeight: 1.45 }}>
               Votre compte n&apos;est pas encore activé. Veuillez cliquer sur le lien envoyé à <strong>{unverifiedEmail}</strong>.
             </p>
           </div>
@@ -211,87 +135,66 @@ export default function SignInClient() {
       {/* Formulaire de connexion direct */}
       <form onSubmit={handleSubmit((d) => loginMutate(d))} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Email */}
-        <div>
-          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "var(--foreground)", marginBottom: 6 }}>
-            Adresse email
+        <div className="auth-input-group">
+          <label className="auth-input-label">
+            <span>Adresse email</span>
           </label>
-          <div style={{ position: "relative" }}>
-            <Mail size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <Mail className="auth-input-icon" size={16} />
             <input
               type="email"
               placeholder="nom@entreprise.com"
               {...register("email")}
-              style={{
-                width: "100%",
-                padding: "11px 14px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.email ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.email ? "error" : ""}`}
             />
           </div>
           {errors.email && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.email.message}
             </p>
           )}
         </div>
 
         {/* Mot de passe */}
-        <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-            <label style={{ fontSize: 12.5, fontWeight: 700, color: "var(--foreground)" }}>
-              Mot de passe
-            </label>
-            <Link href="/forgot-password" style={{ fontSize: 12, color: "#3B805C", textDecoration: "none", fontWeight: 600 }}>
+        <div className="auth-input-group">
+          <div className="auth-input-label">
+            <span>Mot de passe</span>
+            <Link
+              href="/forgot-password"
+              style={{
+                fontSize: 12,
+                color: "#3B805C",
+                textDecoration: "none",
+                fontWeight: 600,
+                transition: "color 0.15s ease",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "#2D6A4F")}
+              onMouseOut={(e) => (e.currentTarget.style.color = "#3B805C")}
+            >
               Mot de passe oublié ?
             </Link>
           </div>
-          <div style={{ position: "relative" }}>
-            <Lock size={15} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted-foreground)" }} />
+          <div className="auth-input-wrapper">
+            <Lock className="auth-input-icon" size={16} />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               {...register("password")}
-              style={{
-                width: "100%",
-                padding: "11px 40px 11px 40px",
-                background: "var(--input-bg)",
-                border: errors.password ? "1px solid #DC2626" : "1px solid var(--border)",
-                borderRadius: 10,
-                color: "var(--foreground)",
-                fontSize: 13.5,
-                outline: "none",
-                transition: "border-color 0.15s ease",
-              }}
+              className={`auth-input-field ${errors.password ? "error" : ""}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                padding: 4,
-                cursor: "pointer",
-                color: "var(--muted-foreground)",
-                display: "flex",
-                alignItems: "center",
-              }}
+              className="auth-eye-btn"
               aria-label="Afficher ou masquer le mot de passe"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
           {errors.password && (
-            <p style={{ fontSize: 11.5, color: "#DC2626", marginTop: 5, margin: "5px 0 0", fontWeight: 500 }}>
+            <p className="auth-field-error">
+              <AlertCircle size={12} />
               {errors.password.message}
             </p>
           )}
@@ -301,26 +204,18 @@ export default function SignInClient() {
         <button
           type="submit"
           disabled={isPending}
-          className="lp-btn-primary"
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            height: 44,
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 700,
-            marginTop: 6,
-          }}
+          className="auth-submit-btn"
+          style={{ marginTop: 4 }}
         >
           {isPending ? (
             <>
-              <Loader2 size={16} className="animate-spin-slow" />
+              <Loader2 size={16} className="animate-spin" />
               Connexion en cours...
             </>
           ) : (
             <>
               Se connecter
-              <ArrowRight size={16} className="lp-arrow" />
+              <ArrowRight size={16} className="arrow-icon" />
             </>
           )}
         </button>
@@ -329,20 +224,21 @@ export default function SignInClient() {
       {/* Trust mark footer */}
       <div
         style={{
-          marginTop: 22,
+          marginTop: 24,
           paddingTop: 16,
-          borderTop: "1px solid var(--border)",
+          borderTop: "1px solid rgba(15, 23, 42, 0.07)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 8,
+          gap: 6,
           fontSize: 11.5,
-          color: "var(--muted-foreground)",
+          color: "#64748B",
         }}
       >
-        <ShieldCheck size={13} color="#3B805C" />
-        <span>Connexion sécurisée & chiffrée SSL</span>
+        <ShieldCheck size={14} color="#3B805C" />
+        <span>Connexion sécurisée & chiffrée SSL 256-bit</span>
       </div>
     </div>
   );
 }
+
