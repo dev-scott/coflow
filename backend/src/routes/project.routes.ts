@@ -13,6 +13,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.post("/:workspaceId", validateBody(projectSchema), createProject);
+router.post("/:workspaceId/create-project", validateBody(projectSchema), createProject);
 router.get("/:projectId", getProjectDetails);
 router.get("/:projectId/tasks", getProjectTasks);
 

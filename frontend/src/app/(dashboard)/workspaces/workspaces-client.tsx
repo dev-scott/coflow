@@ -2,13 +2,15 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, FolderKanban, Users, ArrowRight, X, Sparkles, Loader2 } from "lucide-react";
+import { Plus, FolderKanban, Users, ArrowRight, X, Sparkles, Loader2, Zap, Lock } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { fetchData, postData } from "@/lib/fetch-util";
+import { useAuth } from "@/providers/auth-provider";
+import { UpgradeModal } from "@/components/upgrade-modal";
 import type { Workspace } from "@/types";
 
 const COLORS = [
@@ -23,7 +25,13 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
+function CreateWorkspaceModal({
+  onClose,
+  onLimitReached,
+}: {
+  onClose: () => void;
+  onLimitReached?: () => void;
+}) {
   const qc = useQueryClient();
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -37,7 +45,14 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
       toast.success(`Espace "${newWs.name}" créé avec succès !`);
       onClose();
     },
-    onError: (err: Error) => toast.error(err.message || "Erreur de création"),
+    onError: (err: any) => {
+      const msg = err.message || "Erreur de création";
+      toast.error(msg);
+      if (msg.includes("Starter") || msg.includes("plan Pro") || err.code === "PLAN_LIMIT_REACHED") {
+        onClose();
+        if (onLimitReached) onLimitReached();
+      }
+    },
   });
 
   const selectedColor = watch("color");
@@ -231,12 +246,32 @@ function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
 }
 
 export default function WorkspacesClient() {
+  const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
+  const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
 
   const { data: workspaces, isLoading } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: () => fetchData("/workspaces"),
   });
+
+  const ownedWorkspaces = workspaces?.filter((w) => {
+    const ownerId = typeof w.owner === "object" ? (w.owner as any)?._id : w.owner;
+    return !ownerId || ownerId === user?._id;
+  }) ?? [];
+
+  const ownedCount = ownedWorkspaces.length;
+  const isLimitReached = !isPro && ownedCount >= 3;
+
+  const planStatusObj = {
+    plan: user?.plan,
+    planStatus: user?.planStatus,
+    isPro,
+    daysLeftInTrial: user?.trialEndsAt ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
+  };
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -276,14 +311,61 @@ export default function WorkspacesClient() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="lp-btn-pro"
-          style={{ height: 40, borderRadius: 8, fontSize: 13 }}
-        >
-          <Plus size={15} />
-          Nouvel espace
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          {!isPro ? (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
+                borderRadius: 8,
+                background: isLimitReached ? "rgba(217, 119, 6, 0.10)" : "rgba(15, 23, 42, 0.04)",
+                border: `1px solid ${isLimitReached ? "rgba(217, 119, 6, 0.28)" : "rgba(15, 23, 42, 0.08)"}`,
+                fontSize: 12,
+                fontWeight: 700,
+                color: isLimitReached ? "#D97706" : "#475569",
+              }}
+            >
+              {isLimitReached ? <Lock size={13} color="#D97706" /> : <FolderKanban size={13} color="#475569" />}
+              <span>{ownedCount} / 3 espaces (Starter)</span>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
+                borderRadius: 8,
+                background: "rgba(59, 128, 92, 0.10)",
+                border: "1px solid rgba(59, 128, 92, 0.22)",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#2D6A4F",
+              }}
+            >
+              <Sparkles size={13} color="#3B805C" />
+              <span>Espaces illimités (Plan Pro)</span>
+            </div>
+          )}
+
+          <button
+            onClick={() => {
+              if (isLimitReached) {
+                toast.warning("Limite atteinte : Le plan Starter vous permet de créer jusqu'à 3 espaces. Passez au plan Pro pour créer des espaces illimités.");
+                setShowUpgradeModal(true);
+              } else {
+                setShowModal(true);
+              }
+            }}
+            className="lp-btn-pro"
+            style={{ height: 40, borderRadius: 8, fontSize: 13 }}
+          >
+            {isLimitReached ? <Zap size={14} color="#fff" fill="#fff" /> : <Plus size={15} />}
+            {isLimitReached ? "Débloquer Pro" : "Nouvel espace"}
+          </button>
+        </div>
       </div>
 
       {/* Grid */}
@@ -439,7 +521,18 @@ export default function WorkspacesClient() {
         </div>
       )}
 
-      {showModal && <CreateWorkspaceModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <CreateWorkspaceModal
+          onClose={() => setShowModal(false)}
+          onLimitReached={() => setShowUpgradeModal(true)}
+        />
+      )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        userPlanStatus={planStatusObj}
+      />
     </div>
   );
 }

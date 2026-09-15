@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, LayoutGrid, List, ShieldCheck,
-  UserCheck, Eye, Crown, Mail, Calendar, ChevronDown
+  UserCheck, Eye, Crown, Mail, Calendar, ChevronDown, Lock, Sparkles
 } from "lucide-react";
 import { fetchData } from "@/lib/fetch-util";
+import { useAuth } from "@/providers/auth-provider";
+import { UpgradeModal } from "@/components/upgrade-modal";
 import type { Workspace, WorkspaceMemberRole } from "@/types";
 
 const ROLE_BADGE: Record<WorkspaceMemberRole, { label: string; color: string; bg: string; icon: any }> = {
@@ -17,9 +19,14 @@ const ROLE_BADGE: Record<WorkspaceMemberRole, { label: string; color: string; bg
 };
 
 export default function MembersClient() {
+  const { user } = useAuth();
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
+  const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
 
   const { data: workspaces, isLoading: wsLoading } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
@@ -32,6 +39,15 @@ export default function MembersClient() {
   );
 
   const members = currentWorkspace?.members ?? [];
+  const isOwner = currentWorkspace?.owner === user?._id || (typeof currentWorkspace?.owner === "object" && (currentWorkspace?.owner as any)?._id === user?._id);
+  const isMemberLimitReached = !isPro && isOwner && members.length >= 5;
+
+  const planStatusObj = {
+    plan: user?.plan,
+    planStatus: user?.planStatus,
+    isPro,
+    daysLeftInTrial: user?.trialEndsAt ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
+  };
   const filteredMembers = members.filter((m) => {
     const q = search.toLowerCase();
     const name = m.user?.name?.toLowerCase() ?? "";
@@ -65,38 +81,79 @@ export default function MembersClient() {
           </div>
         </div>
 
-        {/* Workspace Selector */}
-        {workspaces && workspaces.length > 0 && (
-          <div style={{ position: "relative" }}>
-            <select
-              value={currentWorkspace?._id ?? ""}
-              onChange={(e) => setSelectedWorkspaceId(e.target.value)}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          {/* Member quota badge */}
+          {currentWorkspace && (!isPro && isOwner ? (
+            <div
               style={{
-                appearance: "none",
-                background: "#FFFFFF",
-                border: "1px solid #CBD5E1",
-                color: "#1E293B",
-                padding: "8px 36px 8px 14px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
                 borderRadius: 8,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-                outline: "none",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                background: isMemberLimitReached ? "rgba(217, 119, 6, 0.10)" : "rgba(15, 23, 42, 0.04)",
+                border: `1px solid ${isMemberLimitReached ? "rgba(217, 119, 6, 0.28)" : "rgba(15, 23, 42, 0.08)"}`,
+                fontSize: 12,
+                fontWeight: 700,
+                color: isMemberLimitReached ? "#D97706" : "#475569",
               }}
             >
-              {workspaces.map((ws) => (
-                <option key={ws._id} value={ws._id} style={{ background: "#FFFFFF", color: "#1E293B" }}>
-                  Espace: {ws.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={14}
-              style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#64748B" }}
-            />
-          </div>
-        )}
+              {isMemberLimitReached ? <Lock size={13} color="#D97706" /> : <Users size={13} color="#475569" />}
+              <span>{members.length} / 5 membres (Starter)</span>
+            </div>
+          ) : isPro ? (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
+                borderRadius: 8,
+                background: "rgba(59, 128, 92, 0.10)",
+                border: "1px solid rgba(59, 128, 92, 0.22)",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#2D6A4F",
+              }}
+            >
+              <Sparkles size={13} color="#3B805C" />
+              <span>Membres illimités (Plan Pro)</span>
+            </div>
+          ) : null)}
+
+          {/* Workspace Selector */}
+          {workspaces && workspaces.length > 0 && (
+            <div style={{ position: "relative" }}>
+              <select
+                value={currentWorkspace?._id ?? ""}
+                onChange={(e) => setSelectedWorkspaceId(e.target.value)}
+                style={{
+                  appearance: "none",
+                  background: "#FFFFFF",
+                  border: "1px solid #CBD5E1",
+                  color: "#1E293B",
+                  padding: "8px 36px 8px 14px",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  outline: "none",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                }}
+              >
+                {workspaces.map((ws) => (
+                  <option key={ws._id} value={ws._id} style={{ background: "#FFFFFF", color: "#1E293B" }}>
+                    Espace: {ws.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={14}
+                style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#64748B" }}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Control Bar: Search & View switcher */}
@@ -301,6 +358,12 @@ export default function MembersClient() {
           })}
         </div>
       )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        userPlanStatus={planStatusObj}
+      />
     </div>
   );
 }
