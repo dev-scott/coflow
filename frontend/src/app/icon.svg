@@ -1,0 +1,25 @@
+<svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="3" width="94" height="94" rx="24" fill="#FFFFFF"/>
+  <rect x="3.5" y="3.5" width="93" height="93" rx="23.5" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Conduit 1 (Ardoise) -->
+  <path
+    d="M 73 28 C 46 28 25 33 25 50 C 25 61 31 66 43 66 C 53 66 60 58 60 49"
+    stroke="#1E293B"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Conduit 2 (Vert Sauge) -->
+  <path
+    d="M 27 72 C 54 72 75 67 75 50 C 75 39 69 34 57 34 C 47 34 40 42 40 51"
+    stroke="#4D9972"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <circle cx="50" cy="50" r="3.5" fill="#4D9972"/>
+</svg>
+
