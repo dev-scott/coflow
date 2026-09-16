@@ -73,8 +73,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(15,23,42,0.06)" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
             <CoFlowLogo size={32} />
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em", color: "#1E293B" }}>
-              Co<span style={{ color: "#4D9972" }}>Flow</span>
+            <span
+              className="brand-logo-text"
+              style={{
+                fontFamily: "var(--font-logo)",
+                fontSize: 18,
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                color: "#0F172A",
+              }}
+            >
+              Co<span
+                className="brand-logo-accent"
+                style={{
+                  background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 800,
+                }}
+              >
+                Flow
+              </span>
             </span>
           </Link>
         </div>

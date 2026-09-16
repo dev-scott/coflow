@@ -61,8 +61,27 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         >
           <CoFlowLogo size={28} />
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: "-0.02em", color: "#1E293B" }}>
-              Co<span style={{ color: "#4D9972" }}>Flow</span>
+            <span
+              className="brand-logo-text"
+              style={{
+                fontFamily: "var(--font-logo)",
+                fontSize: 17,
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                color: "#0F172A",
+              }}
+            >
+              Co<span
+                className="brand-logo-accent"
+                style={{
+                  background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 800,
+                }}
+              >
+                Flow
+              </span>
             </span>
             <span
               style={{
