@@ -764,14 +764,14 @@ export default function HomeClient() {
                   background: "#334155",
                 }}
               >
-                SM
+                GW
               </div>
               <div>
                 <p className="text-sm font-medium" style={{ fontSize: 14, fontWeight: 600, color: "#1E293B" }}>
-                  Sarah Miller
+                  Gabriel Wandja
                 </p>
                 <p className="text-xs font-mono" style={{ fontSize: 12, fontFamily: "monospace", color: "#475569" }}>
-                  Head of Product, PixelNova
+                  Founder of FrameItUp
                 </p>
               </div>
             </footer>
@@ -792,7 +792,7 @@ export default function HomeClient() {
                 “L'interface est rapide, propre, sans distraction. C'est exactement ce qu'on cherchait pour coordonner nos collaborateurs sans lourdeur inutile.”
               </p>
               <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
-                Thomas Garnier — Directeur Technique, NexGen Studio
+                Christia wandja - Community manager
               </p>
             </div>
             <div>
@@ -800,7 +800,7 @@ export default function HomeClient() {
                 “La gestion multi-espaces nous permet de collaborer avec nos clients et prestataires en toute sérénité sans mélanger nos dossiers.”
               </p>
               <p className="mt-4 font-mono text-[11px]" style={{ marginTop: 16, fontFamily: "monospace", fontSize: 11, color: "#475569", fontWeight: 600 }}>
-                Camille Roux — Fondatrice, ScaleAgency
+                Anerson josias - Developer
               </p>
             </div>
           </div>
@@ -948,7 +948,7 @@ export default function HomeClient() {
             {[
               { feature: "Espaces de travail (Workspaces)", starter: "3", pro: "Illimité", enterprise: "Illimité" },
               { feature: "Collaborateurs & invités", starter: "5", pro: "Illimité", enterprise: "Illimité" },
-              { feature: "Tableaux Kanban & Projets", starter: "Illimité", pro: "Illimité", enterprise: "Illimité" },
+              { feature: "Tableaux Kanban & Projets", starter: "3 par espace", pro: "Illimité", enterprise: "Illimité" },
               { feature: "Suivi des priorités & échéances", starter: "✓", pro: "✓", enterprise: "✓" },
               { feature: "Archivage des accomplissements", starter: "30 jours", pro: "Illimité", enterprise: "Illimité" },
               { feature: "Paiement Mobile Money (MoMo/OM)", starter: "Gratuit", pro: "✓", enterprise: "✓" },

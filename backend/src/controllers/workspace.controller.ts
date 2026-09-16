@@ -7,6 +7,7 @@ import User from "../models/User.model.js";
 import WorkspaceInvite from "../models/WorkspaceInvite.model.js";
 import { sendEmail } from "../lib/send-email.js";
 import { recordActivity, isValidObjectId } from "../lib/index.js";
+import { PLAN_LIMITS, isUserPro } from "../lib/plan-limits.js";
 import type { WorkspaceMemberRole } from "../models/Workspace.model.js";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -18,6 +19,21 @@ export const createWorkspace = async (req: Request, res: Response): Promise<void
     description?: string;
     color: string;
   };
+
+  const user = await User.findById(req.user._id);
+  if (!isUserPro(user)) {
+    const ownedCount = await Workspace.countDocuments({ owner: req.user._id });
+    if (ownedCount >= PLAN_LIMITS.starter.maxWorkspaces) {
+      res.status(403).json({
+        code: "PLAN_LIMIT_REACHED",
+        limitType: "workspaces",
+        limit: PLAN_LIMITS.starter.maxWorkspaces,
+        current: ownedCount,
+        message: `Vous avez atteint la limite de ${PLAN_LIMITS.starter.maxWorkspaces} espaces de travail du plan Starter. Passez au plan Pro pour créer des espaces illimités.`,
+      });
+      return;
+    }
+  }
 
   const workspace = await Workspace.create({
     name,
@@ -234,6 +250,21 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
   if (!memberInfo || !["admin", "owner"].includes(memberInfo.role)) {
     res.status(403).json({ message: "Not authorized to invite members" });
     return;
+  }
+
+  // Vérifier la limite de membres selon le plan du propriétaire de l'espace
+  const owner = await User.findById(workspace.owner);
+  if (!isUserPro(owner)) {
+    if (workspace.members.length >= PLAN_LIMITS.starter.maxMembersPerWorkspace) {
+      res.status(403).json({
+        code: "PLAN_LIMIT_REACHED",
+        limitType: "members",
+        limit: PLAN_LIMITS.starter.maxMembersPerWorkspace,
+        current: workspace.members.length,
+        message: `Cet espace de travail a atteint la limite de ${PLAN_LIMITS.starter.maxMembersPerWorkspace} membres du plan Starter. Passez au plan Pro pour inviter des collaborateurs en illimité.`,
+      });
+      return;
+    }
   }
 
   const target = await User.findOne({ email });

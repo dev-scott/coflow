@@ -5,13 +5,15 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   FolderKanban, Users, ArrowRight, BarChart2, Plus,
-  CheckCircle2, Clock, Loader2, ArrowLeft, X, Mail
+  CheckCircle2, Clock, Loader2, ArrowLeft, X, Mail, Zap, Lock, Sparkles
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { fetchData, postData } from "@/lib/fetch-util";
+import { useAuth } from "@/providers/auth-provider";
+import { UpgradeModal } from "@/components/upgrade-modal";
 import type { Workspace, Project, WorkspaceStatsResponse } from "@/types";
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
@@ -33,9 +35,11 @@ type ProjectForm = z.infer<typeof projectSchema>;
 function CreateProjectModal({
   workspaceId,
   onClose,
+  onLimitReached,
 }: {
   workspaceId: string;
   onClose: () => void;
+  onLimitReached?: () => void;
 }) {
   const qc = useQueryClient();
   const { register, handleSubmit, formState: { errors } } = useForm<ProjectForm>({
@@ -51,7 +55,14 @@ function CreateProjectModal({
       toast.success(`Projet "${p.title}" créé avec succès !`);
       onClose();
     },
-    onError: (err: Error) => toast.error(err.message || "Erreur de création du projet"),
+    onError: (err: any) => {
+      const msg = err.message || "Erreur de création du projet";
+      toast.error(msg);
+      if (msg.includes("Starter") || msg.includes("plan Pro") || err.code === "PLAN_LIMIT_REACHED") {
+        onClose();
+        if (onLimitReached) onLimitReached();
+      }
+    },
   });
 
   return (
@@ -249,8 +260,13 @@ function StatCard({ label, value, icon: Icon, color, bg }: { label: string; valu
 }
 
 export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: string }) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
+  const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
 
   const { data, isLoading } = useQuery<{ projects: Project[]; workspace: Workspace }>({
     queryKey: ["workspace-projects", workspaceId],
@@ -264,6 +280,16 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
 
   const workspace = data?.workspace;
   const projects = data?.projects ?? [];
+
+  const isOwner = workspace?.owner === user?._id || (typeof workspace?.owner === "object" && (workspace?.owner as any)?._id === user?._id);
+  const isProjectLimitReached = !isPro && isOwner && projects.length >= 3;
+
+  const planStatusObj = {
+    plan: user?.plan,
+    planStatus: user?.planStatus,
+    isPro,
+    daysLeftInTrial: user?.trialEndsAt ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
+  };
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -328,13 +354,43 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
             </div>
           </div>
 
-          <button
-            onClick={() => setShowProjectModal(true)}
-            className="lp-btn-pro"
-            style={{ height: 40, borderRadius: 8, fontSize: 13 }}
-          >
-            <Plus size={15} /> Nouveau projet
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            {!isPro && isOwner ? (
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 12px",
+                  borderRadius: 8,
+                  background: isProjectLimitReached ? "rgba(217, 119, 6, 0.10)" : "rgba(15, 23, 42, 0.04)",
+                  border: `1px solid ${isProjectLimitReached ? "rgba(217, 119, 6, 0.28)" : "rgba(15, 23, 42, 0.08)"}`,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: isProjectLimitReached ? "#D97706" : "#475569",
+                }}
+              >
+                {isProjectLimitReached ? <Lock size={13} color="#D97706" /> : <FolderKanban size={13} color="#475569" />}
+                <span>{projects.length} / 3 projets (Starter)</span>
+              </div>
+            ) : null}
+
+            <button
+              onClick={() => {
+                if (isProjectLimitReached) {
+                  toast.warning("Limite atteinte : Le plan Starter vous permet de créer jusqu'à 3 projets par espace. Passez au plan Pro pour créer des projets illimités.");
+                  setShowUpgradeModal(true);
+                } else {
+                  setShowProjectModal(true);
+                }
+              }}
+              className="lp-btn-pro"
+              style={{ height: 40, borderRadius: 8, fontSize: 13 }}
+            >
+              {isProjectLimitReached ? <Zap size={14} color="#fff" fill="#fff" /> : <Plus size={15} />}
+              {isProjectLimitReached ? "Débloquer Pro" : "Nouveau projet"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -589,8 +645,15 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
         <CreateProjectModal
           workspaceId={workspaceId}
           onClose={() => setShowProjectModal(false)}
+          onLimitReached={() => setShowUpgradeModal(true)}
         />
       )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        userPlanStatus={planStatusObj}
+      />
     </div>
   );
 }
