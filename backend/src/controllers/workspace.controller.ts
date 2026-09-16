@@ -8,10 +8,10 @@ import WorkspaceInvite from "../models/WorkspaceInvite.model.js";
 import { sendEmail } from "../lib/send-email.js";
 import { recordActivity, isValidObjectId } from "../lib/index.js";
 import { PLAN_LIMITS, isUserPro } from "../lib/plan-limits.js";
+import { getFrontendBaseUrl } from "../lib/urls.js";
 import type { WorkspaceMemberRole } from "../models/Workspace.model.js";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-const FRONTEND_URL = process.env.FRONTEND_URL ?? "http://localhost:3000";
 
 export const createWorkspace = async (req: Request, res: Response): Promise<void> => {
   const { name, description, color } = req.body as {
@@ -306,7 +306,8 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
-  const link = `${FRONTEND_URL}/workspace-invite/${workspace._id}?tk=${inviteToken}`;
+  const baseUrl = getFrontendBaseUrl(req);
+  const link = `${baseUrl}/workspace-invite/${workspace._id}?tk=${inviteToken}`;
   const html = `
     <p>Vous avez été invité à rejoindre le workspace <strong>${workspace.name}</strong>.</p>
     <p><a href="${link}">Cliquez ici pour rejoindre</a></p>

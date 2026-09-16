@@ -5,6 +5,7 @@ import User from "../models/User.model.js";
 import Workspace from "../models/Workspace.model.js";
 import Verification from "../models/Verification.model.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../lib/send-email.js";
+import { getFrontendBaseUrl } from "../lib/urls.js";
 import aj from "../lib/arcjet.js";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -65,7 +66,8 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   });
 
   // Envoyer l'email d'activation (gratuit via SMTP ou journalisation terminal)
-  await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
+  const baseUrl = getFrontendBaseUrl(req);
+  await sendVerificationEmail(newUser.email, newUser.name, verificationToken, baseUrl);
 
   res.status(201).json({
     message: "Compte créé avec succès ! Un email de vérification vous a été envoyé.",
@@ -163,7 +165,8 @@ export const resendVerificationEmail = async (req: Request, res: Response): Prom
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
   });
 
-  await sendVerificationEmail(user.email, user.name, verificationToken);
+  const baseUrl = getFrontendBaseUrl(req);
+  await sendVerificationEmail(user.email, user.name, verificationToken, baseUrl);
 
   res.status(200).json({ message: "Un nouveau lien d'activation vous a été envoyé." });
 };
@@ -252,7 +255,8 @@ export const resetPasswordRequest = async (req: Request, res: Response): Promise
     expiresAt: new Date(Date.now() + 15 * 60 * 1000),
   });
 
-  const sent = await sendPasswordResetEmail(user.email, user.name, resetToken);
+  const baseUrl = getFrontendBaseUrl(req);
+  const sent = await sendPasswordResetEmail(user.email, user.name, resetToken, baseUrl);
   if (!sent) {
     res.status(500).json({ message: "Impossible d'envoyer l'email de réinitialisation" });
     return;

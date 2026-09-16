@@ -197,10 +197,29 @@ export default function HomeClient() {
         }}
       >
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
             <CoFlowLogo size={32} />
-            <span className="font-bold tracking-tight" style={{ color: "#1E293B", fontSize: 16, fontWeight: 700, letterSpacing: "-0.02em" }}>
-              Co<span style={{ color: "#4D9972" }}>Flow</span>
+            <span
+              className="brand-logo-text"
+              style={{
+                fontFamily: "var(--font-logo)",
+                fontSize: 18,
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                color: "#0F172A",
+              }}
+            >
+              Co<span
+                className="brand-logo-accent"
+                style={{
+                  background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 800,
+                }}
+              >
+                Flow
+              </span>
             </span>
           </Link>
 
@@ -1198,10 +1217,29 @@ export default function HomeClient() {
             gap: 20,
           }}
         >
-          <Link href="/" className="flex items-center gap-2" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link href="/" className="flex items-center gap-2" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
             <CoFlowLogo size={24} />
-            <span className="text-sm font-bold" style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>
-              Co<span style={{ color: "#3B805C" }}>Flow</span>
+            <span
+              className="brand-logo-text"
+              style={{
+                fontFamily: "var(--font-logo)",
+                fontSize: 16,
+                fontWeight: 800,
+                letterSpacing: "-0.035em",
+                color: "#0F172A",
+              }}
+            >
+              Co<span
+                className="brand-logo-accent"
+                style={{
+                  background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 800,
+                }}
+              >
+                Flow
+              </span>
             </span>
           </Link>
 
