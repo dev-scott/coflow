@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import crypto from "crypto";
 import User from "../models/User.model.js";
 import Subscription from "../models/Subscription.model.js";
+import { getFrontendBaseUrl } from "../lib/urls.js";
 
 const NOTCHPAY_PUBLIC_KEY = process.env.NOTCHPAY_PUBLIC_KEY;
 const NOTCHPAY_HASH_KEY = process.env.NOTCHPAY_HASH_KEY;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 // Tarifs officiels CoFlow (XAF pour le Cameroun, EUR pour l'international)
 const PRICING = {
@@ -156,7 +156,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
           email: user.email,
           name: user.name,
           reference,
-          callback: `${FRONTEND_URL}/dashboard?payment=success&ref=${reference}`,
+          callback: `${getFrontendBaseUrl(req)}/dashboard?payment=success&ref=${reference}`,
         }),
       });
 
@@ -188,7 +188,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
   console.log("=".repeat(70) + "\n");
 
   res.status(200).json({
-    checkoutUrl: `${FRONTEND_URL}/dashboard?payment=sandbox&ref=${reference}`,
+    checkoutUrl: `${getFrontendBaseUrl(req)}/dashboard?payment=sandbox&ref=${reference}`,
     reference,
     amount,
     currency: selectedCurrency,

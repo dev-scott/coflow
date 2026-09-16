@@ -92,9 +92,11 @@ export async function sendEmail(
 export async function sendVerificationEmail(
   to: string,
   name: string,
-  token: string
+  token: string,
+  baseUrl?: string
 ): Promise<boolean> {
-  const verifyUrl = `${FRONTEND_URL}/verify-email?token=${token}`;
+  const rootUrl = baseUrl ? baseUrl.replace(/\/$/, "") : FRONTEND_URL;
+  const verifyUrl = `${rootUrl}/verify-email?token=${token}`;
 
   const html = `
     <!DOCTYPE html>
@@ -141,9 +143,11 @@ export async function sendVerificationEmail(
 export async function sendPasswordResetEmail(
   to: string,
   name: string,
-  token: string
+  token: string,
+  baseUrl?: string
 ): Promise<boolean> {
-  const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
+  const rootUrl = baseUrl ? baseUrl.replace(/\/$/, "") : FRONTEND_URL;
+  const resetUrl = `${rootUrl}/reset-password?token=${token}`;
 
   const html = `
     <!DOCTYPE html>
