@@ -45,7 +45,7 @@ export const projectSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().optional(),
   status: z.enum(["Planning", "In Progress", "On Hold", "Completed", "Cancelled"]),
-  startDate: z.string(),
+  startDate: z.string().optional(),
   dueDate: z.string().optional(),
   tags: z.string().optional(),
   members: z
@@ -64,7 +64,7 @@ export const taskSchema = z.object({
   status: z.enum(["To Do", "In Progress", "Review", "Done"]),
   priority: z.enum(["Low", "Medium", "High"]),
   dueDate: z.string().min(1, "Due date is required"),
-  assignees: z.array(z.string()).min(1, "At least one assignee is required"),
+  assignees: z.array(z.string()).optional(),
 });
 
 // Inferred types

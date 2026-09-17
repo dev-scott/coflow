@@ -3,6 +3,11 @@ import TaskDetailClient from "./task-detail-client";
 
 export const metadata: Metadata = { title: "Tâche" };
 
-export default function TaskDetailPage({ params }: { params: { taskId: string } }) {
-  return <TaskDetailClient taskId={params.taskId} />;
+export default async function TaskDetailPage({
+  params,
+}: {
+  params: Promise<{ taskId: string }>;
+}) {
+  const { taskId } = await params;
+  return <TaskDetailClient taskId={taskId} />;
 }

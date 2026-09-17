@@ -3,6 +3,11 @@ import ProjectDetailClient from "./project-detail-client";
 
 export const metadata: Metadata = { title: "Projet" };
 
-export default function ProjectDetailPage({ params }: { params: { projectId: string } }) {
-  return <ProjectDetailClient projectId={params.projectId} />;
+export default async function ProjectDetailPage({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) {
+  const { projectId } = await params;
+  return <ProjectDetailClient projectId={projectId} />;
 }

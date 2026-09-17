@@ -93,11 +93,27 @@ export const getWorkspaceProjects = async (req: Request, res: Response): Promise
     return;
   }
 
-  const projects = await Project.find({
-    workspace: workspaceId,
-    isArchived: false,
-    members: { $elemMatch: { user: req.user._id } },
-  })
+  const isOwnerOrAdmin =
+    workspace.owner.toString() === req.user._id.toString() ||
+    workspace.members.some(
+      (m) =>
+        ((m.user as any)?._id?.toString() === req.user._id.toString() ||
+          (m.user as any)?.toString() === req.user._id.toString()) &&
+        (m.role === "owner" || m.role === "admin")
+    );
+
+  const projectFilter = isOwnerOrAdmin
+    ? { workspace: workspaceId, isArchived: false }
+    : {
+        workspace: workspaceId,
+        isArchived: false,
+        $or: [
+          { createdBy: req.user._id },
+          { members: { $elemMatch: { user: req.user._id } } },
+        ],
+      };
+
+  const projects = await Project.find(projectFilter)
     .populate("tasks", "status")
     .sort({ createdAt: -1 });
 

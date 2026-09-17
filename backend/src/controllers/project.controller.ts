@@ -56,15 +56,20 @@ export const createProject = async (req: Request, res: Response): Promise<void> 
 
   const tagArray = tags ? tags.split(",").map((t) => t.trim()) : [];
 
+  const memberList = members && members.length > 0 ? [...members] : [];
+  if (!memberList.some((m) => m.user.toString() === req.user._id.toString())) {
+    memberList.push({ user: req.user._id.toString(), role: "manager" });
+  }
+
   const project = await Project.create({
     title,
     description,
     status,
-    startDate,
-    dueDate,
+    startDate: startDate ? new Date(startDate) : new Date(),
+    dueDate: dueDate ? new Date(dueDate) : undefined,
     tags: tagArray,
     workspace: workspaceId,
-    members,
+    members: memberList,
     createdBy: req.user._id,
   });
 
@@ -88,10 +93,11 @@ export const getProjectDetails = async (req: Request, res: Response): Promise<vo
     return;
   }
 
+  const isCreator = project.createdBy.toString() === req.user._id.toString();
   const isMember = project.members.some(
-    (m) => m.user.toString() === req.user._id.toString()
+    (m) => (m.user as any)?._id?.toString() === req.user._id.toString() || (m.user as any)?.toString() === req.user._id.toString()
   );
-  if (!isMember) {
+  if (!isMember && !isCreator) {
     res.status(403).json({ message: "You are not a member of this project" });
     return;
   }
@@ -113,10 +119,11 @@ export const getProjectTasks = async (req: Request, res: Response): Promise<void
     return;
   }
 
+  const isCreator = project.createdBy.toString() === req.user._id.toString();
   const isMember = project.members.some(
-    (m) => m.user._id.toString() === req.user._id.toString()
+    (m) => (m.user as any)?._id?.toString() === req.user._id.toString() || (m.user as any)?.toString() === req.user._id.toString()
   );
-  if (!isMember) {
+  if (!isMember && !isCreator) {
     res.status(403).json({ message: "You are not a member of this project" });
     return;
   }
