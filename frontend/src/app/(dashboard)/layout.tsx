@@ -5,9 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FolderKanban, CheckSquare, Users,
-  Archive, Settings, LogOut, Plus, Zap, Crown,
+  Archive, Settings, LogOut, Plus, Zap, Crown, Clock,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
+import { usePlan } from "@/hooks/use-plan";
 import { CoFlowLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
 
@@ -26,17 +27,16 @@ const NAV_SECONDARY = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const {
+    isPro,
+    isProPaid,
+    isTrialActive,
+    isTrialExpired,
+    isEnterprise,
+    canStartTrial,
+    daysLeftInTrial,
+  } = usePlan();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-
-  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing";
-  const isProActive = user?.plan === "pro" && user?.planStatus === "active";
-  const isEnterprise = user?.plan === "enterprise";
-
-  const getTrialDaysLeft = () => {
-    if (!user?.trialEndsAt) return 14;
-    const diff = new Date(user.trialEndsAt).getTime() - Date.now();
-    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-  };
 
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Tableau de bord";
@@ -192,17 +192,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Plan status card in sidebar */}
         <div style={{ margin: "0 10px 10px", padding: "10px 12px", borderRadius: 8, background: "rgba(15,23,42,0.03)", border: "1px solid rgba(15,23,42,0.06)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isProActive || isEnterprise ? 0 : 4 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: isTrial || isProActive ? "#2D6A4F" : "#64748B" }}>
-              {isEnterprise ? "Entreprise" : isProActive ? "Plan Pro" : isTrial ? "Essai Pro" : "Starter"}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isProPaid || isEnterprise ? 0 : 4 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: isTrialActive || isProPaid ? "#2D6A4F" : isTrialExpired ? "#D97706" : "#64748B" }}>
+              {isEnterprise ? "Entreprise" : isProPaid ? "Plan Pro" : isTrialActive ? "Essai Pro" : isTrialExpired ? "Starter" : "Starter"}
             </span>
-            {isTrial && (
+            {isTrialActive && (
               <span style={{ fontSize: 10, fontWeight: 700, color: "#3B805C", background: "rgba(59,128,92,0.12)", padding: "1px 6px", borderRadius: 10 }}>
-                {getTrialDaysLeft()}j
+                {daysLeftInTrial}j restants
+              </span>
+            )}
+            {isTrialExpired && (
+              <span style={{ fontSize: 9.5, fontWeight: 700, color: "#D97706", background: "rgba(245,158,11,0.12)", padding: "1px 5px", borderRadius: 8 }}>
+                Essai expiré
               </span>
             )}
           </div>
-          {!isProActive && !isEnterprise && (
+
+          {!isProPaid && !isEnterprise && (
             <button
               type="button"
               onClick={() => setUpgradeOpen(true)}
@@ -212,9 +218,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 marginTop: 4,
                 fontSize: 11,
                 fontWeight: 600,
-                color: "#2D6A4F",
+                color: isTrialExpired ? "#D97706" : "#2D6A4F",
                 background: "transparent",
-                border: "1px dashed rgba(59,128,92,0.35)",
+                border: isTrialExpired ? "1px dashed rgba(217,119,6,0.4)" : "1px dashed rgba(59,128,92,0.35)",
                 borderRadius: 5,
                 cursor: "pointer",
                 display: "flex",
@@ -223,10 +229,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 gap: 4,
                 transition: "background 0.12s ease",
               }}
-              onMouseOver={(e) => (e.currentTarget.style.background = "rgba(59,128,92,0.06)")}
+              onMouseOver={(e) => (e.currentTarget.style.background = isTrialExpired ? "rgba(217,119,6,0.06)" : "rgba(59,128,92,0.06)")}
               onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
             >
-              <Zap size={11} color="#3B805C" /> {isTrial ? "Activer l'abonnement" : "Essayer Pro (14j)"}
+              <Zap size={11} color={isTrialExpired ? "#D97706" : "#3B805C"} />
+              {isTrialActive ? "Passer au Plan Pro" : isTrialExpired ? "Réactiver Pro" : "Essayer Pro (14j)"}
+            </button>
+          )}
+
+          {isProPaid && (
+            <button
+              type="button"
+              onClick={() => setUpgradeOpen(true)}
+              style={{
+                width: "100%",
+                padding: "4px 8px",
+                marginTop: 4,
+                fontSize: 10.5,
+                fontWeight: 600,
+                color: "#2D6A4F",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "center",
+              }}
+            >
+              Gérer mon abonnement →
             </button>
           )}
         </div>
@@ -310,7 +338,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </span>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {isTrial && (
+            {isTrialActive && (
               <button
                 type="button"
                 onClick={() => setUpgradeOpen(true)}
@@ -320,23 +348,52 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   gap: 6,
                   padding: "5px 12px",
                   borderRadius: 20,
-                  background: "rgba(59,128,92,0.10)",
-                  border: "1px solid rgba(59,128,92,0.25)",
-                  color: "#2D6A4F",
+                  background: daysLeftInTrial <= 3 ? "rgba(245,158,11,0.12)" : "rgba(59,128,92,0.10)",
+                  border: daysLeftInTrial <= 3 ? "1px solid rgba(245,158,11,0.3)" : "1px solid rgba(59,128,92,0.25)",
+                  color: daysLeftInTrial <= 3 ? "#B45309" : "#2D6A4F",
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
-                title="Cliquez pour gérer votre abonnement Pro"
+                title="Cliquez pour finaliser votre abonnement Pro"
               >
-                <Zap size={13} fill="#3B805C" color="#3B805C" />
-                <span>Essai Pro · {getTrialDaysLeft()}j restant{getTrialDaysLeft() > 1 ? "s" : ""}</span>
+                <Zap size={13} fill={daysLeftInTrial <= 3 ? "#D97706" : "#3B805C"} color={daysLeftInTrial <= 3 ? "#D97706" : "#3B805C"} />
+                <span>
+                  {daysLeftInTrial <= 3
+                    ? `Fin d'essai dans ${daysLeftInTrial}j · Passer en Pro`
+                    : `Essai Pro · ${daysLeftInTrial}j restant${daysLeftInTrial > 1 ? "s" : ""}`}
+                </span>
               </button>
             )}
 
-            {isProActive && (
-              <div
+            {isTrialExpired && (
+              <button
+                type="button"
+                onClick={() => setUpgradeOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "5px 12px",
+                  borderRadius: 20,
+                  background: "rgba(245,158,11,0.12)",
+                  border: "1px solid rgba(245,158,11,0.35)",
+                  color: "#B45309",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                <Clock size={13} />
+                <span>Essai terminé · Débloquer Pro</span>
+              </button>
+            )}
+
+            {isProPaid && (
+              <button
+                type="button"
+                onClick={() => setUpgradeOpen(true)}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -348,14 +405,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   color: "#2D6A4F",
                   fontSize: 12,
                   fontWeight: 700,
+                  cursor: "pointer",
                 }}
               >
                 <Crown size={13} color="#2D6A4F" />
-                <span>Plan Pro</span>
-              </div>
+                <span>Plan Pro Actif</span>
+              </button>
             )}
 
-            {!isTrial && !isProActive && !isEnterprise && (
+            {canStartTrial && (
               <button
                 type="button"
                 onClick={() => setUpgradeOpen(true)}

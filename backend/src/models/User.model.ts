@@ -9,6 +9,7 @@ export interface IUser extends Document {
   plan: "starter" | "pro" | "enterprise";
   planStatus: "active" | "trialing" | "past_due" | "canceled";
   trialEndsAt?: Date;
+  hasUsedTrial?: boolean;
   subscriptionEndsAt?: Date;
   paymentReference?: string;
   lastLogin?: Date;
@@ -43,6 +44,7 @@ const userSchema = new Schema<IUser>(
       default: "active",
     },
     trialEndsAt: { type: Date },
+    hasUsedTrial: { type: Boolean, default: false },
     subscriptionEndsAt: { type: Date },
     paymentReference: { type: String },
     lastLogin: { type: Date },

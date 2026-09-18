@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { fetchData } from "@/lib/fetch-util";
 import { useAuth } from "@/providers/auth-provider";
+import { usePlan } from "@/hooks/use-plan";
 import { UpgradeModal } from "@/components/upgrade-modal";
 import { InviteMemberModal } from "@/components/invite-member-modal";
 import type { Workspace, WorkspaceMemberRole } from "@/types";
@@ -21,14 +22,12 @@ const ROLE_BADGE: Record<WorkspaceMemberRole, { label: string; color: string; bg
 
 export default function MembersClient() {
   const { user } = useAuth();
+  const { isPro } = usePlan();
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
-
-  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
-  const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
 
   const { data: workspaces, isLoading: wsLoading } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
@@ -43,13 +42,6 @@ export default function MembersClient() {
   const members = currentWorkspace?.members ?? [];
   const isOwner = currentWorkspace?.owner === user?._id || (typeof currentWorkspace?.owner === "object" && (currentWorkspace?.owner as any)?._id === user?._id);
   const isMemberLimitReached = !isPro && isOwner && members.length >= 5;
-
-  const planStatusObj = {
-    plan: user?.plan,
-    planStatus: user?.planStatus,
-    isPro,
-    daysLeftInTrial: user?.trialEndsAt ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
-  };
   const filteredMembers = members.filter((m) => {
     const q = search.toLowerCase();
     const name = m.user?.name?.toLowerCase() ?? "";
@@ -400,7 +392,7 @@ export default function MembersClient() {
       <UpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
-        userPlanStatus={planStatusObj}
+        contextMessage={isMemberLimitReached ? "Vous avez atteint la limite de 5 membres par espace du plan Starter. Passez en Pro pour des membres illimités." : undefined}
       />
     </div>
   );
