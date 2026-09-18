@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import Workspace from "../models/Workspace.model.js";
 import Project from "../models/Project.model.js";
@@ -93,27 +92,10 @@ export const getWorkspaceProjects = async (req: Request, res: Response): Promise
     return;
   }
 
-  const isOwnerOrAdmin =
-    workspace.owner.toString() === req.user._id.toString() ||
-    workspace.members.some(
-      (m) =>
-        ((m.user as any)?._id?.toString() === req.user._id.toString() ||
-          (m.user as any)?.toString() === req.user._id.toString()) &&
-        (m.role === "owner" || m.role === "admin")
-    );
-
-  const projectFilter = isOwnerOrAdmin
-    ? { workspace: workspaceId, isArchived: false }
-    : {
-        workspace: workspaceId,
-        isArchived: false,
-        $or: [
-          { createdBy: req.user._id },
-          { members: { $elemMatch: { user: req.user._id } } },
-        ],
-      };
-
-  const projects = await Project.find(projectFilter)
+  const projects = await Project.find({
+    workspace: workspaceId,
+    isArchived: false,
+  })
     .populate("tasks", "status")
     .sort({ createdAt: -1 });
 
@@ -264,7 +246,7 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
   );
 
   if (!memberInfo || !["admin", "owner"].includes(memberInfo.role)) {
-    res.status(403).json({ message: "Not authorized to invite members" });
+    res.status(403).json({ message: "Seuls les administrateurs et propriétaires peuvent inviter des membres" });
     return;
   }
 
@@ -283,39 +265,25 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
     }
   }
 
-  const target = await User.findOne({ email });
-  if (!target) {
-    res.status(400).json({ message: "User not found" });
+  const emailLower = email.trim().toLowerCase();
+  const target = await User.findOne({ email: emailLower });
+  if (target && workspace.members.some((m) => m.user.toString() === target._id.toString())) {
+    res.status(400).json({ message: "Cet utilisateur est déjà membre de cet espace de travail" });
     return;
   }
 
-  if (workspace.members.some((m) => m.user.toString() === target._id.toString())) {
-    res.status(400).json({ message: "User already a member of this workspace" });
-    return;
-  }
-
-  const existingInvite = await WorkspaceInvite.findOne({
-    user: target._id,
-    workspaceId,
-  });
-
-  if (existingInvite && existingInvite.expiresAt > new Date()) {
-    res.status(400).json({ message: "User already invited" });
-    return;
-  }
-
-  if (existingInvite) {
-    await WorkspaceInvite.deleteOne({ _id: existingInvite._id });
-  }
+  // Nettoyer les anciennes invitations pour cet email sur cet espace
+  await WorkspaceInvite.deleteMany({ email: emailLower, workspaceId });
 
   const inviteToken = jwt.sign(
-    { user: target._id, workspaceId, role: role ?? "member" },
+    { email: emailLower, workspaceId, role: role ?? "member", userId: target?._id?.toString() },
     JWT_SECRET,
     { expiresIn: "7d" }
   );
 
   await WorkspaceInvite.create({
-    user: target._id,
+    email: emailLower,
+    user: target?._id,
     workspaceId,
     token: inviteToken,
     role: role ?? "member",
@@ -325,12 +293,72 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
   const baseUrl = getFrontendBaseUrl(req);
   const link = `${baseUrl}/workspace-invite/${workspace._id}?tk=${inviteToken}`;
   const html = `
-    <p>Vous avez été invité à rejoindre le workspace <strong>${workspace.name}</strong>.</p>
-    <p><a href="${link}">Cliquez ici pour rejoindre</a></p>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff;">
+      <h2 style="color: #1E293B; margin-top: 0;">Rejoignez l'espace de travail CoFlow</h2>
+      <p style="color: #475569; font-size: 15px; line-height: 1.6;">
+        Vous avez été invité(e) par <strong>${req.user.name || "un collaborateur"}</strong> à rejoindre l'espace de travail <strong>${workspace.name}</strong> avec le rôle de <strong>${role === "admin" ? "Administrateur" : role === "viewer" ? "Lecteur" : "Membre"}</strong>.
+      </p>
+      <div style="margin: 28px 0;">
+        <a href="${link}" style="display: inline-block; background: #3B805C; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+          Accepter l'invitation et rejoindre
+        </a>
+      </div>
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.5;">
+        Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :<br/>
+        <a href="${link}" style="color: #3B805C; word-break: break-all;">${link}</a>
+      </p>
+      <hr style="border: none; border-top: 1px solid #F1F5F9; margin: 24px 0;" />
+      <p style="color: #94A3B8; font-size: 12px; margin: 0;">Ce lien expirera dans 7 jours.</p>
+    </div>
   `;
 
-  await sendEmail(email, "Invitation à rejoindre un workspace", html);
-  res.status(200).json({ message: "Invitation sent successfully" });
+  await sendEmail(emailLower, `Invitation à rejoindre l'espace "${workspace.name}" sur CoFlow`, html);
+  res.status(200).json({
+    message: "Invitation envoyée avec succès",
+    inviteLink: link,
+    token: inviteToken,
+    role: role ?? "member",
+  });
+};
+
+export const getInviteDetails = async (req: Request, res: Response): Promise<void> => {
+  const token = (req.query.token as string) || (req.body?.token as string);
+  if (!token) {
+    res.status(400).json({ message: "Jeton d'invitation manquant" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      email: string;
+      workspaceId: string;
+      role: WorkspaceMemberRole;
+    };
+
+    const workspace = await Workspace.findById(decoded.workspaceId)
+      .select("name description color owner members")
+      .populate("owner", "name email");
+
+    if (!workspace) {
+      res.status(404).json({ message: "Espace de travail introuvable" });
+      return;
+    }
+
+    res.status(200).json({
+      workspace: {
+        _id: workspace._id,
+        name: workspace.name,
+        description: workspace.description,
+        color: workspace.color,
+        owner: workspace.owner,
+        memberCount: workspace.members.length,
+      },
+      email: decoded.email,
+      role: decoded.role,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "Lien d'invitation invalide ou expiré" });
+  }
 };
 
 export const acceptGenerateInvite = async (req: Request, res: Response): Promise<void> => {
@@ -365,47 +393,61 @@ export const acceptGenerateInvite = async (req: Request, res: Response): Promise
 export const acceptInviteByToken = async (req: Request, res: Response): Promise<void> => {
   const { token } = req.body as { token: string };
 
-  const decoded = jwt.verify(token, JWT_SECRET) as {
-    user: string;
-    workspaceId: string;
-    role: WorkspaceMemberRole;
-  };
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      email?: string;
+      user?: string;
+      workspaceId: string;
+      role: WorkspaceMemberRole;
+    };
 
-  const workspace = await Workspace.findById(decoded.workspaceId);
-  if (!workspace) {
-    res.status(404).json({ message: "Workspace not found" });
-    return;
+    const workspace = await Workspace.findById(decoded.workspaceId);
+    if (!workspace) {
+      res.status(404).json({ message: "Espace de travail introuvable" });
+      return;
+    }
+
+    const alreadyMember = workspace.members.some(
+      (m) => m.user.toString() === req.user._id.toString()
+    );
+    if (alreadyMember) {
+      res.status(200).json({
+        message: "Vous êtes déjà membre de cet espace de travail",
+        workspaceId: workspace._id,
+      });
+      return;
+    }
+
+    const invite = await WorkspaceInvite.findOne({
+      workspaceId: decoded.workspaceId,
+      token,
+    });
+
+    if (!invite || invite.expiresAt < new Date()) {
+      res.status(400).json({ message: "Invitation expirée ou introuvable" });
+      return;
+    }
+
+    workspace.members.push({
+      user: req.user._id,
+      role: invite.role ?? decoded.role ?? "member",
+      joinedAt: new Date(),
+    });
+
+    await workspace.save();
+
+    await Promise.all([
+      WorkspaceInvite.deleteOne({ _id: invite._id }),
+      recordActivity(req.user._id, "joined_workspace", "Workspace", workspace._id.toString(), {
+        description: `A rejoint l'espace ${workspace.name}`,
+      }),
+    ]);
+
+    res.status(200).json({
+      message: `Félicitations ! Vous avez rejoint "${workspace.name}" avec succès`,
+      workspaceId: workspace._id,
+    });
+  } catch (err) {
+    res.status(400).json({ message: "Jeton d'invitation invalide ou expiré" });
   }
-
-  if (workspace.members.some((m) => m.user.toString() === decoded.user)) {
-    res.status(400).json({ message: "User already a member of this workspace" });
-    return;
-  }
-
-  const invite = await WorkspaceInvite.findOne({
-    user: decoded.user,
-    workspaceId: decoded.workspaceId,
-  });
-
-  if (!invite || invite.expiresAt < new Date()) {
-    res.status(400).json({ message: "Invitation expired or not found" });
-    return;
-  }
-
-  workspace.members.push({
-    user: new mongoose.Types.ObjectId(decoded.user),
-    role: decoded.role ?? "member",
-    joinedAt: new Date(),
-  });
-
-  await workspace.save();
-
-  await Promise.all([
-    WorkspaceInvite.deleteOne({ _id: invite._id }),
-    recordActivity(decoded.user, "joined_workspace", "Workspace", decoded.workspaceId, {
-      description: `Joined ${workspace.name} workspace`,
-    }),
-  ]);
-
-  res.status(200).json({ message: "Invitation accepted successfully" });
 };

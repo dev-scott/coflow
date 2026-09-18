@@ -12,15 +12,32 @@ import { Types } from "mongoose";
 const param = (req: Request, key: string): string =>
   req.params[key] as string;
 
-const canAccessProject = (project: any, userId: string): boolean => {
+const canAccessProject = async (project: any, userId: string): Promise<boolean> => {
   if (!project) return false;
   if (project.createdBy && project.createdBy.toString() === userId) return true;
-  return (
+  if (
     project.members?.some((m: any) => {
       const uId = m.user?._id ? m.user._id.toString() : m.user?.toString();
       return uId === userId;
-    }) ?? false
-  );
+    })
+  ) {
+    return true;
+  }
+  if (project.workspace) {
+    const ws = await Workspace.findById(project.workspace);
+    if (ws) {
+      if (ws.owner.toString() === userId) return true;
+      if (
+        ws.members?.some((m: any) => {
+          const uId = m.user?._id ? m.user._id.toString() : m.user?.toString();
+          return uId === userId;
+        })
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
 
 export const createTask = async (req: Request, res: Response): Promise<void> => {
@@ -74,7 +91,7 @@ export const updateTaskTitle = async (req: Request, res: Response): Promise<void
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -99,7 +116,7 @@ export const updateTaskDescription = async (req: Request, res: Response): Promis
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -124,7 +141,7 @@ export const updateTaskStatus = async (req: Request, res: Response): Promise<voi
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -149,7 +166,7 @@ export const updateTaskAssignees = async (req: Request, res: Response): Promise<
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -173,7 +190,7 @@ export const updateTaskPriority = async (req: Request, res: Response): Promise<v
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -198,7 +215,7 @@ export const addSubTask = async (req: Request, res: Response): Promise<void> => 
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -258,7 +275,7 @@ export const addComment = async (req: Request, res: Response): Promise<void> => 
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -282,7 +299,7 @@ export const watchTask = async (req: Request, res: Response): Promise<void> => {
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }
@@ -310,7 +327,7 @@ export const achievedTask = async (req: Request, res: Response): Promise<void> =
   const project = await Project.findById(task.project);
   if (!project) { res.status(404).json({ message: "Project not found" }); return; }
 
-  if (!canAccessProject(project, req.user._id.toString())) {
+  if (!(await canAccessProject(project, req.user._id.toString()))) {
     res.status(403).json({ message: "Not authorized" });
     return;
   }

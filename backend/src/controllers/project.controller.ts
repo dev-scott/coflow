@@ -93,16 +93,29 @@ export const getProjectDetails = async (req: Request, res: Response): Promise<vo
     return;
   }
 
+  const workspace = await Workspace.findById(project.workspace).populate("members.user", "name email profilePicture");
+  const isWorkspaceMember = workspace
+    ? workspace.owner.toString() === req.user._id.toString() ||
+      workspace.members.some(
+        (m) =>
+          (m.user as any)?._id?.toString() === req.user._id.toString() ||
+          (m.user as any)?.toString() === req.user._id.toString()
+      )
+    : false;
+
   const isCreator = project.createdBy.toString() === req.user._id.toString();
   const isMember = project.members.some(
     (m) => (m.user as any)?._id?.toString() === req.user._id.toString() || (m.user as any)?.toString() === req.user._id.toString()
   );
-  if (!isMember && !isCreator) {
+  if (!isMember && !isCreator && !isWorkspaceMember) {
     res.status(403).json({ message: "You are not a member of this project" });
     return;
   }
 
-  res.status(200).json(project);
+  res.status(200).json({
+    ...project.toObject(),
+    workspaceMembers: workspace?.members ?? [],
+  });
 };
 
 export const getProjectTasks = async (req: Request, res: Response): Promise<void> => {
@@ -119,11 +132,21 @@ export const getProjectTasks = async (req: Request, res: Response): Promise<void
     return;
   }
 
+  const workspace = await Workspace.findById(project.workspace).populate("members.user", "name email profilePicture");
+  const isWorkspaceMember = workspace
+    ? workspace.owner.toString() === req.user._id.toString() ||
+      workspace.members.some(
+        (m) =>
+          (m.user as any)?._id?.toString() === req.user._id.toString() ||
+          (m.user as any)?.toString() === req.user._id.toString()
+      )
+    : false;
+
   const isCreator = project.createdBy.toString() === req.user._id.toString();
   const isMember = project.members.some(
     (m) => (m.user as any)?._id?.toString() === req.user._id.toString() || (m.user as any)?.toString() === req.user._id.toString()
   );
-  if (!isMember && !isCreator) {
+  if (!isMember && !isCreator && !isWorkspaceMember) {
     res.status(403).json({ message: "You are not a member of this project" });
     return;
   }
@@ -132,5 +155,9 @@ export const getProjectTasks = async (req: Request, res: Response): Promise<void
     .populate("assignees", "name profilePicture")
     .sort({ createdAt: -1 });
 
-  res.status(200).json({ project, tasks });
+  res.status(200).json({
+    project,
+    tasks,
+    workspaceMembers: workspace?.members ?? [],
+  });
 };

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   FolderKanban, Users, ArrowRight, BarChart2, Plus,
-  CheckCircle2, Clock, Loader2, ArrowLeft, X, Mail, Zap, Lock, Sparkles
+  CheckCircle2, Clock, Loader2, ArrowLeft, X, Mail, Zap, Lock, Sparkles, UserPlus
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { fetchData, postData } from "@/lib/fetch-util";
 import { useAuth } from "@/providers/auth-provider";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { InviteMemberModal } from "@/components/invite-member-modal";
 import type { Workspace, Project, WorkspaceStatsResponse } from "@/types";
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
@@ -264,6 +265,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
   const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
   const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
@@ -374,6 +376,35 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
                 <span>{projects.length} / 3 projets (Starter)</span>
               </div>
             ) : null}
+
+            <button
+              onClick={() => {
+                if (!isPro && isOwner && (workspace?.members?.length ?? 0) >= 5) {
+                  toast.warning("Limite de membres atteinte : Le plan Starter vous permet d'inviter jusqu'à 5 membres. Passez au plan Pro pour des collaborateurs illimités.");
+                  setShowUpgradeModal(true);
+                } else {
+                  setShowInviteModal(true);
+                }
+              }}
+              style={{
+                height: 40,
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "0 14px",
+                background: "#FFFFFF",
+                border: "1px solid #CBD5E1",
+                color: "#1E293B",
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+              }}
+            >
+              <UserPlus size={15} color="#3B805C" />
+              Inviter un membre
+            </button>
 
             <button
               onClick={() => {
@@ -578,7 +609,33 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
 
       {/* Members Tab */}
       {activeTab === "members" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 10 }}>
+            <div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#1E293B", margin: 0 }}>
+                Membres de l'équipe ({workspace?.members?.length ?? 0})
+              </h3>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: "2px 0 0" }}>
+                Tous les collaborateurs de cet espace peuvent travailler ensemble sur les projets et tâches.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isPro && isOwner && (workspace?.members?.length ?? 0) >= 5) {
+                  setShowUpgradeModal(true);
+                } else {
+                  setShowInviteModal(true);
+                }
+              }}
+              className="lp-btn-pro"
+              style={{ height: 36, padding: "0 14px", borderRadius: 8, fontSize: 12.5 }}
+            >
+              <UserPlus size={14} />
+              Inviter un collaborateur
+            </button>
+          </div>
+
           {workspace?.members?.map((m) => {
             const u = m.user as { _id: string; name: string; email: string; profilePicture?: string };
             return (
@@ -648,6 +705,14 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
           onLimitReached={() => setShowUpgradeModal(true)}
         />
       )}
+
+      <InviteMemberModal
+        workspaceId={workspaceId}
+        workspaceName={workspace?.name}
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        onLimitReached={() => setShowUpgradeModal(true)}
+      />
 
       <UpgradeModal
         isOpen={showUpgradeModal}

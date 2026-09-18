@@ -9,13 +9,14 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
   "/reset-password",
   "/verify-email",
+  "/workspace-invite",
 ];
 
 // Routes that authenticated users should NOT access (redirect to dashboard)
 const AUTH_ONLY_ROUTES = ["/sign-in", "/sign-up", "/forgot-password", "/reset-password"];
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
   // Never intercept API routes or Next.js internals
   if (
@@ -41,7 +42,7 @@ export function middleware(request: NextRequest) {
   // If not authenticated and trying to access protected page → redirect to sign-in
   if (!token && !isPublic) {
     const signInUrl = new URL("/sign-in", request.url);
-    signInUrl.searchParams.set("from", pathname);
+    signInUrl.searchParams.set("from", pathname + search);
     return NextResponse.redirect(signInUrl);
   }
 

@@ -2,7 +2,8 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 import { WorkspaceMemberRole } from "./Workspace.model.js";
 
 export interface IWorkspaceInvite extends Document {
-  user: Types.ObjectId;
+  email: string;
+  user?: Types.ObjectId;
   workspaceId: Types.ObjectId;
   token: string;
   role: WorkspaceMemberRole;
@@ -12,7 +13,8 @@ export interface IWorkspaceInvite extends Document {
 
 const workspaceInviteSchema = new Schema<IWorkspaceInvite>(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    email: { type: String, required: true, lowercase: true, trim: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: false },
     workspaceId: {
       type: Schema.Types.ObjectId,
       ref: "Workspace",

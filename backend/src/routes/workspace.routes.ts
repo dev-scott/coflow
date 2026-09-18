@@ -8,12 +8,16 @@ import {
   inviteUserToWorkspace,
   acceptGenerateInvite,
   acceptInviteByToken,
+  getInviteDetails,
 } from "../controllers/workspace.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import { validateBody } from "./middleware/validate.js";
 import { workspaceSchema, inviteMemberSchema, tokenSchema } from "../lib/validate-schema.js";
 
 const router = Router();
+
+// Route publique pour consulter les informations d'une invitation
+router.get("/invite-info", getInviteDetails);
 
 router.use(authMiddleware);
 
