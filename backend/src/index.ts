@@ -17,6 +17,7 @@ const ALLOWED_ORIGINS = [
   "http://localhost:5173",
   "https://coflow.dev-scott.me",
   "https://www.coflow.dev-scott.me",
+  "https://bloom.dev-scott.me"
 ].filter(Boolean) as string[];
 
 app.use(
