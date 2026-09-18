@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Users, Search, LayoutGrid, List, ShieldCheck,
-  UserCheck, Eye, Crown, Mail, Calendar, ChevronDown, Lock, Sparkles
+  UserCheck, Eye, Crown, Mail, Calendar, ChevronDown, Lock, Sparkles, UserPlus
 } from "lucide-react";
 import { fetchData } from "@/lib/fetch-util";
 import { useAuth } from "@/providers/auth-provider";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { InviteMemberModal } from "@/components/invite-member-modal";
 import type { Workspace, WorkspaceMemberRole } from "@/types";
 
 const ROLE_BADGE: Record<WorkspaceMemberRole, { label: string; color: string; bg: string; icon: any }> = {
@@ -24,6 +25,7 @@ export default function MembersClient() {
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
   const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
@@ -152,6 +154,32 @@ export default function MembersClient() {
                 style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#64748B" }}
               />
             </div>
+          )}
+
+          {currentWorkspace && (
+            <button
+              type="button"
+              onClick={() => {
+                if (isMemberLimitReached) {
+                  setShowUpgradeModal(true);
+                } else {
+                  setShowInviteModal(true);
+                }
+              }}
+              className="lp-btn-pro"
+              style={{
+                height: 38,
+                borderRadius: 8,
+                fontSize: 13,
+                padding: "0 14px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <UserPlus size={15} />
+              Inviter un membre
+            </button>
           )}
         </div>
       </div>
@@ -357,6 +385,16 @@ export default function MembersClient() {
             );
           })}
         </div>
+      )}
+
+      {currentWorkspace && (
+        <InviteMemberModal
+          workspaceId={currentWorkspace._id}
+          workspaceName={currentWorkspace.name}
+          isOpen={showInviteModal}
+          onClose={() => setShowInviteModal(false)}
+          onLimitReached={() => setShowUpgradeModal(true)}
+        />
       )}
 
       <UpgradeModal

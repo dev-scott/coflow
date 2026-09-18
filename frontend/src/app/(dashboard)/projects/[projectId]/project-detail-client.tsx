@@ -380,14 +380,28 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
   const [showModal, setShowModal] = useState(false);
   const [modalColumn, setModalColumn] = useState<string>("To Do");
 
-  const { data, isLoading } = useQuery<{ project: Project; tasks: Task[] }>({
+  const { data, isLoading } = useQuery<{
+    project: Project;
+    tasks: Task[];
+    workspaceMembers?: { user: { _id: string; name: string }; role: string }[];
+  }>({
     queryKey: ["project-tasks", projectId],
     queryFn: () => fetchData(`/projects/${projectId}/tasks`),
   });
 
   const project = data?.project;
   const tasks = data?.tasks ?? [];
-  const members = (project?.members ?? []) as { user: { _id: string; name: string }; role: string }[];
+  const projectMembers = (project?.members ?? []) as { user: { _id: string; name: string }; role: string }[];
+  const workspaceMembers = (data?.workspaceMembers ?? []) as { user: { _id: string; name: string }; role: string }[];
+
+  // Liste combinée unique de tous les membres de l'espace et du projet assignables
+  const availableMembersMap = new Map<string, { user: { _id: string; name: string }; role: string }>();
+  [...workspaceMembers, ...projectMembers].forEach((m) => {
+    if (m?.user?._id) {
+      availableMembersMap.set(m.user._id, m);
+    }
+  });
+  const members = Array.from(availableMembersMap.values());
 
   const openCreateForStatus = (status: string) => {
     setModalColumn(status);
