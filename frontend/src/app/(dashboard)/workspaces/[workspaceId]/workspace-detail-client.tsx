@@ -13,6 +13,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { fetchData, postData } from "@/lib/fetch-util";
 import { useAuth } from "@/providers/auth-provider";
+import { usePlan } from "@/hooks/use-plan";
 import { UpgradeModal } from "@/components/upgrade-modal";
 import { InviteMemberModal } from "@/components/invite-member-modal";
 import type { Workspace, Project, WorkspaceStatsResponse } from "@/types";
@@ -262,13 +263,11 @@ function StatCard({ label, value, icon: Icon, color, bg }: { label: string; valu
 
 export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: string }) {
   const { user } = useAuth();
+  const { isPro } = usePlan();
   const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
-
-  const isTrial = user?.plan === "pro" && user?.planStatus === "trialing" && Boolean(user?.trialEndsAt && new Date(user.trialEndsAt).getTime() > Date.now());
-  const isPro = user?.plan === "enterprise" || (user?.plan === "pro" && (user?.planStatus === "active" || isTrial));
 
   const { data, isLoading } = useQuery<{ projects: Project[]; workspace: Workspace }>({
     queryKey: ["workspace-projects", workspaceId],
@@ -285,13 +284,6 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
 
   const isOwner = workspace?.owner === user?._id || (typeof workspace?.owner === "object" && (workspace?.owner as any)?._id === user?._id);
   const isProjectLimitReached = !isPro && isOwner && projects.length >= 3;
-
-  const planStatusObj = {
-    plan: user?.plan,
-    planStatus: user?.planStatus,
-    isPro,
-    daysLeftInTrial: user?.trialEndsAt ? Math.max(0, Math.ceil((new Date(user.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
-  };
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -717,7 +709,7 @@ export default function WorkspaceDetailClient({ workspaceId }: { workspaceId: st
       <UpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
-        userPlanStatus={planStatusObj}
+        contextMessage={isProjectLimitReached ? "Vous avez atteint la limite de 3 projets par espace du plan Starter. Passez en Pro pour des projets illimités." : undefined}
       />
     </div>
   );

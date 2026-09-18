@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Lock, Sparkles } from "lucide-react";
-import { CoFlowLogo } from "@/components/logo";
+import { BloomLogo } from "@/components/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -59,7 +59,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             textDecoration: "none",
           }}
         >
-          <CoFlowLogo size={28} />
+          <BloomLogo size={28} />
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span
               className="brand-logo-text"
@@ -71,7 +71,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 color: "#0F172A",
               }}
             >
-              Co<span
+              Bl<span
                 className="brand-logo-accent"
                 style={{
                   background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
@@ -80,7 +80,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   fontWeight: 800,
                 }}
               >
-                Flow
+                oom
               </span>
             </span>
             <span
@@ -163,7 +163,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           Espaces de travail cloisonnés & sécurisés
         </span>
         <span style={{ color: "#CBD5E1" }}>•</span>
-        <span>© {new Date().getFullYear()} CoFlow</span>
+        <span>© {new Date().getFullYear()} Bloom</span>
       </footer>
     </div>
   );

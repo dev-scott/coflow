@@ -294,7 +294,7 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
   const link = `${baseUrl}/workspace-invite/${workspace._id}?tk=${inviteToken}`;
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff;">
-      <h2 style="color: #1E293B; margin-top: 0;">Rejoignez l'espace de travail CoFlow</h2>
+      <h2 style="color: #1E293B; margin-top: 0;">Rejoignez l'espace de travail Bloom</h2>
       <p style="color: #475569; font-size: 15px; line-height: 1.6;">
         Vous avez été invité(e) par <strong>${req.user.name || "un collaborateur"}</strong> à rejoindre l'espace de travail <strong>${workspace.name}</strong> avec le rôle de <strong>${role === "admin" ? "Administrateur" : role === "viewer" ? "Lecteur" : "Membre"}</strong>.
       </p>
@@ -312,7 +312,7 @@ export const inviteUserToWorkspace = async (req: Request, res: Response): Promis
     </div>
   `;
 
-  await sendEmail(emailLower, `Invitation à rejoindre l'espace "${workspace.name}" sur CoFlow`, html);
+  await sendEmail(emailLower, `Invitation à rejoindre l'espace "${workspace.name}" sur Bloom`, html);
   res.status(200).json({
     message: "Invitation envoyée avec succès",
     inviteLink: link,

@@ -40,7 +40,7 @@ async function seed() {
     if (!workspace) {
       console.log("Création du workspace de démonstration...");
       workspace = await WorkspaceModel.create({
-        name: "Espace CoFlow Demo",
+        name: "Espace Bloom Demo",
         description: "Espace de travail collaboratif pour gérer nos projets",
         color: "#3b82f6",
         owner: user._id,
@@ -82,7 +82,7 @@ async function seed() {
 
       // Projet 2
       const project2 = await ProjectModel.create({
-        title: "Application Mobile CoFlow",
+        title: "Application Mobile Bloom",
         description: "Développement de l'application mobile multiplateforme.",
         status: "Planning",
         startDate: now,

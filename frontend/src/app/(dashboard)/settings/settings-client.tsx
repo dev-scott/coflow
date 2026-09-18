@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { User, Lock, Save, Shield, Bell, CheckCircle2, Loader2, Sparkles } from "lucide-react";
+import { User, Lock, Save, Shield, Bell, CheckCircle2, Loader2, Sparkles, CreditCard, Crown, Zap, ShieldCheck, Check } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
+import { usePlan } from "@/hooks/use-plan";
+import { UpgradeModal } from "@/components/upgrade-modal";
 import { fetchData, putData } from "@/lib/fetch-util";
 import type { User as UserType } from "@/types";
 
@@ -33,7 +35,22 @@ type PasswordForm = z.infer<typeof passwordSchema>;
 export default function SettingsClient() {
   const { user: authUser } = useAuth();
   const qc = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "security" | "billing">("profile");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const {
+    isPro,
+    isProPaid,
+    isTrialActive,
+    isTrialExpired,
+    isEnterprise,
+    canStartTrial,
+    daysLeftInTrial,
+    currentTrialDay,
+    trialProgressPercent,
+    subscriptionEndsAt,
+    paymentReference,
+  } = usePlan();
 
   const { data: user } = useQuery<UserType>({
     queryKey: ["auth", "me"],
@@ -202,6 +219,27 @@ export default function SettingsClient() {
         >
           <Shield size={15} />
           Sécurité & Mot de passe
+        </button>
+
+        <button
+          onClick={() => setActiveTab("billing")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 16px",
+            borderRadius: 6,
+            background: activeTab === "billing" ? "#EEF1F6" : "transparent",
+            color: activeTab === "billing" ? "#1E293B" : "#64748B",
+            border: "none",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <CreditCard size={15} />
+          Abonnement & Facturation
         </button>
       </div>
 
@@ -416,6 +454,151 @@ export default function SettingsClient() {
         </div>
       )}
 
+      {/* Tab 3: Billing & Subscription */}
+      {activeTab === "billing" && (
+        <div className="glass-card" style={{ padding: "28px 32px", borderRadius: 14 }}>
+          {/* Card header */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 24, paddingBottom: 18, borderBottom: "1px solid #E2E8F0" }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <h3 style={{ fontSize: 18, fontWeight: 800, color: "#1E293B", margin: 0 }}>
+                  Votre Formule Bloom
+                </h3>
+                <span
+                  style={{
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    padding: "2px 10px",
+                    borderRadius: 20,
+                    background: isProPaid || isTrialActive ? "rgba(59, 128, 92, 0.12)" : isTrialExpired ? "rgba(245, 158, 11, 0.12)" : "#EEF1F6",
+                    color: isProPaid || isTrialActive ? "#2D6A4F" : isTrialExpired ? "#D97706" : "#64748B",
+                  }}
+                >
+                  {isEnterprise ? "Entreprise" : isProPaid ? "Plan Pro Actif" : isTrialActive ? "Essai Pro (14j)" : isTrialExpired ? "Essai Expiré" : "Starter Gratuit"}
+                </span>
+              </div>
+              <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
+                {isProPaid
+                  ? "Vous disposez d'un abonnement actif avec accès à toutes les fonctionnalités illimitées."
+                  : isTrialActive
+                  ? `Vous profitez actuellement de l'essai gratuit de 14 jours (${daysLeftInTrial} jour${daysLeftInTrial > 1 ? "s" : ""} restant${daysLeftInTrial > 1 ? "s" : ""}).`
+                  : isTrialExpired
+                  ? "Votre période d'essai gratuit a pris fin. Passez au Plan Pro pour réactiver vos accès illimités."
+                  : "Le plan Starter gratuit vous permet de gérer jusqu'à 3 espaces de travail et 5 membres."}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowUpgradeModal(true)}
+              className="lp-btn-pro"
+              style={{ height: 38, borderRadius: 8, fontSize: 12.5 }}
+            >
+              <Zap size={14} />
+              {isProPaid ? "Modifier la formule" : isTrialActive ? "Passer à l'abonnement Pro" : isTrialExpired ? "Réactiver Pro" : "Passer en Pro"}
+            </button>
+          </div>
+
+          {/* Trial countdown gauge if in trial */}
+          {isTrialActive && (
+            <div
+              style={{
+                padding: "16px 20px",
+                borderRadius: 12,
+                background: "linear-gradient(135deg, rgba(59,128,92,0.06) 0%, rgba(37,99,235,0.04) 100%)",
+                border: "1px solid rgba(59,128,92,0.22)",
+                marginBottom: 24,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13, fontWeight: 600 }}>
+                <span style={{ color: "#0F172A" }}>Progression de l'essai gratuit</span>
+                <span style={{ color: "#2D6A4F" }}>Jour {currentTrialDay} sur 14 ({daysLeftInTrial}j restant{daysLeftInTrial > 1 ? "s" : ""})</span>
+              </div>
+              <div style={{ width: "100%", height: 6, borderRadius: 3, background: "#E2E8F0", overflow: "hidden" }}>
+                <div style={{ width: `${trialProgressPercent}%`, height: "100%", background: "linear-gradient(90deg, #3B805C, #10B981)", borderRadius: 3 }} />
+              </div>
+            </div>
+          )}
+
+          {/* Details & Quotas Grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 24 }}>
+            <div style={{ padding: "16px", borderRadius: 10, background: "#F8FAFC", border: "1px solid #E2E8F0" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "#64748B" }}>Espaces de travail</span>
+              <p style={{ fontSize: 18, fontWeight: 800, color: "#0F172A", margin: "4px 0 2px" }}>
+                {isPro ? "Illimités" : "Max 3"}
+              </p>
+              <span style={{ fontSize: 11.5, color: isPro ? "#2D6A4F" : "#64748B" }}>
+                {isPro ? "✓ Débloqué sans limite" : "Limite du plan Starter"}
+              </span>
+            </div>
+
+            <div style={{ padding: "16px", borderRadius: 10, background: "#F8FAFC", border: "1px solid #E2E8F0" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "#64748B" }}>Membres par Espace</span>
+              <p style={{ fontSize: 18, fontWeight: 800, color: "#0F172A", margin: "4px 0 2px" }}>
+                {isPro ? "Illimités" : "Max 5"}
+              </p>
+              <span style={{ fontSize: 11.5, color: isPro ? "#2D6A4F" : "#64748B" }}>
+                {isPro ? "✓ Débloqué sans limite" : "Limite du plan Starter"}
+              </span>
+            </div>
+
+            <div style={{ padding: "16px", borderRadius: 10, background: "#F8FAFC", border: "1px solid #E2E8F0" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", color: "#64748B" }}>Projets & Tâches</span>
+              <p style={{ fontSize: 18, fontWeight: 800, color: "#0F172A", margin: "4px 0 2px" }}>
+                Illimités
+              </p>
+              <span style={{ fontSize: 11.5, color: "#2D6A4F" }}>
+                ✓ Inclus sur tous les plans
+              </span>
+            </div>
+          </div>
+
+          {/* Payment & Invoicing Info */}
+          {subscriptionEndsAt && (
+            <div style={{ padding: "14px 18px", borderRadius: 10, background: "#F8FAFC", border: "1px solid #E2E8F0", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+              <div>
+                <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748B", textTransform: "uppercase" }}>Prochain Renouvellement</span>
+                <p style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", margin: "2px 0 0" }}>
+                  {new Date(subscriptionEndsAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                </p>
+              </div>
+              {paymentReference && (
+                <div style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, color: "#64748B", textTransform: "uppercase" }}>Réf. Transaction</span>
+                  <p style={{ fontSize: 12, fontFamily: "monospace", color: "#475569", margin: "2px 0 0" }}>
+                    {paymentReference}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Payment Methods Info */}
+          <div style={{ padding: "16px 18px", borderRadius: 10, background: "#FFFFFF", border: "1px solid #E2E8F0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: "rgba(59,128,92,0.1)", color: "#2D6A4F", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", margin: "0 0 2px" }}>
+                  Passerelle de paiement sécurisée Notch Pay
+                </p>
+                <p style={{ fontSize: 11.5, color: "#64748B", margin: 0 }}>
+                  MTN Mobile Money, Orange Money Cameroun & Cartes bancaires Visa / Mastercard.
+                </p>
+              </div>
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "#3B805C", background: "rgba(59,128,92,0.1)", padding: "3px 8px", borderRadius: 6 }}>
+              100% Chiffré SSL 256 bits
+            </span>
+          </div>
+        </div>
+      )}
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+      />
     </div>
   );
 }

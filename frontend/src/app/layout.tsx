@@ -20,16 +20,16 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "CoFlow — Gestionnaire de projets collaboratif",
-    template: "%s | CoFlow",
+    default: "Bloom — Gestionnaire de projets collaboratif",
+    template: "%s | Bloom",
   },
   description:
-    "CoFlow est un outil de gestion de projets collaboratif qui simplifie la coordination d'équipes, le suivi des tâches et la productivité.",
-  keywords: ["gestion de projet", "collaboration", "tâches", "équipe", "productivité"],
+    "Bloom est un outil de gestion de projets collaboratif qui simplifie la coordination d'équipes, le suivi des tâches et la productivité.",
+  keywords: ["gestion de projet", "collaboration", "tâches", "équipe", "productivité", "bloom"],
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    siteName: "CoFlow",
+    siteName: "Bloom",
   },
 };
 

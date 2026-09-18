@@ -41,6 +41,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     plan: isProTrial ? "pro" : "starter",
     planStatus: isProTrial ? "trialing" : "active",
     trialEndsAt: isProTrial ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) : undefined,
+    hasUsedTrial: isProTrial,
   });
 
   await Workspace.create({

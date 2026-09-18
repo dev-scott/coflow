@@ -215,7 +215,7 @@ export default function SignUpClient() {
           </div>
         )}
         <h1 style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.025em", color: "#0F172A", margin: "0 0 6px" }}>
-          Rejoindre CoFlow
+          Rejoindre Bloom
         </h1>
         <p style={{ fontSize: 13, color: "#64748B", margin: 0, lineHeight: 1.5 }}>
           Créez votre premier espace de travail et synchronisez votre équipe en temps réel.

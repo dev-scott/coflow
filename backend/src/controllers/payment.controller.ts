@@ -27,14 +27,29 @@ export const startFreeTrial = async (req: Request, res: Response): Promise<void>
 
   // Si l'utilisateur est déjà Pro actif
   if (user.plan === "pro" && user.planStatus === "active") {
-    res.status(400).json({ message: "Vous êtes déjà abonné au plan Pro." });
+    res.status(400).json({ message: "Vous disposez déjà d'un abonnement actif au Plan Pro." });
+    return;
+  }
+
+  // Si l'utilisateur est actuellement en cours d'essai gratuit
+  if (
+    user.plan === "pro" &&
+    user.planStatus === "trialing" &&
+    user.trialEndsAt &&
+    user.trialEndsAt > new Date()
+  ) {
+    res.status(400).json({
+      message: "Votre essai gratuit de 14 jours est déjà actif.",
+      isTrialActive: true,
+      trialEndsAt: user.trialEndsAt,
+    });
     return;
   }
 
   // Si l'utilisateur a déjà consommé son essai gratuit
-  if (user.planStatus === "trialing" && user.trialEndsAt && user.trialEndsAt < new Date()) {
+  if (user.hasUsedTrial || (user.trialEndsAt && user.trialEndsAt <= new Date())) {
     res.status(400).json({
-      message: "Votre période d'essai gratuit de 14 jours est terminée. Veuillez souscrire pour continuer à profiter du plan Pro.",
+      message: "Votre période d'essai gratuit de 14 jours a déjà été utilisée. Veuillez choisir une formule d'abonnement pour continuer avec le Plan Pro.",
       trialExpired: true,
     });
     return;
@@ -47,6 +62,7 @@ export const startFreeTrial = async (req: Request, res: Response): Promise<void>
   user.plan = "pro";
   user.planStatus = "trialing";
   user.trialEndsAt = trialEndsAt;
+  user.hasUsedTrial = true;
   await user.save();
 
   res.status(200).json({
@@ -55,11 +71,12 @@ export const startFreeTrial = async (req: Request, res: Response): Promise<void>
     planStatus: user.planStatus,
     trialEndsAt: user.trialEndsAt,
     daysLeft: trialDays,
+    hasUsedTrial: true,
   });
 };
 
 /**
- * Récupère le statut actuel du plan de l'utilisateur (Starter, Pro, Essai)
+ * Récupère le statut actuel et complet du plan de l'utilisateur (Starter, Pro, Essai)
  */
 export const getPlanStatus = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user._id;
@@ -71,26 +88,44 @@ export const getPlanStatus = async (req: Request, res: Response): Promise<void> 
   }
 
   const now = new Date();
-  let isPro = false;
+  const isEnterprise = user.plan === "enterprise";
+  const isProPaid = user.plan === "pro" && user.planStatus === "active";
+  const isTrialActive = Boolean(
+    user.plan === "pro" &&
+    user.planStatus === "trialing" &&
+    user.trialEndsAt &&
+    user.trialEndsAt > now
+  );
+  const isTrialExpired = Boolean(
+    user.planStatus === "trialing" &&
+    user.trialEndsAt &&
+    user.trialEndsAt <= now
+  );
+
+  let isPro = isEnterprise || isProPaid || isTrialActive;
   let daysLeftInTrial = 0;
 
-  if (user.plan === "pro" || user.plan === "enterprise") {
-    if (user.planStatus === "active") {
-      isPro = true;
-    } else if (user.planStatus === "trialing" && user.trialEndsAt && user.trialEndsAt > now) {
-      isPro = true;
-      const diffTime = user.trialEndsAt.getTime() - now.getTime();
-      daysLeftInTrial = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
+  if (isTrialActive && user.trialEndsAt) {
+    const diffTime = user.trialEndsAt.getTime() - now.getTime();
+    daysLeftInTrial = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }
+
+  const canStartTrial = !user.hasUsedTrial && !isPro && !isEnterprise && !user.trialEndsAt;
 
   res.status(200).json({
     plan: user.plan,
     planStatus: user.planStatus,
     isPro,
+    isProPaid,
+    isTrialActive,
+    isTrialExpired,
+    isEnterprise,
+    canStartTrial,
+    hasUsedTrial: Boolean(user.hasUsedTrial),
     trialEndsAt: user.trialEndsAt,
     daysLeftInTrial,
     subscriptionEndsAt: user.subscriptionEndsAt,
+    paymentReference: user.paymentReference,
   });
 };
 
@@ -120,7 +155,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
   const selectedCurrency = currency === "EUR" ? "EUR" : "XAF";
   const amount = PRICING[selectedPeriod][selectedCurrency];
 
-  const reference = `COFLOW_${Date.now()}_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+  const reference = `BLOOM_${Date.now()}_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
   // Enregistrer la tentative de souscription
   const subscription = await Subscription.create({
@@ -152,7 +187,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
         body: JSON.stringify({
           amount,
           currency: selectedCurrency,
-          description: `Abonnement CoFlow Pro (${selectedPeriod === "yearly" ? "Annuel" : "Mensuel"})`,
+          description: `Abonnement Bloom Pro (${selectedPeriod === "yearly" ? "Annuel" : "Mensuel"})`,
           email: user.email,
           name: user.name,
           reference,

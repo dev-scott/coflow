@@ -11,7 +11,9 @@ export interface User {
   plan?: "starter" | "pro" | "enterprise";
   planStatus?: "active" | "trialing" | "past_due" | "canceled";
   trialEndsAt?: string | Date;
+  hasUsedTrial?: boolean;
   subscriptionEndsAt?: string | Date;
+  paymentReference?: string;
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;

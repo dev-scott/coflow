@@ -1,17 +1,50 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
   FolderKanban, CheckSquare, Clock, Users, ArrowUpRight,
-  TrendingUp, Plus, Sparkles, CheckCircle2, AlertCircle, ChevronRight
+  TrendingUp, Plus, Sparkles, CheckCircle2, AlertCircle, ChevronRight, Zap, Crown
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
+import { usePlan } from "@/hooks/use-plan";
+import { UpgradeModal } from "@/components/upgrade-modal";
 import { fetchData } from "@/lib/fetch-util";
 import type { Workspace, Task } from "@/types";
 
 export default function DashboardClient() {
   const { user } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const {
+    isPro,
+    isProPaid,
+    isTrialActive,
+    isTrialExpired,
+    daysLeftInTrial,
+    currentTrialDay,
+    trialProgressPercent,
+  } = usePlan();
+
+  // Détection du retour de paiement réussi (Notch Pay ou Sandbox)
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    const ref = searchParams.get("ref");
+    if (payment === "success" || payment === "sandbox") {
+      toast.success("🎉 Félicitations ! Votre abonnement Pro a été activé avec succès.");
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+      queryClient.invalidateQueries({ queryKey: ["plan-status"] });
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      // Nettoyer l'URL
+      window.history.replaceState({}, "", "/dashboard");
+    }
+  }, [searchParams, queryClient]);
 
   const { data: workspaces, isLoading: wsLoading } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
@@ -94,6 +127,140 @@ export default function DashboardClient() {
           </Link>
         </div>
       </div>
+
+      {/* ── BANNIÈRE CONTEXTUELLE D'ESSAI PRO OU EXPIRATION ── */}
+      {isTrialActive && (
+        <div
+          style={{
+            marginBottom: 24,
+            padding: "14px 20px",
+            borderRadius: 14,
+            background: "linear-gradient(135deg, rgba(59, 128, 92, 0.08) 0%, rgba(37, 99, 235, 0.05) 100%)",
+            border: "1px solid rgba(59, 128, 92, 0.22)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 14,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: "rgba(59, 128, 92, 0.14)",
+                color: "#2D6A4F",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Zap size={18} fill="#3B805C" />
+            </div>
+            <div>
+              <p style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", margin: "0 0 2px" }}>
+                Essai Pro Actif · Jour {currentTrialDay} sur 14 ({daysLeftInTrial} jour{daysLeftInTrial > 1 ? "s" : ""} restant{daysLeftInTrial > 1 ? "s" : ""})
+              </p>
+              <p style={{ fontSize: 12, color: "#64748B", margin: 0 }}>
+                Vos fonctionnalités Pro illimitées sont actives. Choisissez dès maintenant votre abonnement pour continuer sans interruption.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowUpgradeModal(true)}
+            style={{
+              padding: "7px 16px",
+              borderRadius: 8,
+              background: "#2D6A4F",
+              color: "#FFFFFF",
+              fontSize: 12.5,
+              fontWeight: 700,
+              border: "none",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              whiteSpace: "nowrap",
+              transition: "background 0.15s ease",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.background = "#24553F")}
+            onMouseOut={(e) => (e.currentTarget.style.background = "#2D6A4F")}
+          >
+            <span>Passer à l'abonnement Pro</span>
+            <ChevronRight size={14} />
+          </button>
+        </div>
+      )}
+
+      {isTrialExpired && (
+        <div
+          style={{
+            marginBottom: 24,
+            padding: "14px 20px",
+            borderRadius: 14,
+            background: "rgba(245, 158, 11, 0.08)",
+            border: "1px solid rgba(245, 158, 11, 0.28)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 14,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: "rgba(245, 158, 11, 0.16)",
+                color: "#D97706",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Clock size={18} />
+            </div>
+            <div>
+              <p style={{ fontSize: 13.5, fontWeight: 700, color: "#92400E", margin: "0 0 2px" }}>
+                Votre période d'essai de 14 jours est terminée
+              </p>
+              <p style={{ fontSize: 12, color: "#B45309", margin: 0 }}>
+                Vos projets et espaces sont en sécurité. Choisissez votre formule pour débloquer les collaborateurs illimités.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowUpgradeModal(true)}
+            style={{
+              padding: "7px 16px",
+              borderRadius: 8,
+              background: "#D97706",
+              color: "#FFFFFF",
+              fontSize: 12.5,
+              fontWeight: 700,
+              border: "none",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span>Réactiver le Plan Pro</span>
+            <ChevronRight size={14} />
+          </button>
+        </div>
+      )}
 
       {/* ── BENTO KPI CARDS ── */}
       <div
@@ -466,6 +633,11 @@ export default function DashboardClient() {
           )}
         </div>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+      />
     </div>
   );
 }

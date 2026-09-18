@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import WorkspaceInviteClient from "./workspace-invite-client";
 
 export const metadata: Metadata = {
-  title: "Invitation à un espace de travail | CoFlow",
-  description: "Rejoignez un espace de travail CoFlow pour collaborer avec votre équipe.",
+  title: "Invitation à un espace de travail | Bloom",
+  description: "Rejoignez un espace de travail Bloom pour collaborer avec votre équipe.",
 };
 
 export default async function WorkspaceInvitePage({
