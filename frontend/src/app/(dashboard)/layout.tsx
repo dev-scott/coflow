@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { usePlan } from "@/hooks/use-plan";
-import { CoFlowLogo } from "@/components/logo";
+import { BloomLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
 
 const NAV_MAIN = [
@@ -72,7 +72,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Logo Section */}
         <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(15,23,42,0.06)" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <CoFlowLogo size={32} />
+            <BloomLogo size={32} />
             <span
               className="brand-logo-text"
               style={{
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 color: "#0F172A",
               }}
             >
-              Co<span
+              Bl<span
                 className="brand-logo-accent"
                 style={{
                   background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   fontWeight: 800,
                 }}
               >
-                Flow
+                oom
               </span>
             </span>
           </Link>

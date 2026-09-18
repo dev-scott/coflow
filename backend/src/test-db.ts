@@ -1,7 +1,7 @@
 import { connectDB } from "./config/db.js";
 
 async function main() {
-  console.log("=== Test de connexion MongoDB CoFlow ===");
+  console.log("=== Test de connexion MongoDB Bloom ===");
   await connectDB();
   console.log("=== Test réussi avec succès ! ===");
   process.exit(0);

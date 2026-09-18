@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import VerifyEmailClient from "./verify-email-client";
 
 export const metadata = {
-  title: "Vérification de compte | CoFlow",
-  description: "Activez votre compte CoFlow en vérifiant votre adresse email.",
+  title: "Vérification de compte | Bloom",
+  description: "Activez votre compte Bloom en vérifiant votre adresse email.",
 };
 
 export default function VerifyEmailPage() {

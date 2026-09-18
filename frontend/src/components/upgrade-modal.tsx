@@ -199,7 +199,7 @@ export function UpgradeModal({ isOpen, open, onClose, contextMessage }: UpgradeM
               Votre Abonnement Pro est Actif
             </h2>
             <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
-              Vous bénéficiez de toutes les fonctionnalités illimitées et du support prioritaire CoFlow.
+              Vous bénéficiez de toutes les fonctionnalités illimitées et du support prioritaire Bloom.
             </p>
           </div>
         ) : isTrialActive ? (
@@ -330,7 +330,7 @@ export function UpgradeModal({ isOpen, open, onClose, contextMessage }: UpgradeM
               <span>Passez à la vitesse supérieure</span>
             </div>
             <h2 style={{ fontSize: 23, fontWeight: 900, color: "#0F172A", margin: "0 0 6px" }}>
-              Débloquez tout le potentiel de CoFlow
+              Débloquez tout le potentiel de Bloom
             </h2>
             <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
               Collaborez sans aucune limite sur tous vos projets avec votre équipe.

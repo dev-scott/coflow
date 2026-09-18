@@ -155,7 +155,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
   const selectedCurrency = currency === "EUR" ? "EUR" : "XAF";
   const amount = PRICING[selectedPeriod][selectedCurrency];
 
-  const reference = `COFLOW_${Date.now()}_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+  const reference = `BLOOM_${Date.now()}_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
   // Enregistrer la tentative de souscription
   const subscription = await Subscription.create({
@@ -187,7 +187,7 @@ export const createCheckout = async (req: Request, res: Response): Promise<void>
         body: JSON.stringify({
           amount,
           currency: selectedCurrency,
-          description: `Abonnement CoFlow Pro (${selectedPeriod === "yearly" ? "Annuel" : "Mensuel"})`,
+          description: `Abonnement Bloom Pro (${selectedPeriod === "yearly" ? "Annuel" : "Mensuel"})`,
           email: user.email,
           name: user.name,
           reference,

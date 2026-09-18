@@ -61,7 +61,7 @@ app.use(async (_req, _res, next) => {
 
 app.get("/", (_req, res) => {
   res.status(200).json({
-    message: "CoFlow API v2 — TypeScript",
+    message: "Bloom API v2 — TypeScript",
     version: "2.0.0",
     status: "ok",
   });
@@ -84,7 +84,7 @@ const PORT = Number(process.env.PORT) || 5000;
 async function bootstrap(): Promise<void> {
   await connectDB();
   app.listen(PORT, () => {
-    console.log(`\n🚀 CoFlow API running on http://localhost:${PORT}`);
+    console.log(`\n🚀 Bloom API running on http://localhost:${PORT}`);
     console.log(`   Environment : ${process.env.NODE_ENV ?? "development"}`);
     console.log(`   API base    : /api-v1\n`);
   });

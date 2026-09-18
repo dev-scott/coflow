@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { fetchData, postData } from "@/lib/fetch-util";
 import { useAuth } from "@/providers/auth-provider";
-import { CoFlowLogo } from "@/components/logo";
+import { BloomLogo } from "@/components/logo";
 
 interface InviteInfoResponse {
   workspace: {
@@ -75,7 +75,7 @@ export default function WorkspaceInviteClient({ workspaceId }: { workspaceId: st
       {/* Brand logo */}
       <div style={{ marginBottom: 32 }}>
         <Link href="/" style={{ textDecoration: "none" }}>
-          <CoFlowLogo />
+          <BloomLogo />
         </Link>
       </div>
 
@@ -331,7 +331,7 @@ export default function WorkspaceInviteClient({ workspaceId }: { workspaceId: st
 
       {/* Footer support */}
       <p style={{ fontSize: 12, color: "#94A3B8", marginTop: 24 }}>
-        CoFlow &bull; Collaboration d'équipe et gestion de projets
+        Bloom &bull; Collaboration d&apos;équipe et gestion de projets
       </p>
     </div>
   );

@@ -14,7 +14,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
-import { CoFlowLogo } from "@/components/logo";
+import { BloomLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
 
 const FAQ_ITEMS = [
@@ -198,7 +198,7 @@ export default function HomeClient() {
       >
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
           <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <CoFlowLogo size={32} />
+            <BloomLogo size={32} />
             <span
               className="brand-logo-text"
               style={{
@@ -209,7 +209,7 @@ export default function HomeClient() {
                 color: "#0F172A",
               }}
             >
-              Co<span
+              Bl<span
                 className="brand-logo-accent"
                 style={{
                   background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
@@ -218,14 +218,14 @@ export default function HomeClient() {
                   fontWeight: 800,
                 }}
               >
-                Flow
+                oom
               </span>
             </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#334155", gap: 28, fontSize: 13.5, fontWeight: 500 }}>
             {[
-              { label: "Pourquoi CoFlow", href: "#why" },
+              { label: "Pourquoi Bloom", href: "#why" },
               { label: "Fonctionnalités", href: "#features" },
               { label: "Tarifs", href: "#pricing" },
               { label: "FAQ", href: "#faq" },
@@ -284,7 +284,7 @@ export default function HomeClient() {
             }}
           >
             {[
-              { label: "Pourquoi CoFlow", href: "#why" },
+              { label: "Pourquoi Bloom", href: "#why" },
               { label: "Fonctionnalités", href: "#features" },
               { label: "Tarifs", href: "#pricing" },
               { label: "FAQ", href: "#faq" },
@@ -356,7 +356,7 @@ export default function HomeClient() {
             </h1>
 
             <p className="mt-8 text-base leading-relaxed max-w-md" style={{ marginTop: 32, fontSize: 16, lineHeight: 1.625, maxWidth: 448, color: "#334155" }}>
-              CoFlow met vos projets, vos tâches et vos collaborateurs dans un seul endroit — sans vous noyer sous les fonctionnalités que personne n&apos;utilise.
+              Bloom met vos projets, vos tâches et vos collaborateurs dans un seul endroit — sans vous noyer sous les fonctionnalités que personne n&apos;utilise.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-5" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20 }}>
@@ -404,7 +404,7 @@ export default function HomeClient() {
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e" }} />
                 <span className="w-2.5 h-2.5 rounded-full" style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840" }} />
                 <span className="ml-3 font-mono text-[11px]" style={{ marginLeft: 12, fontFamily: "monospace", fontSize: 11, color: "#94A3B8" }}>
-                  coflow.app / workspace / agence-croissance
+                  bloom.app / workspace / agence-croissance
                 </span>
               </div>
 
@@ -582,12 +582,12 @@ export default function HomeClient() {
         </div>
       </div>
 
-      {/* ── 00 — POURQUOI COFLOW ── */}
+      {/* ── 00 — POURQUOI BLOOM ── */}
       <section id="why" className="relative z-10 max-w-screen-xl mx-auto px-6 py-28" style={{ position: "relative", zIndex: 10, padding: "112px 24px" }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start" style={{ display: "grid", alignItems: "flex-start" }}>
           <div className="lg:sticky lg:top-24" style={{ position: "sticky", top: 96 }}>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6" style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 24, color: "#3B805C" }}>
-              00 — Pourquoi CoFlow
+              00 — Pourquoi Bloom
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] leading-tight" style={{ fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.25, color: "#1E293B" }}>
               On a construit l’outil<br />
@@ -595,7 +595,7 @@ export default function HomeClient() {
               sans trouver.
             </h2>
             <p className="mt-6 text-sm leading-relaxed max-w-sm" style={{ marginTop: 24, fontSize: 14, lineHeight: 1.625, maxWidth: 384, color: "#334155" }}>
-              Jira est trop lourd. Trello manque de contexte. Notion, c’est un éditeur de texte déguisé. Asana coûte trop cher. On a donc construit CoFlow — focus sur l’essentiel, zéro friction.
+              Jira est trop lourd. Trello manque de contexte. Notion, c’est un éditeur de texte déguisé. Asana coûte trop cher. On a donc construit Bloom — focus sur l’essentiel, zéro friction.
             </p>
           </div>
 
@@ -764,7 +764,7 @@ export default function HomeClient() {
                 color: "#1E293B",
               }}
             >
-              “CoFlow a remplacé trois outils chez nous.<br />
+              “Bloom a remplacé trois outils chez nous.<br />
               <span style={{ color: "#3B805C" }}>Les réunions de cadrage ont été divisées par deux.</span>”
             </p>
             <footer className="mt-8 flex items-center gap-4" style={{ marginTop: 32, display: "flex", alignItems: "center", gap: 16 }}>
@@ -1032,7 +1032,7 @@ export default function HomeClient() {
               </div>
               <div className="flex justify-center" style={{ display: "flex", justifyContent: "center" }}>
                 <a
-                  href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
+                  href="https://wa.me/237658732446?text=Bonjour%20Bloom%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="lp-btn-ghost"
@@ -1064,7 +1064,7 @@ export default function HomeClient() {
                 </Link>
               )}
               <a
-                href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
+                href="https://wa.me/237658732446?text=Bonjour%20Bloom%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20l%27offre%20Entreprise."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="lp-btn-ghost"
@@ -1096,7 +1096,7 @@ export default function HomeClient() {
               <p className="mt-3 text-sm" style={{ marginTop: 12, fontSize: 14, color: "#334155" }}>
                 Une question spécifique ?{" "}
                 <a
-                  href="https://wa.me/237658732446?text=Bonjour%20CoFlow%2C%20j%27ai%20une%20question%20sur%20la%20plateforme."
+                  href="https://wa.me/237658732446?text=Bonjour%20Bloom%2C%20j%27ai%20une%20question%20sur%20la%20plateforme."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline transition-colors font-semibold"
@@ -1218,7 +1218,7 @@ export default function HomeClient() {
           }}
         >
           <Link href="/" className="flex items-center gap-2" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <CoFlowLogo size={24} />
+            <BloomLogo size={24} />
             <span
               className="brand-logo-text"
               style={{
@@ -1229,7 +1229,7 @@ export default function HomeClient() {
                 color: "#0F172A",
               }}
             >
-              Co<span
+              Bl<span
                 className="brand-logo-accent"
                 style={{
                   background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
@@ -1238,7 +1238,7 @@ export default function HomeClient() {
                   fontWeight: 800,
                 }}
               >
-                Flow
+                oom
               </span>
             </span>
           </Link>
@@ -1252,14 +1252,14 @@ export default function HomeClient() {
               justifyContent: "center",
               gap: 24,
               fontSize: 13,
-              color: "#475569",
-              fontWeight: 500,
+              color: "#64748B",
             }}
           >
             {[
-              { label: "Pourquoi CoFlow", href: "#why" },
+              { label: "Pourquoi Bloom", href: "#why" },
               { label: "Fonctionnalités", href: "#features" },
               { label: "Tarifs", href: "#pricing" },
+              { label: "FAQ", href: "#faq" },
               { label: "Connexion", href: "/sign-in" },
               { label: "Inscription", href: "/sign-up" },
             ].map((item) => (
@@ -1276,7 +1276,7 @@ export default function HomeClient() {
           </nav>
 
           <p className="text-[11.5px] font-mono" style={{ fontSize: 11.5, fontFamily: "monospace", color: "#475569" }}>
-            © {new Date().getFullYear()} CoFlow · Tous droits réservés
+            © {new Date().getFullYear()} Bloom · Tous droits réservés
           </p>
         </div>
       </footer>

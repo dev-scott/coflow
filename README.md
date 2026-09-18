@@ -4,7 +4,7 @@
 
 ## 📖 Présentation
 
-**CoFlow** est une solution complète de gestion de projet pensée pour les équipes modernes, les startups et les freelances. Elle combine la simplicité d'un tableau Kanban interactif, la puissance de collaboration multi-utilisateurs au sein d'espaces de travail (Workspaces) dédiés, et un modèle de monétisation prêt pour la production (avec intégration de **Mobile Money** et **Cartes Bancaires** via **Notch Pay**).
+**Bloom** est une solution complète de gestion de projet pensée pour les équipes modernes, les startups et les freelances. Elle combine la simplicité d'un tableau Kanban interactif, la puissance de collaboration multi-utilisateurs au sein d'espaces de travail (Workspaces) dédiés, et un modèle de monétisation prêt pour la production (avec intégration de **Mobile Money** et **Cartes Bancaires** via **Notch Pay**).
 
 ---
 
@@ -211,7 +211,7 @@ docker compose down
 
 ## 🤝 Système d'Invitations & Collaboration
 
-CoFlow intègre un flux complet de collaboration d'équipe :
+Bloom intègre un flux complet de collaboration d'équipe :
 
 1. **Invitation directe par Email** : Depuis un workspace (`/workspaces/[id]`) ou la vue membres (`/members`), cliquez sur **Inviter un membre**.
 2. **Attribution de Rôle** : Définissez les permissions du collaborateur (*Membre*, *Admin*, *Lecteur*).
@@ -225,7 +225,7 @@ CoFlow intègre un flux complet de collaboration d'équipe :
 
 ## 💳 Abonnements & Paiements (Notch Pay)
 
-CoFlow propose un système de tarification freemium :
+Bloom propose un système de tarification freemium :
 
 | Plan              | Prix              | Quotas & Fonctionnalités                                                     |
 | :---------------- | :---------------- | :---------------------------------------------------------------------------- |
@@ -259,4 +259,4 @@ CoFlow propose un système de tarification freemium :
 
 ## 📄 Licence
 
-Ce projet est sous licence propriétaire pour **CoFlow**. Tous droits réservés.
+Ce projet est sous licence propriétaire pour **Bloom**. Tous droits réservés.

@@ -462,7 +462,7 @@ export default function SettingsClient() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                 <h3 style={{ fontSize: 18, fontWeight: 800, color: "#1E293B", margin: 0 }}>
-                  Votre Formule CoFlow
+                  Votre Formule Bloom
                 </h3>
                 <span
                   style={{

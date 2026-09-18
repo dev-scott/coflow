@@ -42,7 +42,7 @@ export async function sendEmail(
   if (smtpTransporter) {
     try {
       await smtpTransporter.sendMail({
-        from: `CoFlow <${FROM_EMAIL}>`,
+        from: `Bloom <${FROM_EMAIL}>`,
         to,
         subject,
         html,
@@ -59,7 +59,7 @@ export async function sendEmail(
     try {
       await sgMail.send({
         to,
-        from: `CoFlow <${FROM_EMAIL}>`,
+        from: `Bloom <${FROM_EMAIL}>`,
         subject,
         html,
       });
@@ -75,7 +75,7 @@ export async function sendEmail(
   const actionLink = linkMatch ? linkMatch[1] : null;
 
   console.log("\n" + "=".repeat(76));
-  console.log("📨  [COFLOW EMAIL DISPATCHER]");
+  console.log("📨  [BLOOM EMAIL DISPATCHER]");
   console.log(`    Destinataire : ${to}`);
   console.log(`    Objet        : ${subject}`);
   if (actionLink) {
@@ -87,7 +87,7 @@ export async function sendEmail(
 }
 
 /**
- * Email de vérification de compte avec template HTML moderne CoFlow
+ * Email de vérification de compte avec template HTML moderne Bloom
  */
 export async function sendVerificationEmail(
   to: string,
@@ -117,10 +117,10 @@ export async function sendVerificationEmail(
     </head>
     <body>
       <div class="card">
-        <div class="logo">Co<span>Flow</span></div>
-        <h1>Activez votre compte CoFlow</h1>
+        <div class="logo">Bl<span>oom</span></div>
+        <h1>Activez votre compte Bloom</h1>
         <p>Bonjour ${name || ""},</p>
-        <p>Merci d'avoir rejoint CoFlow ! Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et déverrouiller l'accès à votre espace de travail.</p>
+        <p>Merci d'avoir rejoint Bloom ! Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et déverrouiller l'accès à votre espace de travail.</p>
         <div style="text-align: center;">
           <a href="${verifyUrl}" class="btn" target="_blank">Vérifier mon adresse email</a>
         </div>
@@ -134,11 +134,11 @@ export async function sendVerificationEmail(
     </html>
   `;
 
-  return sendEmail(to, "Activez votre compte CoFlow", html);
+  return sendEmail(to, "Activez votre compte Bloom", html);
 }
 
 /**
- * Email de réinitialisation de mot de passe avec template HTML moderne CoFlow
+ * Email de réinitialisation de mot de passe avec template HTML moderne Bloom
  */
 export async function sendPasswordResetEmail(
   to: string,
@@ -168,10 +168,10 @@ export async function sendPasswordResetEmail(
     </head>
     <body>
       <div class="card">
-        <div class="logo">Co<span>Flow</span></div>
+        <div class="logo">Bl<span>oom</span></div>
         <h1>Réinitialisation de mot de passe</h1>
         <p>Bonjour ${name || ""},</p>
-        <p>Nous avons reçu une demande de réinitialisation pour votre compte CoFlow. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p>
+        <p>Nous avons reçu une demande de réinitialisation pour votre compte Bloom. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p>
         <div style="text-align: center;">
           <a href="${resetUrl}" class="btn" target="_blank">Changer mon mot de passe</a>
         </div>
@@ -185,5 +185,5 @@ export async function sendPasswordResetEmail(
     </html>
   `;
 
-  return sendEmail(to, "Réinitialisation de votre mot de passe CoFlow", html);
+  return sendEmail(to, "Réinitialisation de votre mot de passe Bloom", html);
 }

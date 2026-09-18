@@ -7,7 +7,7 @@
     "backend",
     "frontend"
   ],
-  "description": "CoFlow – Gestionnaire de projets collaboratif",
+  "description": "Bloom – Gestionnaire de projets collaboratif",
   "scripts": {
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
