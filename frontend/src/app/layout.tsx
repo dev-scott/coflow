@@ -31,6 +31,13 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     siteName: "Bloom",
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({

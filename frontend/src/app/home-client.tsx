@@ -198,29 +198,7 @@ export default function HomeClient() {
       >
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
           <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-            <BloomLogo size={32} />
-            <span
-              className="brand-logo-text"
-              style={{
-                fontFamily: "var(--font-logo)",
-                fontSize: 18,
-                fontWeight: 800,
-                letterSpacing: "-0.035em",
-                color: "#0F172A",
-              }}
-            >
-              Bl<span
-                className="brand-logo-accent"
-                style={{
-                  background: "linear-gradient(135deg, #2E6047 0%, #4D9972 65%, #6BAF8A 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: 800,
-                }}
-              >
-                oom
-              </span>
-            </span>
+            <BloomLogo size={32} withText={true}  />
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#334155", gap: 28, fontSize: 13.5, fontWeight: 500 }}>
