@@ -199,6 +199,7 @@ export default function HomeClient() {
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
           <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
             <BloomLogo size={32} withText={true}  />
+         
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#334155", gap: 28, fontSize: 13.5, fontWeight: 500 }}>
@@ -309,7 +310,7 @@ export default function HomeClient() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12 items-start" style={{ display: "grid", alignItems: "flex-start" }}>
           <div>
             <h1
-              className="font-bold leading-[1.03] tracking-[-0.04em] text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem]"
+              className=" font-bold leading-[1.03] tracking-[-0.04em] text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem]"
               style={{
                 fontWeight: 800,
                 lineHeight: 1.03,
