@@ -2,16 +2,17 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Plus, ArrowLeft, CheckCircle2, Clock, AlertTriangle,
-  Calendar, Tag, Users, X, Loader2
+  Calendar, Tag, Users, X, Loader2, Search, Download,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { fetchData, postData } from "@/lib/fetch-util";
+import { fetchData, postData, putData } from "@/lib/fetch-util";
+import { trackTask, trackEngagement } from "@/lib/analytics";
 import type { Task, Project } from "@/types";
 
 const STATUS_COLS: { status: string; label: string; color: string; bg: string }[] = [
@@ -65,6 +66,13 @@ function CreateTaskModal({
     onSuccess: (t) => {
       qc.invalidateQueries({ queryKey: ["project-tasks", projectId] });
       toast.success(`Tâche "${t.title}" ajoutée !`);
+      trackTask("create", {
+        taskId: t._id,
+        taskTitle: t.title,
+        toStatus: t.status,
+        priority: t.priority,
+        projectId,
+      });
       onClose();
     },
     onError: (err: Error) => toast.error(err.message || "Erreur de création"),
@@ -284,22 +292,50 @@ function CreateTaskModal({
   );
 }
 
-function KanbanTaskCard({ task }: { task: Task }) {
+function KanbanTaskCard({ task, projectId }: { task: Task; projectId: string }) {
+  const qc = useQueryClient();
+  const [isUpdating, setIsUpdating] = useState(false);
   const p = PRIORITY_CONFIG[task.priority] ?? PRIORITY_CONFIG.Medium;
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== "Done";
+
+  const handleQuickStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newStatus = e.target.value;
+    if (newStatus === task.status) return;
+
+    setIsUpdating(true);
+    try {
+      await putData(`/tasks/${task._id}`, { status: newStatus });
+      toast.success(`Statut mis à jour : ${newStatus}`);
+      trackTask("status_change", {
+        taskId: task._id,
+        taskTitle: task.title,
+        fromStatus: task.status,
+        toStatus: newStatus,
+        projectId,
+      });
+      qc.invalidateQueries({ queryKey: ["project-tasks", projectId] });
+    } catch {
+      toast.error("Impossible de modifier le statut");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <Link href={`/tasks/${task._id}`} style={{ textDecoration: "none", display: "block" }}>
       <div
         className="glass-card card-hover"
         style={{
-          padding: "16px",
+          padding: "15px",
           borderRadius: 12,
           marginBottom: 10,
           cursor: "pointer",
           background: "#FFFFFF",
           border: "1px solid #E2E8F0",
           boxShadow: "0 2px 6px rgba(15, 23, 42, 0.04)",
+          transition: "all 0.15s ease",
         }}
       >
         <p
@@ -371,6 +407,48 @@ function KanbanTaskCard({ task }: { task: Task }) {
             </div>
           )}
         </div>
+
+        {/* Quick status selector */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 10,
+            paddingTop: 8,
+            borderTop: "1px solid #F1F5F9",
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <span style={{ fontSize: 10.5, color: "#94A3B8", fontWeight: 500 }}>
+            {isUpdating ? "Mise à jour..." : "Statut :"}
+          </span>
+          <select
+            value={task.status}
+            disabled={isUpdating}
+            onChange={handleQuickStatusChange}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              padding: "2px 6px",
+              borderRadius: 6,
+              background: "#F8FAFC",
+              border: "1px solid #CBD5E1",
+              color: "#334155",
+              cursor: "pointer",
+              outline: "none",
+            }}
+          >
+            <option value="To Do">À faire</option>
+            <option value="In Progress">En cours</option>
+            <option value="Review">En révision</option>
+            <option value="Done">Terminé</option>
+          </select>
+        </div>
       </div>
     </Link>
   );
@@ -379,6 +457,8 @@ function KanbanTaskCard({ task }: { task: Task }) {
 export default function ProjectDetailClient({ projectId }: { projectId: string }) {
   const [showModal, setShowModal] = useState(false);
   const [modalColumn, setModalColumn] = useState<string>("To Do");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState<string>("ALL");
 
   const { data, isLoading } = useQuery<{
     project: Project;
@@ -393,6 +473,52 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
   const tasks = data?.tasks ?? [];
   const projectMembers = (project?.members ?? []) as { user: { _id: string; name: string }; role: string }[];
   const workspaceMembers = (data?.workspaceMembers ?? []) as { user: { _id: string; name: string }; role: string }[];
+
+  // Filtrage réactif des tâches par recherche et priorité
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((t) => {
+      const matchesSearch =
+        !searchQuery.trim() ||
+        t.title.toLowerCase().includes(searchQuery.toLowerCase().trim());
+      const matchesPriority =
+        selectedPriority === "ALL" || t.priority === selectedPriority;
+      return matchesSearch && matchesPriority;
+    });
+  }, [tasks, searchQuery, selectedPriority]);
+
+  // Exportation CSV
+  const exportTasksCSV = () => {
+    if (tasks.length === 0) {
+      toast.error("Aucune tâche à exporter");
+      return;
+    }
+    const headers = ["ID", "Titre", "Statut", "Priorité", "Échéance", "Assignés"];
+    const rows = tasks.map((t) => [
+      `"${t._id}"`,
+      `"${(t.title || "").replace(/"/g, '""')}"`,
+      `"${t.status || ""}"`,
+      `"${t.priority || ""}"`,
+      `"${t.dueDate ? new Date(t.dueDate).toLocaleDateString("fr-FR") : ""}"`,
+      `"${Array.isArray(t.assignees) ? (t.assignees as { name: string }[]).map((a) => a.name).join("; ") : ""}"`,
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bloom-taches-${project?.title?.toLowerCase().replace(/[^a-z0-9]/g, "-") || "export"}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success("Export CSV téléchargé avec succès !");
+    trackTask("export_csv", {
+      projectId,
+      taskCount: tasks.length,
+    });
+  };
 
   // Liste combinée unique de tous les membres de l'espace et du projet assignables
   const availableMembersMap = new Map<string, { user: { _id: string; name: string }; role: string }>();
@@ -478,6 +604,125 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
         </div>
       </div>
 
+      {/* Kanban Interactive Toolbar: Search, Filters & CSV Export */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 12,
+          marginBottom: 20,
+          background: "#FFFFFF",
+          padding: "12px 18px",
+          borderRadius: 12,
+          border: "1px solid #E2E8F0",
+          boxShadow: "0 1px 3px rgba(15, 23, 42, 0.04)",
+        }}
+      >
+        {/* Search input */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 220, maxWidth: 380 }}>
+          <Search size={16} color="#94A3B8" />
+          <input
+            type="text"
+            placeholder="Filtrer les tâches par titre..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: "100%",
+              border: "none",
+              outline: "none",
+              fontSize: 13,
+              color: "#1E293B",
+              background: "transparent",
+            }}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 2,
+                color: "#94A3B8",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          {/* Priority filter pills */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#64748B", marginRight: 2 }}>
+              Priorité :
+            </span>
+            {[
+              { id: "ALL", label: "Toutes" },
+              { id: "High", label: "Haute" },
+              { id: "Medium", label: "Moyenne" },
+              { id: "Low", label: "Basse" },
+            ].map((item) => {
+              const active = selectedPriority === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedPriority(item.id);
+                    trackEngagement("kanban_filter", "priority_change", { priority: item.id });
+                  }}
+                  style={{
+                    padding: "4px 10px",
+                    borderRadius: 6,
+                    fontSize: 11.5,
+                    fontWeight: active ? 700 : 500,
+                    background: active ? "#2D6A4F" : "#F1F5F9",
+                    color: active ? "#FFFFFF" : "#475569",
+                    border: active ? "1px solid #2D6A4F" : "1px solid #E2E8F0",
+                    cursor: "pointer",
+                    transition: "all 0.12s ease",
+                  }}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Export CSV Button */}
+          <button
+            type="button"
+            onClick={exportTasksCSV}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 12px",
+              borderRadius: 7,
+              background: "#F8FAFC",
+              border: "1px solid #CBD5E1",
+              color: "#334155",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.background = "#F1F5F9")}
+            onMouseOut={(e) => (e.currentTarget.style.background = "#F8FAFC")}
+            title="Télécharger la liste des tâches au format CSV"
+          >
+            <Download size={13} />
+            <span>Exporter CSV</span>
+          </button>
+        </div>
+      </div>
+
       {/* Kanban Board Container */}
       <div
         style={{
@@ -489,7 +734,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
         }}
       >
         {STATUS_COLS.map(({ status, label, color, bg }) => {
-          const colTasks = tasks.filter((t) => t.status === status);
+          const colTasks = filteredTasks.filter((t) => t.status === status);
           return (
             <div
               key={status}
@@ -549,7 +794,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
                     Aucune tâche
                   </div>
                 ) : (
-                  colTasks.map((t) => <KanbanTaskCard key={t._id} task={t} />)
+                  colTasks.map((t) => <KanbanTaskCard key={t._id} task={t} projectId={projectId} />)
                 )}
               </div>
 

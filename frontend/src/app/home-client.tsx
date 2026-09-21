@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/providers/auth-provider";
 import { BloomLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { trackEngagement } from "@/lib/analytics";
 
 const FAQ_ITEMS = [
   {
@@ -236,7 +237,11 @@ export default function HomeClient() {
                 >
                   Connexion
                 </Link>
-                <Link href="/sign-up" className="lp-btn-nav">
+                <Link
+                  href="/sign-up"
+                  className="lp-btn-nav"
+                  onClick={() => trackEngagement("landing_cta", "click", { label: "header_sign_up" })}
+                >
                   Commencer gratuitement
                 </Link>
               </>
@@ -339,7 +344,15 @@ export default function HomeClient() {
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-5" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20 }}>
-              <Link href={isAuthenticated ? "/dashboard" : "/sign-up"} className="lp-btn-primary">
+              <Link
+                href={isAuthenticated ? "/dashboard" : "/sign-up"}
+                className="lp-btn-primary"
+                onClick={() =>
+                  trackEngagement("landing_cta", "click", {
+                    label: isAuthenticated ? "hero_open_workspace" : "hero_start_free",
+                  })
+                }
+              >
                 {isAuthenticated ? "Ouvrir mon workspace" : "Démarrer — c'est gratuit"}
                 <ArrowRight size={16} className="lp-arrow" />
               </Link>
