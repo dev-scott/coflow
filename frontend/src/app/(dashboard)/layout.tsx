@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FolderKanban, CheckSquare, Users,
-  Archive, Settings, LogOut, Plus, Zap, Crown, Clock,
+  Archive, Settings, LogOut, Plus, Zap, Crown, Clock, Search,
 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { usePlan } from "@/hooks/use-plan";
 import { BloomLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { CommandPalette } from "@/components/command-palette";
 
 const NAV_MAIN = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -37,6 +38,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     daysLeftInTrial,
   } = usePlan();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const getPageTitle = () => {
     if (pathname === "/dashboard") return "Tableau de bord";
@@ -333,9 +346,54 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             boxShadow: "0 1px 3px rgba(15,23,42,0.06)",
           }}
         >
-          <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
-            {getPageTitle()}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+              {getPageTitle()}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setCommandPaletteOpen(true)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "5px 10px",
+                borderRadius: 7,
+                background: "rgba(15, 23, 42, 0.04)",
+                border: "1px solid rgba(15, 23, 42, 0.08)",
+                color: "#64748B",
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = "rgba(15, 23, 42, 0.08)";
+                e.currentTarget.style.color = "#1E293B";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = "rgba(15, 23, 42, 0.04)";
+                e.currentTarget.style.color = "#64748B";
+              }}
+            >
+              <Search size={13} />
+              <span>Rechercher...</span>
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: "#64748B",
+                  background: "#FFFFFF",
+                  padding: "1px 5px",
+                  borderRadius: 4,
+                  border: "1px solid rgba(15, 23, 42, 0.12)",
+                }}
+              >
+                Ctrl K
+              </span>
+            </button>
+          </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {isTrialActive && (
@@ -475,6 +533,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} />
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onOpenUpgrade={() => setUpgradeOpen(true)}
+      />
     </div>
   );
 }

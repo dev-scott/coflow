@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import {
   Check, Loader2, Send, Users, Sparkles
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
+import { trackWorkspace } from "@/lib/analytics";
 import type { WorkspaceMemberRole } from "@/types";
 
 const inviteSchema = z.object({
@@ -77,6 +78,12 @@ export function InviteMemberModal({
 
   const selectedRole = watch("role");
 
+  useEffect(() => {
+    if (isOpen) {
+      trackWorkspace("invite_open", { workspaceId, workspaceName });
+    }
+  }, [isOpen, workspaceId, workspaceName]);
+
   const { mutate, isPending } = useMutation({
     mutationFn: (data: InviteForm) =>
       postData<{ message: string; inviteLink?: string; token?: string }>(
@@ -89,6 +96,12 @@ export function InviteMemberModal({
       queryClient.invalidateQueries({ queryKey: ["workspace-stats", workspaceId] });
 
       toast.success(res.message || "Invitation envoyée avec succès !");
+      trackWorkspace("invite_sent", {
+        workspaceId,
+        workspaceName,
+        role: selectedRole,
+      });
+
       if (res.inviteLink) {
         setGeneratedLink(res.inviteLink);
       } else {
@@ -121,6 +134,7 @@ export function InviteMemberModal({
   const handleCopy = (link: string) => {
     navigator.clipboard.writeText(link);
     setCopied(true);
+    trackWorkspace("copy_invite_link", { workspaceId, workspaceName });
     toast.success("Lien d'invitation copié dans le presse-papiers !");
     setTimeout(() => setCopied(false), 2500);
   };

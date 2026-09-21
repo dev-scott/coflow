@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/providers/auth-provider";
 import { BloomLogo } from "@/components/logo";
 import { UpgradeModal } from "@/components/upgrade-modal";
+import { trackEngagement } from "@/lib/analytics";
 
 const FAQ_ITEMS = [
   {
@@ -199,6 +200,7 @@ export default function HomeClient() {
         <div className="max-w-screen-xl mx-auto px-6 h-14 flex items-center gap-8" style={{ display: "flex", alignItems: "center" }}>
           <Link href="/" className="flex items-center gap-2.5 group shrink-0" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
             <BloomLogo size={32} withText={true}  />
+         
           </Link>
 
           <nav className="hidden md:flex items-center gap-7 ml-6 text-[13px]" style={{ color: "#334155", gap: 28, fontSize: 13.5, fontWeight: 500 }}>
@@ -235,7 +237,11 @@ export default function HomeClient() {
                 >
                   Connexion
                 </Link>
-                <Link href="/sign-up" className="lp-btn-nav">
+                <Link
+                  href="/sign-up"
+                  className="lp-btn-nav"
+                  onClick={() => trackEngagement("landing_cta", "click", { label: "header_sign_up" })}
+                >
                   Commencer gratuitement
                 </Link>
               </>
@@ -309,7 +315,7 @@ export default function HomeClient() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12 items-start" style={{ display: "grid", alignItems: "flex-start" }}>
           <div>
             <h1
-              className="font-bold leading-[1.03] tracking-[-0.04em] text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem]"
+              className=" font-bold leading-[1.03] tracking-[-0.04em] text-[3.2rem] sm:text-[4.5rem] lg:text-[5.5rem]"
               style={{
                 fontWeight: 800,
                 lineHeight: 1.03,
@@ -338,7 +344,15 @@ export default function HomeClient() {
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-5" style={{ marginTop: 40, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20 }}>
-              <Link href={isAuthenticated ? "/dashboard" : "/sign-up"} className="lp-btn-primary">
+              <Link
+                href={isAuthenticated ? "/dashboard" : "/sign-up"}
+                className="lp-btn-primary"
+                onClick={() =>
+                  trackEngagement("landing_cta", "click", {
+                    label: isAuthenticated ? "hero_open_workspace" : "hero_start_free",
+                  })
+                }
+              >
                 {isAuthenticated ? "Ouvrir mon workspace" : "Démarrer — c'est gratuit"}
                 <ArrowRight size={16} className="lp-arrow" />
               </Link>

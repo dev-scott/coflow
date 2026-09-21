@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { postData } from "@/lib/fetch-util";
 import { usePlan } from "@/hooks/use-plan";
+import { trackSubscription } from "@/lib/analytics";
 
 interface UpgradeModalProps {
   isOpen?: boolean;
@@ -46,11 +47,22 @@ export function UpgradeModal({ isOpen, open, onClose, contextMessage }: UpgradeM
     queryClient.invalidateQueries({ queryKey: ["projects"] });
   };
 
+  const visible = isOpen ?? open ?? false;
+
+  useEffect(() => {
+    if (visible) {
+      trackSubscription("view_pricing_modal", {
+        plan: isPro ? "pro" : "starter",
+      });
+    }
+  }, [visible, isPro]);
+
   // Mutation pour activer l'essai gratuit 14 jours
   const { mutate: trialMutate, isPending: isTrialPending } = useMutation({
     mutationFn: () => postData<{ message: string; daysLeft: number }>("/payments/start-trial", {}),
     onSuccess: (data) => {
       toast.success(data.message || "Félicitations ! Votre essai Pro gratuit de 14 jours est activé.");
+      trackSubscription("start_trial_click", { plan: "pro" });
       refreshUserData();
       onClose();
     },
@@ -61,17 +73,31 @@ export function UpgradeModal({ isOpen, open, onClose, contextMessage }: UpgradeM
 
   // Mutation pour initialiser le paiement (Notch Pay ou Sandbox)
   const { mutate: checkoutMutate, isPending: isCheckoutPending } = useMutation({
-    mutationFn: () =>
-      postData<{ checkoutUrl: string; reference: string; provider: string }>("/payments/checkout", {
+    mutationFn: () => {
+      trackSubscription("initiate_checkout", {
+        plan: "pro",
+        interval: period,
+        amount: period === "yearly" ? 62400 : 6500,
+        currency,
+        channel: paymentMethod,
+      });
+      return postData<{ checkoutUrl: string; reference: string; provider: string }>("/payments/checkout", {
         period,
         currency,
         paymentMethod,
-      }),
+      });
+    },
     onSuccess: async (data) => {
       if (data.provider === "sandbox") {
         try {
           await postData("/payments/confirm-sandbox", { reference: data.reference });
           toast.success("🎉 Paiement validé avec succès ! Votre abonnement Pro est maintenant actif.");
+          trackSubscription("payment_success", {
+            plan: "pro",
+            interval: period,
+            currency,
+            channel: "sandbox",
+          });
           refreshUserData();
           onClose();
         } catch {
@@ -86,7 +112,6 @@ export function UpgradeModal({ isOpen, open, onClose, contextMessage }: UpgradeM
     },
   });
 
-  const visible = isOpen ?? open ?? false;
   if (!visible) return null;
 
   const priceXaf = period === "yearly" ? "62 400" : "6 500";
